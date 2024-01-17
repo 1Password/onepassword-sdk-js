@@ -2,10 +2,11 @@ import { SecretsAPI, SecretsSource } from "./secrets";
 import { ClientAuthConfig, Core, TestCore } from "./core";
 
 export const language = "JS";
-export const version = "0010001";
+export const version = "0010001"; // v0.1.0
 export const defaultIntegrationName = "Unknown";
 export const defaultIntegrationVersion = "Unknown";
 
+// Client represents a client instance of the SDK.
 export class Client {
   public secrets?: SecretsAPI;
 
@@ -17,6 +18,7 @@ export class Client {
     this.config = config.getAuthConfig();
   }
 
+  // authenticate returns an authenticated client whose SecretsAPI is ready to be used.
   async authenticate(): Promise<Client> {
     let clientID = await this.core.initClient(this.config);
     this.secrets = new SecretsSource(parseInt(clientID), this.core);
@@ -28,7 +30,7 @@ const maxIntegrationNameLen = 40;
 const maxIntegrationVersionLen = 20;
 const allowedChars = /^[a-zA-Z0-9_. -]*$/;
 
-// ClientConfiguration contains information about the current client.
+// ClientConfiguration is used to configure an SDK client.
 export class ClientConfiguration {
   auth: Auth;
   integrationInfo: IntegrationInformation;
@@ -86,6 +88,7 @@ export class ClientConfiguration {
   }
 }
 
+// Auth is the authentication method used by an SDK client.
 type Auth = ServiceAccountAuth | null;
 
 export class ServiceAccountAuth {
@@ -100,6 +103,7 @@ export class ServiceAccountAuth {
   }
 }
 
+// IntegrationInformation contains the name and version of the integration built using the 1Password JS SDK.
 export class IntegrationInformation {
   name: string;
   version: string;
