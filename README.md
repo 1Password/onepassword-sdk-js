@@ -38,7 +38,6 @@ async function main() {
 main();
 ```
 
-### Compatibility
+### Officially supported on
 - NodeJS
-- Browsers
 
