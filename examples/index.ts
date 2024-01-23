@@ -1,26 +1,13 @@
-import {
-  Client,
-  ClientConfiguration,
-  defaultIntegrationName,
-  defaultIntegrationVersion,
-  IntegrationInformation,
-  ServiceAccountAuth,
-} from "../client";
+import { createClient } from "../client";
 
 async function main() {
-  // create a client and authenticate it
-  let client = await new Client(
-    new ClientConfiguration(
-      new ServiceAccountAuth("<your_token>"),
-      new IntegrationInformation(
-        defaultIntegrationName,
-        defaultIntegrationVersion,
-      ),
-    ),
-  ).authenticate();
+  // create an authenticated client
+  const client = await createClient({
+    auth: "<your_service_account_token>",
+    integrationName: "<your_integration_name>",
+    integrationVersion: "<your_integration_version>",
+  });
 
   // fetch secret
-  client.secrets?.resolve("op://Ana/Netflix/website").then(console.log);
+  const secret = await client.secrets.resolve("op://Private/Netflix/website");
 }
-
-main();

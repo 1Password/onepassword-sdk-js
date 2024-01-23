@@ -3,15 +3,15 @@ export interface Core {
   // initClient allocates a new authenticated client and returns its id.
   initClient(config: ClientAuthConfig): Promise<string>;
   // invoke calls business logic from a given client and returns the result.
-  invoke(config: Invocation): Promise<string>;
+  invoke(config: InvokeConfig): Promise<string>;
   // releaseClient is called for deallocating WASM memory held by the given client in the WASM core when it goes out of scope.
-  releaseClient(clientId: number): void;
+  releaseClient(clientId: number): Promise<void>;
 }
 
 // ClientAuthConfig is sent to the WASM core for allocating and authenticating a client instance.
 export interface ClientAuthConfig {
-  saToken: string;
-  language: string;
+  serviceAccountToken: string;
+  programmingLanguage: string;
   sdkVersion: string;
   integrationName: string;
   integrationVersion: string;
@@ -19,27 +19,62 @@ export interface ClientAuthConfig {
   requestLibraryVersion: string;
   os: string;
   osVersion: string;
-  arch: string;
+  architecture: string;
+}
+
+// InvokeConfig is the information being sent to the sdk core upon a function call.
+export interface InvokeConfig {
+  // The client ID on which this functionality is invoked
+  clientId: number;
+  invocation: Invocation;
 }
 
 // Invocation is sent to the WASM core for calling certain logic, with the given parameters.
-export interface Invocation {
-  // The client ID on which this functionality is invoked
-  client: number;
+interface Invocation {
   // Functionality name
   name: string;
   // Parameters
-  data: string;
+  parameters: string;
 }
 
-export class TestCore implements Core {
+// SharedCore is an implementation of the Core interface whose resources will be shared across all clients.
+export class SharedCore implements Core {
   async initClient(config: ClientAuthConfig): Promise<string> {
-    return "1";
+    return "";
   }
 
-  async invoke(config: Invocation): Promise<string> {
-    return "secret";
+  async invoke(config: InvokeConfig): Promise<string> {
+    return "";
   }
 
-  async releaseClient(clientId: number) {}
+  async releaseClient(clientId: number): Promise<void> {}
+}
+
+// TestCore is a mocked Core used only for testing.
+export class TestCore implements Core {
+  id: number;
+
+  constructor(id: number) {
+    this.id = id;
+  }
+  async initClient(config: ClientAuthConfig): Promise<string> {
+    const res = this.id.toString();
+    this.id++;
+    return res;
+  }
+
+  async invoke(config: InvokeConfig): Promise<string> {
+    return (
+      "method " +
+      config.invocation.name +
+      " called on client " +
+      config.clientId +
+      " with parameters " +
+      config.invocation.parameters
+    );
+  }
+
+  async releaseClient(clientId: number) {
+    this.id--;
+  }
 }

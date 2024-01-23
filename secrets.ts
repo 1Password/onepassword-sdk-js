@@ -1,4 +1,5 @@
-import { Core, Invocation } from "./core";
+import { InvokeConfig } from "./core";
+import { InnerClient } from "./configuration";
 
 // SecretsAPI exposes functionality around secrets.
 export interface SecretsAPI {
@@ -8,20 +9,20 @@ export interface SecretsAPI {
 
 // SecretSource is an implementation of the SecretsAPI that wraps a Core.
 export class SecretsSource implements SecretsAPI {
-  clientID: number;
-  core: Core;
+  #inner: InnerClient;
 
-  constructor(clientID: number, core: Core) {
-    this.clientID = clientID;
-    this.core = core;
+  constructor(inner: InnerClient) {
+    this.#inner = inner;
   }
 
   resolve(secretReference: string): Promise<string> {
-    let invocationConfig: Invocation = {
-      client: this.clientID,
-      name: "Resolve",
-      data: secretReference,
+    let invocationConfig: InvokeConfig = {
+      clientId: this.#inner.id,
+      invocation: {
+        name: "Resolve",
+        parameters: secretReference,
+      },
     };
-    return this.core.invoke(invocationConfig);
+    return this.#inner.core.invoke(invocationConfig);
   }
 }
