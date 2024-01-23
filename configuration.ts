@@ -1,5 +1,6 @@
 import { Core } from "./core";
 
+// InnerClient represents the client instance on which a call is made
 export interface InnerClient {
   id: number;
   core: Core;
@@ -12,4 +13,5 @@ export interface ClientConfiguration {
   integrationVersion: string;
 }
 
+// Authentication method. For now only Service Account Authentication is supported so this will always be a token.
 type Auth = string;
