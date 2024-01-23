@@ -22,20 +22,17 @@ yarn add @1password/sdk
 5. Use the SDK in your project:
 
 ```js
-async function main() {
-    let client = await new Client(
-        new ClientConfiguration(
-            new ServiceAccountAuth(
-                "<your_token>",
-            ),
-            new IntegrationInformation("Terraform app", "v1"),
-        ),
-    ).authenticate();
+import { createClient } from "@1password/sdk";
 
-    client.secrets.resolve("op://vault/item/field").then(console.log);
-}
+// create an authenticated client
+const client = await createClient({
+    auth: "<your_service_account_token>",
+    integrationName: "<your_integration_name>",
+    integrationVersion: "<your_integration_version>",
+});
 
-main();
+// fetch secret
+const secret = await client.secrets.resolve("op://Private/Netflix/website");
 ```
 
 ### Officially supported on
