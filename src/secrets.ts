@@ -16,7 +16,7 @@ export class SecretsSource implements SecretsAPI {
   }
 
   resolve(secretReference: string): Promise<string> {
-    let invocationConfig: InvokeConfig = {
+    const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
       invocation: {
         name: "Resolve",
