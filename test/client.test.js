@@ -1,5 +1,5 @@
-import { createClientAuthConfig, createClientWithCore } from "./src/client";
-import { TestCore } from "./src/core";
+import { createClientAuthConfig, createClientWithCore } from "../src/client";
+import { TestCore } from "./test_core";
 
 test("the right configuration is created", () => {
   const config = createClientAuthConfig({
