@@ -6,12 +6,12 @@ export interface InnerClient {
   core: Core;
 }
 
-// ClientConfiguration is used to configure an SDK client.
+// `ClientConfiguration` contains information necessary to configure an SDK client.
 export interface ClientConfiguration {
   auth: Auth;
   integrationName: string;
   integrationVersion: string;
 }
 
-// Authentication method. For now only Service Account Authentication is supported so this will always be a token.
+// Sets the authentication method. Currently, the SDK only supports authentication with [service accounts](https://developer.1password.com/docs/service-accounts), so the authentication type must be set to string to authenticate with a service account token.
 type Auth = string;

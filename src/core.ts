@@ -1,14 +1,14 @@
-// Core exposes the WASM core interface to host JS SDK.
+// `Core` exposes the WASM core interface to the host JS SDK.
 export interface Core {
   // initClient allocates a new authenticated client and returns its id.
   initClient(config: ClientAuthConfig): Promise<string>;
   // invoke calls business logic from a given client and returns the result.
   invoke(config: InvokeConfig): Promise<string>;
-  // releaseClient is called for deallocating WASM memory held by the given client in the WASM core when it goes out of scope.
+  // `releaseClient` deallocates WASM memory held by the given client in the WASM core when it goes out of scope.
   releaseClient(clientId: number): Promise<void>;
 }
 
-// ClientAuthConfig is sent to the WASM core for allocating and authenticating a client instance.
+// `ClientAuthConfig` wraps configuration information needed to allocate and authenticate a client instance. It's sent to the WASM core.
 export interface ClientAuthConfig {
   serviceAccountToken: string;
   programmingLanguage: string;
@@ -22,14 +22,14 @@ export interface ClientAuthConfig {
   architecture: string;
 }
 
-// InvokeConfig is the information being sent to the sdk core upon a function call.
+// `InvokeConfig` contains the information sent to the SDK core when you call (invoke) a function.
 export interface InvokeConfig {
-  // The client ID on which this functionality is invoked
+  // `clientID` identifies the client instance for which you called the function.
   clientId: number;
   invocation: Invocation;
 }
 
-// Invocation is sent to the WASM core for calling certain logic, with the given parameters.
+// `Invocation` calls certain logic from the WASM core, with the given parameters.
 interface Invocation {
   // Functionality name
   name: string;
@@ -37,7 +37,7 @@ interface Invocation {
   parameters: string;
 }
 
-// SharedCore is an implementation of the Core interface whose resources will be shared across all clients.
+// SharedCore is an implementation of the Core interface that shares resources across all clients.
 export class SharedCore implements Core {
   async initClient(config: ClientAuthConfig): Promise<string> {
     return "";
