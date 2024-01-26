@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "module": "esnext",
+    "moduleResolution": "Node",
     "target": "es2017",
     "lib": [
-      "es2022"
+      "es2021"
     ]
   },
   "exclude": [
-    "node_modules"
-  ]
+       "node_modules"
+      ]
 }

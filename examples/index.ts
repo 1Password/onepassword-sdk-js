@@ -1,4 +1,4 @@
-import { createClient } from "../src/client";
+import { createClient } from "../src/client.js";
 
 // Creates an authenticated client
 const client = await createClient({
@@ -9,3 +9,4 @@ const client = await createClient({
 
 // Fetches a secret
 const secret = await client.secrets.resolve("op://Private/Netflix/website");
+console.log(secret)

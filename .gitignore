@@ -1,3 +1,6 @@
+# js files
+*.js
+
 # Idea files
 .idea/
 

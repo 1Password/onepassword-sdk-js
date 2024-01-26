@@ -44,7 +44,7 @@ export class SharedCore implements Core {
   }
 
   async invoke(config: InvokeConfig): Promise<string> {
-    return "";
+    return "foobar";
   }
 
   async releaseClient(clientId: number): Promise<void> {}

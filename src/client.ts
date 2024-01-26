@@ -1,7 +1,7 @@
-import { SecretsAPI, SecretsSource } from "./secrets";
-import { ClientAuthConfig, Core, SharedCore } from "./core";
-import { ClientConfiguration, InnerClient } from "./configuration";
-import * as os from "os";
+import { SecretsAPI, SecretsSource } from "./secrets.js";
+import { ClientAuthConfig, Core, SharedCore } from "./core.js";
+import { ClientConfiguration, InnerClient } from "./configuration.js";
+// import * as os from "os";
 
 export const DEFAULT_INTEGRATION_NAME = "Unknown";
 export const DEFAULT_INTEGRATION_VERSION = "Unknown";
@@ -59,8 +59,8 @@ export function createClientAuthConfig(
     requestLibraryName: "TBD",
     requestLibraryVersion: "TBD",
     // Only supported on Node.js
-    os: os.type(),
-    osVersion: os.version(),
-    architecture: os.arch(),
+    os: "Darwin", //os.type(),
+    osVersion: "10.1.1", //os.version(),
+    architecture: "arm", //os.arch(),
   };
 }
