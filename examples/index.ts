@@ -2,11 +2,11 @@ import { createClient } from "../src/client.js";
 
 // Creates an authenticated client
 const client = await createClient({
-  auth: "<your_service_account_token>",
-  integrationName: "<your_integration_name>",
-  integrationVersion: "<your_integration_version>",
+  auth: "ops_eyJzaWduSW5BZGRyZXNzIjoic2FtLTFwYXNzLWFsaWFzLmI1dGVzdC5jb20iLCJ1c2VyQXV0aCI6eyJtZXRob2QiOiJTUlBnLTQwOTYiLCJhbGciOiJQQkVTMmctSFMyNTYiLCJpdGVyYXRpb25zIjo2NTAwMDAsInNhbHQiOiIwMHBMNFJpUnRmazFLMm5RZWp3MUZnIn0sImVtYWlsIjoiZG93ajRrd3dndXJ3Z0AxcGFzc3dvcmRzZXJ2aWNlYWNjb3VudHMuY29tIiwic3JwWCI6IjI3YmM3MzI2NDY0NWNmMjUyZDg3ODEyNDc4MDY2MzA2OWYyNTkyY2Q0MDZhYjA3YTg3NWE1NjlmODEwOGYyZTkiLCJtdWsiOnsiYWxnIjoiQTI1NkdDTSIsImV4dCI6dHJ1ZSwiayI6IlJoVUhIaVBzT3JMWHdYOUctUXZ4ZDhTUTdKdmV1UGpuM25JWFREQTZ4MTQiLCJrZXlfb3BzIjpbImVuY3J5cHQiLCJkZWNyeXB0Il0sImt0eSI6Im9jdCIsImtpZCI6Im1wIn0sInNlY3JldEtleSI6IkEzLTJYQ1JDRy1KS05FTjUtU0I3UE0tQlk2QjktUkFHSEctOEpIWjQiLCJ0aHJvdHRsZVNlY3JldCI6eyJzZWVkIjoiMmE5ZDRjNjQ5NzMyMDhjNjgwZWU3ZjA2YmE2OTE3MzkxMzBkMDc4YjI2MTM1ZGIwYWRjNThkZjdlNTIyYmY2NyIsInV1aWQiOiJTM1NWUzVINDRGQVlOSzJUNzVKQ0pEWU5aWSJ9LCJkZXZpY2VVdWlkIjoidm94bHhnNGdlNHVkZzIyZ3RpbnlrajIyeTQifQ",
+  integrationName: "My App",
+  integrationVersion: "1.0.0",
 });
 
 // Fetches a secret
 const secret = await client.secrets.resolve("op://Private/Netflix/website");
-console.log(secret)
+console.log(secret);

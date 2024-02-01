@@ -1,3 +1,9 @@
+import {
+  init_client,
+  invoke,
+  release_client,
+} from "./js-core/op_bindgen_core.js";
+
 // `Core` exposes the WASM core interface to the host JS SDK.
 export interface Core {
   // initClient allocates a new authenticated client and returns its id.
@@ -40,12 +46,22 @@ interface Invocation {
 // SharedCore is an implementation of the Core interface that shares resources across all clients.
 export class SharedCore implements Core {
   async initClient(config: ClientAuthConfig): Promise<string> {
-    return "";
+    const c = JSON.stringify(config);
+    const id = init_client(c);
+    return new Promise((res, rej) => {
+      res(id);
+    });
   }
 
   async invoke(config: InvokeConfig): Promise<string> {
-    return "foobar";
+    const c = JSON.stringify(config);
+    const response = invoke(c);
+    return new Promise((res, rej) => {
+      res(response);
+    });
   }
 
-  async releaseClient(clientId: number): Promise<void> {}
+  async releaseClient(clientId: number): Promise<void> {
+    release_client(BigInt(clientId));
+  }
 }
