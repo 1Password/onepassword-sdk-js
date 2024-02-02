@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "The official 1Password JavaScript SDK",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "tsc | node --experimental-modules --experimental-wasm-modules ./examples/index.js"
   },
   "author": "",
   "type": "module",
