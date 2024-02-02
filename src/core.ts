@@ -1,3 +1,9 @@
+import {
+  init_client,
+  invoke,
+  release_client,
+} from "./js-core/core.js";
+
 // `Core` exposes the WASM core interface to the host JS SDK.
 export interface Core {
   // initClient allocates a new authenticated client and returns its id.
