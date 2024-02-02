@@ -6,6 +6,7 @@
     "test": "jest"
   },
   "author": "",
+  "type": "module",
   "license": "MIT",
   "dependencies": {
     "@babel/preset-env": "^7.23.8",
