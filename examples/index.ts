@@ -1,4 +1,4 @@
-import { createClient } from "../src/client";
+import { createClient } from "../src/client.js";
 
 // Creates an authenticated client
 const client = await createClient({
