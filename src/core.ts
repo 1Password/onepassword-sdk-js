@@ -1,14 +1,14 @@
-// Exposes the WASM core interface to the host JS SDK.
+// Exposes the SDK core to the host JS SDK.
 export interface Core {
   // Allocates a new authenticated client and returns its id.
   initClient(config: ClientAuthConfig): Promise<string>;
   // Calls business logic from a given client and returns the result.
   invoke(config: InvokeConfig): Promise<string>;
-  // Deallocates WASM memory held by the given client in the WASM core when it goes out of scope.
+  // Deallocates memory held by the given client in the SDK core when it goes out of scope.
   releaseClient(clientId: number): Promise<void>;
 }
 
-// Wraps configuration information needed to allocate and authenticate a client instance. It's sent to the WASM core.
+// Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
 export interface ClientAuthConfig {
   serviceAccountToken: string;
   programmingLanguage: string;
@@ -29,7 +29,7 @@ export interface InvokeConfig {
   invocation: Invocation;
 }
 
-// Calls certain logic from the WASM core, with the given parameters.
+// Calls certain logic from the SDK core, with the given parameters.
 interface Invocation {
   // Functionality name
   name: string;
