@@ -13,5 +13,5 @@ export interface ClientConfiguration {
   integrationVersion: string;
 }
 
-// Sets the authentication method. Currently, the SDK only supports authentication with [service accounts](https://developer.1password.com/docs/service-accounts), so the authentication type must be set to string to authenticate with a service account token.
+// Sets the authentication method. Use `string` to authenticate with a service account token.
 type Auth = string;
