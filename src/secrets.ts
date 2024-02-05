@@ -7,7 +7,7 @@ export interface SecretsAPI {
   resolve(secretReference: string): Promise<string>;
 }
 
-// An implementation of the SecretsAPI that wraps a Core.
+// An implementation of the `SecretsAPI` that wraps a `Core`.
 export class SecretsSource implements SecretsAPI {
   #inner: InnerClient;
 

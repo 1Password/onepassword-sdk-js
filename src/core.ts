@@ -37,7 +37,7 @@ interface Invocation {
   parameters: string;
 }
 
-// An implementation of the Core interface that shares resources across all clients.
+// An implementation of the `Core` interface that shares resources across all clients.
 export class SharedCore implements Core {
   async initClient(config: ClientAuthConfig): Promise<string> {
     return "";
