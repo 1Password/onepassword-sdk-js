@@ -1,12 +1,12 @@
 import { Core } from "./core";
 
-// InnerClient represents the client instance on which a call is made
+// Represents the client instance on which a call is made.
 export interface InnerClient {
   id: number;
   core: Core;
 }
 
-// `ClientConfiguration` contains information necessary to configure an SDK client.
+// Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {
   auth: Auth;
   integrationName: string;

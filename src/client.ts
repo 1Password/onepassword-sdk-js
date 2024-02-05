@@ -33,7 +33,7 @@ export async function createClientWithCore(
     core: core,
   };
   const client = new Client(inner);
-  // cleanup associated memory from core when client instance goes out of scope
+  // Cleanup associated memory from core when client instance goes out of scope.
   finalizationRegistry.register(client, inner.id);
   return client;
 }
