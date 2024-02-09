@@ -1,4 +1,4 @@
-import { init_client, invoke, release_client } from "./js-core/core.js";
+import { init_client, invoke, release_client } from "@1password/wasm-core";
 
 // `Core` exposes the WASM core interface to the host JS SDK.
 export interface Core {

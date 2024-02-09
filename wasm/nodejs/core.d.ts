@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
+* Initializes an SDK client with a given configuration.
 * @param {string} config
 * @returns {Promise<string>}
 */

@@ -1,6 +1,9 @@
 # Idea files
 .idea/
 
+# Mac generated
+.DS_Store
+
 # Logs
 logs
 *.log
