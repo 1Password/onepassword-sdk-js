@@ -14,5 +14,7 @@
     "node_modules",
     "test"
   ],
-  "include": ["./src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }

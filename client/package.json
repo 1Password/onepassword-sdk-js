@@ -5,7 +5,8 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "test": "npm run build && jest"
+    "test": "npm run build && jest",
+		"prettier": "prettier --check 'src/*.ts'"
   },
   "exports": {
     ".": {
