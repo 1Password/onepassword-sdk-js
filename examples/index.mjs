@@ -10,3 +10,4 @@ const client = await createClient({
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret)
+
