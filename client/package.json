@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "test": "jest"
+    "test": "npm run build && jest"
   },
   "exports": {
     ".": {
