@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
+    "outDir": "./dist/",
     "module": "esnext",
-    "target": "es2017",
+    "moduleResolution": "node",
+    "target": "es6",
     "lib": [
-      "es2022"
+      "esnext"
     ]
   },
   "exclude": [
-    "node_modules"
-  ]
+    "node_modules",
+    "test"
+  ],
+  "include": ["./src/**/*"]
 }
