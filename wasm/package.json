@@ -1,0 +1,15 @@
+{
+  "name": "@1password/wasm-core",
+  "version": "0.1.0",
+  "author": "1Password",
+  "license": "MIT",
+  "description": "The 1Password Rust SDK core built with `wasm_bindgen`",
+  "files": [
+    "nodejs/core_bg.wasm.d.ts",
+    "nodejs/core_bg.wasm",
+    "nodejs/core.d.ts",
+    "nodejs/core.js"
+  ],
+  "main": "nodejs/core.js",
+  "types": "nodejs/core.d.ts"
+}

@@ -18,6 +18,9 @@
   "types": "dist/client.d.ts",
   "author": "1Password",
   "license": "MIT",
+  "dependencies": {
+    "@1password/wasm-core": "../wasm"
+  },
   "devDependencies": {
     "@1password/eslint-config": "^4.0.0",
     "@1password/prettier-config": "^1.1.3",

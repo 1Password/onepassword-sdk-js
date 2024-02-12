@@ -1,3 +1,5 @@
+import { init_client, invoke, release_client } from "@1password/wasm-core";
+
 // Exposes the SDK core to the host JS SDK.
 export interface Core {
   // Allocates a new authenticated client and returns its id.
@@ -5,7 +7,7 @@ export interface Core {
   // Calls business logic from a given client and returns the result.
   invoke(config: InvokeConfig): Promise<string>;
   // Deallocates memory held by the given client in the SDK core when it goes out of scope.
-  releaseClient(clientId: number): Promise<void>;
+  releaseClient(clientId: number): void;
 }
 
 // Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
@@ -40,12 +42,17 @@ interface Invocation {
 // An implementation of the `Core` interface that shares resources across all clients.
 export class SharedCore implements Core {
   async initClient(config: ClientAuthConfig): Promise<string> {
-    return "";
+    const serializedConfig = JSON.stringify(config)
+    return init_client(serializedConfig)
   }
 
   async invoke(config: InvokeConfig): Promise<string> {
-    return "";
+    const serializedConfig = JSON.stringify(config)
+    return invoke(serializedConfig)
   }
 
-  async releaseClient(clientId: number): Promise<void> {}
+  releaseClient(clientId: number): void {
+    const serializedId = JSON.stringify(clientId)
+    release_client(serializedId)
+  }
 }
