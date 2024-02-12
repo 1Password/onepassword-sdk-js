@@ -1,6 +1,6 @@
 import { ClientAuthConfig, Core, InvokeConfig } from "../src/core";
 
-// TestCore is a mocked Core used only for testing.
+// A mocked `Core` used only for testing.
 export class TestCore implements Core {
   id: number;
 
