@@ -8,4 +8,4 @@ const client = await createClient({
 });
 
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://Private/Netflix/website");
+const secret = await client.secrets.resolve("op://vault/item/field");
