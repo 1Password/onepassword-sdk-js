@@ -1,4 +1,4 @@
-import { Core } from "./core";
+import { Core } from "./core.js";
 
 // Represents the client instance on which a call is made.
 export interface InnerClient {
