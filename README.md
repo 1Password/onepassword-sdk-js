@@ -39,7 +39,7 @@ import { createClient } from "@1password/sdk";
 
 // Creates an authenticated client.
 const client = await createClient({
-    auth: "<your_service_account_token>",
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
     integrationName: "<your_integration_name>",
     integrationVersion: "<your_integration_version>",
 });
