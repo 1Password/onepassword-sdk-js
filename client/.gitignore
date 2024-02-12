@@ -1,6 +1,8 @@
 # Idea files
 .idea/
 
+
+
 # Logs
 logs
 *.log
@@ -44,6 +46,9 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+
+# Package-lock
+package-lock.json
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
