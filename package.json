@@ -1,29 +1,15 @@
 {
   "name": "1password-js-sdk",
-  "version": "1.0.0",
-  "description": "The official 1Password JavaScript SDK",
-  "scripts": {
-    "test": "jest"
-  },
-  "author": "",
+  "description": "The 1Password JavaScript SDK offers programmatic read access to your secrets in 1Password in an interface native to JavaScript. The SDK currently supports `Node.JS`",
+  "author": "1Password",
   "license": "MIT",
-  "dependencies": {
-    "@babel/preset-env": "^7.23.8",
-    "@extism/extism": "^1.0.1",
-    "babel-jest": "^29.7.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
+    "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples"
   },
-  "devDependencies": {
-    "@1password/eslint-config": "^4.0.0",
-    "@1password/prettier-config": "^1.1.3",
-    "@jest/globals": "^29.7.0",
-    "@types/jest": "^29.5.11",
-    "jest": "^29.7.0",
-    "eslint": "^8.54.0",
-    "prettier-plugin-organize-imports": "^3.2.3",
-    "jest-environment-jsdom": "^29.6.2",
-    "prettier": "3.1.1",
-    "ts-jest": "^29.1.1"
-  }
+  "workspaces": [
+    "client",
+    "examples"
+  ]
 }

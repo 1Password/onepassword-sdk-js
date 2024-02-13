@@ -1,6 +1,6 @@
-import { SecretsAPI, SecretsSource } from "./secrets";
-import { ClientAuthConfig, Core, SharedCore } from "./core";
-import { ClientConfiguration, InnerClient } from "./configuration";
+import { SecretsAPI, SecretsSource } from "./secrets.js";
+import { ClientAuthConfig, Core, SharedCore } from "./core.js";
+import { ClientConfiguration, InnerClient } from "./configuration.js";
 import * as os from "os";
 
 export const DEFAULT_INTEGRATION_NAME = "Unknown";

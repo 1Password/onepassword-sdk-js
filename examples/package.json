@@ -1,0 +1,11 @@
+{
+  "name": "1password-sdk-examples",
+  "description": "Working examples that use the 1Password JS SDK",
+  "scripts": {
+    "esm-example": "node index.mjs",
+    "commonjs-example": "node index.cjs"
+  },
+  "dependencies": {
+    "@1password/sdk": "../client"
+  }
+}
