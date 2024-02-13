@@ -1,10 +1,11 @@
+const sdk = require("@1password/sdk")
+
 async function fetchSecret() {
-  const { createClient, DEFAULT_INTEGRATION_NAME, DEFAULT_INTEGRATION_VERSION } = await import("@1password/sdk");
   // Creates an authenticated client.
-  const client = await createClient({
+  const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    integrationName: DEFAULT_INTEGRATION_NAME,
-    integrationVersion: DEFAULT_INTEGRATION_VERSION,
+    integrationName: sdk.DEFAULT_INTEGRATION_NAME,
+    integrationVersion: sdk.DEFAULT_INTEGRATION_VERSION,
   });
 
   // Fetches a secret.

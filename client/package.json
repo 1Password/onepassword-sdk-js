@@ -14,7 +14,6 @@
       "default": "./dist/client.js"
     }
   },
-  "type": "module",
   "main": "dist/client.js",
   "types": "dist/client.d.ts",
   "author": "1Password",
