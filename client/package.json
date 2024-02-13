@@ -6,17 +6,17 @@
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
     "test": "npm run build && jest",
-		"prettier": "prettier --check 'src/*.ts'"
+    "prettier": "prettier --check 'src/*.ts'"
   },
   "exports": {
     ".": {
-      "types": "./dist/src/client.d.ts",
-      "default": "./dist/src/client.js"
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
     }
   },
   "type": "module",
-  "main": "dist/src/client.js",
-  "types": "dist/src/client.d.ts",
+  "main": "dist/client.js",
+  "types": "dist/client.d.ts",
   "author": "1Password",
   "license": "MIT",
   "devDependencies": {
