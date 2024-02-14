@@ -6,7 +6,8 @@
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
     "test": "npm run build && jest",
-    "prettier": "prettier --check 'src/*.ts'"
+    "prettier": "prettier --check 'src/*.ts'",
+    "prepare": "npm run build"
   },
   "exports": {
     ".": {
@@ -18,7 +19,7 @@
   "types": "dist/client.d.ts",
   "author": "1Password",
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
     "@1password/wasm-core": "../wasm"
   },
   "devDependencies": {
@@ -38,7 +39,7 @@
     "@babel/preset-env": "^7.23.8",
     "babel-jest": "^29.7.0"
   },
-  "directories": {
-    "test": "test"
-  }
+  "files": [
+    "./dist"
+  ]
 }
