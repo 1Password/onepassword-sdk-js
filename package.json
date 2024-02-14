@@ -14,14 +14,14 @@
     "examples"
   ],
   "files": [
-    "./dist"
+    ".client/dist"
   ],
   "exports": {
     ".": {
-      "types": "./dist/client.d.ts",
-      "default": "./dist/client.js"
+      "types": "./client/dist/client.d.ts",
+      "default": "./client/dist/client.js"
     }
   },
-  "main": "dist/client.js",
-  "types": "dist/client.d.ts"
+  "main": ".client/dist/client.js",
+  "types": ".client/dist/client.d.ts"
 }
