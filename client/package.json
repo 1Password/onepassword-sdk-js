@@ -12,7 +12,7 @@
   "types": "dist/client.d.ts",
   "author": "1Password",
   "license": "MIT",
-  "peerDependencies": {
+  "dependencies": {
     "1password-sdk-core": "../wasm"
   },
   "devDependencies": {
