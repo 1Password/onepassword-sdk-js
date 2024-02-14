@@ -14,7 +14,7 @@
     "examples"
   ],
   "files": [
-    ".client/dist"
+    "./client/dist"
   ],
   "exports": {
     ".": {
