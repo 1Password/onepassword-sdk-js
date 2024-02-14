@@ -9,7 +9,6 @@
     "prepare": "npm run build"
   },
   "main": "dist/client.js",
-  "types": "dist/client.d.ts",
   "author": "1Password",
   "license": "MIT",
   "dependencies": {
