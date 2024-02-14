@@ -1,5 +1,5 @@
 {
-  "name": "1password-js-sdk",
+  "name": "@1password/sdk",
   "author": "1Password",
   "license": "MIT",
   "scripts": {
@@ -13,14 +13,6 @@
     "examples"
   ],
   "files": [
-    "./client/dist"
-  ],
-  "exports": {
-    ".": {
-      "types": "./client/dist/client.d.ts",
-      "default": "./client/dist/client.js"
-    }
-  },
-  "main": ".client/dist/client.js",
-  "types": "./client/dist/client.d.ts"
+    "./client"
+  ]
 }
