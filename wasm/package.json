@@ -1,5 +1,5 @@
 {
-  "name": "@1password/wasm-core",
+  "name": "@1password/sdk-core",
   "version": "0.1.0",
   "author": "1Password",
   "license": "MIT",
