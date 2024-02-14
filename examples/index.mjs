@@ -1,4 +1,4 @@
-import { createClient, DEFAULT_INTEGRATION_NAME, DEFAULT_INTEGRATION_VERSION } from "@1password/sdk";
+import { createClient, DEFAULT_INTEGRATION_NAME, DEFAULT_INTEGRATION_VERSION } from "@1password/sdk-client";
 
 // Creates an authenticated client.
 const client = await createClient({
