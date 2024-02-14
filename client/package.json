@@ -13,7 +13,7 @@
   "author": "1Password",
   "license": "MIT",
   "dependencies": {
-    "1password-sdk-core": "../wasm"
+    "@1password/sdk-core": "../wasm"
   },
   "devDependencies": {
     "@1password/eslint-config": "^4.0.0",
