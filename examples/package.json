@@ -6,7 +6,7 @@
     "commonjs-example": "node index.cjs"
   },
   "dependencies": {
-    "@1password/sdk": "../client"
+    "@1password/sdk": "*"
   }
 }
 
