@@ -1,6 +1,7 @@
 {
   "author": "1Password",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
