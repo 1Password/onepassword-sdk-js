@@ -23,7 +23,7 @@
   "main": "./dist/client.js",
   "types": "./dist/client.d.ts",
   "dependencies": {
-    "@1password/sdk-core": "../wasm"
+    "@1password/sdk-core": "1.0.0"
   },
   "devDependencies": {
     "@1password/eslint-config": "^4.0.0",
