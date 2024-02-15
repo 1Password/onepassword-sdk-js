@@ -1,4 +1,4 @@
-import { createClientAuthConfig, createClientWithCore } from "../dist/client.js";
+import { createClientAuthConfig, createClientWithCore } from "@1password/sdk";
 import { TestCore } from "./test_core";
 
 test("the right configuration is created", () => {
