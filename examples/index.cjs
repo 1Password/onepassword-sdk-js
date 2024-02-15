@@ -1,4 +1,4 @@
-const sdk = require("@1password/sdk-client")
+const sdk = require("@1password/sdk")
 
 async function fetchSecret() {
   // Creates an authenticated client.
