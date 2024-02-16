@@ -5,11 +5,7 @@ This folder contains code snippets showing how to import and use the
 
 ### How to run
 1. Clone this repo
-2. Install dependencies:
-```bash
-npm install
-```
-3. Run the code in your preferred module format. First make sure to use a valid Service Account token:
+2. Run the code in your preferred module format. First make sure to use a valid Service Account token:
 ```bash
 export OP_SERVICE_ACCOUNT_TOKEN="<your token>"
 ```

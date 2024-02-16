@@ -1,15 +1,16 @@
 {
-  "name": "1password-js-sdk",
-  "description": "The 1Password JavaScript SDK offers programmatic read access to your secrets in 1Password in an interface native to JavaScript. The SDK currently supports `Node.JS`",
   "author": "1Password",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
-    "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples"
+    "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples",
+    "prepare": "npm run build --workspace client"
   },
   "workspaces": [
     "client",
-    "examples"
+    "examples",
+    "wasm"
   ]
 }
