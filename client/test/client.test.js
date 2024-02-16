@@ -11,8 +11,8 @@ test("the right configuration is created", () => {
   expect(config.serviceAccountToken).toBe("ops_...");
   expect(config.integrationName).toBe("Test app");
   expect(config.integrationVersion).toBe("v1");
-  expect(config.requestLibraryName).toBe("TBD");
-  expect(config.requestLibraryVersion).toBe("TBD");
+  expect(config.requestLibraryName).toBe("Fetch API");
+  expect(config.requestLibraryVersion).toBe("Fetch API");
   expect(config.programmingLanguage).toBe("JS");
   expect(config.sdkVersion).toBe("0010001");
   expect(config.os).toBe("Darwin");

@@ -56,8 +56,8 @@ export function createClientAuthConfig(
     sdkVersion: VERSION,
     integrationName: userConfig.integrationName,
     integrationVersion: userConfig.integrationVersion,
-    requestLibraryName: "TBD",
-    requestLibraryVersion: "TBD",
+    requestLibraryName: "Fetch API",
+    requestLibraryVersion: "Fetch API",
     // Only supported on Node.js
     os: os.type(),
     osVersion: os.version(),
