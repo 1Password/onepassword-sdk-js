@@ -1,9 +1,15 @@
 const { createClient, DEFAULT_INTEGRATION_VERSION } = require("../dist/client.js");
-const { parentPort, isMainThread } = require('node:worker_threads');
+const { parentPort, isMainThread, workerData } = require('node:worker_threads');
 
 async function retrieveSecret() {
+    let saToken;
+    if (isMainThread) {
+        saToken = process.env.OP_SERVICE_ACCOUNT_TOKEN;
+    } else {
+        saToken = workerData;
+    }
     const client = await createClient({
-        auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+        auth: saToken,
         integrationName: "Integration_Test_JS",
         integrationVersion: DEFAULT_INTEGRATION_VERSION,
     })

@@ -22,7 +22,7 @@ test("test retrieving of secret by 5 async clients", async () => {
 test("test retrieving of secrets in parallel", async () => {
     let promises = []
     const p1 = new Promise((resolve, reject) => {
-        const worker = new Worker(path.join(__dirname, 'task.js'));
+        const worker = new Worker(path.join(__dirname, 'task.js'), { workerData: process.env.OP_SERVICE_ACCOUNT_TOKEN });
         worker.on("message", msg => resolve(msg));
         worker.on("error", err => reject(err));
         worker.on("exit", _ => reject());
@@ -30,7 +30,7 @@ test("test retrieving of secrets in parallel", async () => {
     promises.push(p1.then(res => expect(res).toBe("password")))
 
     const p2 = new Promise((resolve, reject) => {
-        const worker = new Worker(path.join(__dirname, 'task.js'));
+        const worker = new Worker(path.join(__dirname, 'task.js'), { workerData: process.env.OP_SERVICE_ACCOUNT_TOKEN });
         worker.on("message", msg => resolve(msg));
         worker.on("error", err => reject(err));
         worker.on("exit", _ => reject());
