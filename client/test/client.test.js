@@ -1,5 +1,5 @@
-import { createClientAuthConfig, createClientWithCore } from "../dist/client.js";
-import { TestCore } from "./test_core";
+const { createClientAuthConfig, createClientWithCore } = require("../dist/client.js");
+const { TestCore } = require("./test_core");
 
 test("the right configuration is created", () => {
   const config = createClientAuthConfig({
