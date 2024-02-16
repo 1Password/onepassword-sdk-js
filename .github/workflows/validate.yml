@@ -13,4 +13,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
       - run: npm test
