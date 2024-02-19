@@ -22,7 +22,7 @@ test("the right configuration is created", () => {
 });
 
 test("authenticated client resolves secrets correctly", () => {
-  const core = new TestCore(0);
+  const core = new TestCore(1000);
   createClientWithCore(
     {
       auth: "test token",
@@ -32,10 +32,10 @@ test("authenticated client resolves secrets correctly", () => {
     core,
   ).then((client) => {
     expect(client.secrets).toBeDefined();
-    expect(core.id).toBe(1);
+    expect(core.id).toBe(1001);
     client.secrets.resolve("secret_ref").then((secret) => {
       expect(secret).toBe(
-        "method Resolve called on client 0 with parameters secret_ref",
+        "method Resolve called on client 1000 with parameters secret_ref",
       );
     });
   });
