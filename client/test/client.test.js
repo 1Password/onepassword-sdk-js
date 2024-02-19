@@ -15,7 +15,8 @@ test("the right configuration is created", () => {
   expect(config.requestLibraryVersion).toBe("Fetch API");
   expect(config.programmingLanguage).toBe("JS");
   expect(config.sdkVersion).toBe("0010001");
-  expect(config.os).toBe("Darwin");
+  // os is Linux because this test is mostly run in the pipeline
+  expect(config.os).toBe("Linux");
   expect(config.osVersion).toContain("Version");
   expect(config.architecture).toContain("64");
 });
