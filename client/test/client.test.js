@@ -17,7 +17,7 @@ test("the right configuration is created", () => {
   expect(config.sdkVersion).toBe("0010001");
   // os is Linux because this test is mostly run in the pipeline
   expect(config.os).toBe("Linux");
-  expect(config.osVersion).toContain("Version");
+  expect(config.osVersion).toBe("0.0.0");
   expect(config.architecture).toContain("64");
 });
 

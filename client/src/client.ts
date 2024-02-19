@@ -50,6 +50,8 @@ export class Client {
 export function createClientAuthConfig(
   userConfig: ClientConfiguration,
 ): ClientAuthConfig {
+  // TODO: Add logic for computing the correct sanitized version value for each platform
+  const defaultOsVersion = "0.0.0"
   return {
     serviceAccountToken: userConfig.auth,
     programmingLanguage: LANGUAGE,
@@ -60,7 +62,7 @@ export function createClientAuthConfig(
     requestLibraryVersion: "Fetch API",
     // Only supported on Node.js
     os: os.type(),
-    osVersion: os.version(),
+    osVersion: defaultOsVersion,
     architecture: os.arch(),
   };
 }
