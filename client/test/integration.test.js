@@ -2,15 +2,16 @@ const { Worker } = require('node:worker_threads');
 const path = require("path");
 const { retrieveSecret } = require('./task.js');
 
-test("test simple retrieving of secret", () => {
-    retrieveSecret().then(secret => {
+test("test simple retrieving of secret", async () => {
+    let p = retrieveSecret().then(secret => {
         expect(secret).toBe("password")
     })
+    await p
 });
 
 test("test retrieving of secret by 5 async clients", async () => {
     let promises = []
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 5; i++) {
         promises.push(retrieveSecret().then(secret => {
             expect(secret).toBe("password")
         }))

@@ -10,9 +10,8 @@ const LANGUAGE = "JS";
 const VERSION = "0010001"; // v0.1.0
 
 const finalizationRegistry = new FinalizationRegistry(
-  (heldClientId: number) => {
-    const sharedCore = new SharedCore();
-    sharedCore.releaseClient(heldClientId);
+  (heldClient: InnerClient) => {
+    heldClient.core.releaseClient(heldClient.id);
   },
 );
 
@@ -34,7 +33,7 @@ export async function createClientWithCore(
   };
   const client = new Client(inner);
   // Cleans up associated memory from core when client instance goes out of scope.
-  finalizationRegistry.register(client, inner.id);
+  finalizationRegistry.register(client, inner);
   return client;
 }
 
