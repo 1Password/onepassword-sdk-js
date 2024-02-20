@@ -1,5 +1,6 @@
-import { createClientAuthConfig, createClientWithCore } from "../dist/client.js";
-import { TestCore } from "./test_core";
+const { createClientAuthConfig, createClientWithCore } = require("../dist/client.js");
+const { TestCore } = require("./test_core");
+const { type } = require("os");
 
 test("the right configuration is created", () => {
   const config = createClientAuthConfig({
@@ -15,13 +16,14 @@ test("the right configuration is created", () => {
   expect(config.requestLibraryVersion).toBe("Fetch API");
   expect(config.programmingLanguage).toBe("JS");
   expect(config.sdkVersion).toBe("0010001");
-  expect(config.os).toBe("Darwin");
-  expect(config.osVersion).toContain("Version");
+  // os is Linux because this test is mostly run in the pipeline
+  expect(config.os).toBe(type());
+  expect(config.osVersion).toBe("0.0.0");
   expect(config.architecture).toContain("64");
 });
 
 test("authenticated client resolves secrets correctly", () => {
-  const core = new TestCore(0);
+  const core = new TestCore();
   createClientWithCore(
     {
       auth: "test token",
