@@ -4,8 +4,8 @@ import { ClientAuthConfig, Core, InvokeConfig } from "../src/core";
 export class TestCore implements Core {
   id: number;
 
-  constructor(id: number) {
-    this.id = id;
+  constructor() {
+    this.id = 0;
   }
   async initClient(config: ClientAuthConfig): Promise<string> {
     const res = this.id.toString();
@@ -24,7 +24,5 @@ export class TestCore implements Core {
     );
   }
 
-  async releaseClient(clientId: number) {
-    this.id--;
-  }
+  async releaseClient(clientId: number) { }
 }

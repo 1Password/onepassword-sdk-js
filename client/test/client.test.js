@@ -1,5 +1,6 @@
 const { createClientAuthConfig, createClientWithCore } = require("../dist/client.js");
 const { TestCore } = require("./test_core");
+const { type } = require("os");
 
 test("the right configuration is created", () => {
   const config = createClientAuthConfig({
@@ -16,13 +17,13 @@ test("the right configuration is created", () => {
   expect(config.programmingLanguage).toBe("JS");
   expect(config.sdkVersion).toBe("0010001");
   // os is Linux because this test is mostly run in the pipeline
-  expect(config.os).toBe("Linux");
+  expect(config.os).toBe(type());
   expect(config.osVersion).toBe("0.0.0");
   expect(config.architecture).toContain("64");
 });
 
 test("authenticated client resolves secrets correctly", () => {
-  const core = new TestCore(1000);
+  const core = new TestCore();
   createClientWithCore(
     {
       auth: "test token",
@@ -32,10 +33,10 @@ test("authenticated client resolves secrets correctly", () => {
     core,
   ).then((client) => {
     expect(client.secrets).toBeDefined();
-    expect(core.id).toBe(1001);
+    expect(core.id).toBe(1);
     client.secrets.resolve("secret_ref").then((secret) => {
       expect(secret).toBe(
-        "method Resolve called on client 1000 with parameters secret_ref",
+        "method Resolve called on client 0 with parameters secret_ref",
       );
     });
   });
