@@ -14,7 +14,7 @@ async function retrieveSecret() {
         integrationVersion: DEFAULT_INTEGRATION_VERSION,
     })
 
-    return await client.secrets.resolve("op://testingVault/Real Login/password")
+    return await client.secrets.resolve("op://gowwbvgow7kxocrfmfvtwni6vi/6ydrn7ne6mwnqc2prsbqx4i4aq/password")
 }
 
 module.exports = { retrieveSecret }
