@@ -11,11 +11,11 @@ export interface SecretsAPI {
 export class SecretsSource implements SecretsAPI {
   #inner: InnerClient;
 
-  constructor(inner: InnerClient) {
+  public constructor(inner: InnerClient) {
     this.#inner = inner;
   }
 
-  resolve(secretReference: string): Promise<string> {
+  public async resolve(secretReference: string): Promise<string> {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
       invocation: {

@@ -41,18 +41,18 @@ interface Invocation {
 
 // An implementation of the `Core` interface that shares resources across all clients.
 export class SharedCore implements Core {
-  async initClient(config: ClientAuthConfig): Promise<string> {
-    const serializedConfig = JSON.stringify(config)
-    return init_client(serializedConfig)
+  public async initClient(config: ClientAuthConfig): Promise<string> {
+    const serializedConfig = JSON.stringify(config);
+    return init_client(serializedConfig);
   }
 
-  async invoke(config: InvokeConfig): Promise<string> {
-    const serializedConfig = JSON.stringify(config)
-    return invoke(serializedConfig)
+  public async invoke(config: InvokeConfig): Promise<string> {
+    const serializedConfig = JSON.stringify(config);
+    return invoke(serializedConfig);
   }
 
-  releaseClient(clientId: number): void {
-    const serializedId = JSON.stringify(clientId)
-    release_client(serializedId)
+  public releaseClient(clientId: number): void {
+    const serializedId = JSON.stringify(clientId);
+    release_client(serializedId);
   }
 }

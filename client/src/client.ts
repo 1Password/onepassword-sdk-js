@@ -1,7 +1,7 @@
+import * as os from "os";
 import { SecretsAPI, SecretsSource } from "./secrets.js";
 import { ClientAuthConfig, Core, SharedCore } from "./core.js";
 import { ClientConfiguration, InnerClient } from "./configuration.js";
-import * as os from "os";
 
 export const DEFAULT_INTEGRATION_NAME = "Unknown";
 export const DEFAULT_INTEGRATION_VERSION = "Unknown";
@@ -15,21 +15,27 @@ const finalizationRegistry = new FinalizationRegistry(
   },
 );
 
+/**
+ * Creates a default 1Password SDK client.
+ * @returns The authenticated 1Password SDK client.
+ */
 export async function createClient(
   config: ClientConfiguration,
 ): Promise<Client> {
   return createClientWithCore(config, new SharedCore());
 }
 
-export async function createClientWithCore(
+
+// Creates a 1Password SDK client with a given core implementation.
+async function createClientWithCore(
   config: ClientConfiguration,
   core: Core,
 ): Promise<Client> {
   const authConfig = createClientAuthConfig(config);
   const clientID = await core.initClient(authConfig);
   const inner: InnerClient = {
-    id: parseInt(clientID),
-    core: core,
+    id: parseInt(clientID, 10),
+    core,
   };
   const client = new Client(inner);
   // Cleans up associated memory from core when client instance goes out of scope.
@@ -41,16 +47,16 @@ export async function createClientWithCore(
 export class Client {
   public secrets: SecretsAPI;
 
-  constructor(innerClient: InnerClient) {
+  public constructor(innerClient: InnerClient) {
     this.secrets = new SecretsSource(innerClient);
   }
 }
 
-export function createClientAuthConfig(
+function createClientAuthConfig(
   userConfig: ClientConfiguration,
 ): ClientAuthConfig {
   // TODO: Add logic for computing the correct sanitized version value for each platform
-  const defaultOsVersion = "0.0.0"
+  const defaultOsVersion = "0.0.0";
   return {
     serviceAccountToken: userConfig.auth,
     programmingLanguage: LANGUAGE,
