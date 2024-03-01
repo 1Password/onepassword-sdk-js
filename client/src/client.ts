@@ -25,8 +25,11 @@ export async function createClient(
   return createClientWithCore(config, new SharedCore());
 }
 
-// Creates a 1Password SDK client with a given core implementation.
-async function createClientWithCore(
+/**
+ * Creates a 1Password SDK client with a given core implementation.
+ * @returns The authenticated 1Password SDK client.
+ */
+export async function createClientWithCore(
   config: ClientConfiguration,
   core: Core,
 ): Promise<Client> {
@@ -51,7 +54,11 @@ export class Client {
   }
 }
 
-function createClientAuthConfig(
+/**
+ * Creates a default client configuration.
+ * @returns The client configuration to instantiate the client with.
+ */
+export function createClientAuthConfig(
   userConfig: ClientConfiguration,
 ): ClientAuthConfig {
   // TODO: Add logic for computing the correct sanitized version value for each platform
