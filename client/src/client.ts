@@ -25,7 +25,6 @@ export async function createClient(
   return createClientWithCore(config, new SharedCore());
 }
 
-
 // Creates a 1Password SDK client with a given core implementation.
 async function createClientWithCore(
   config: ClientConfiguration,
