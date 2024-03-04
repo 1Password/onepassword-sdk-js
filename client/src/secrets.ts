@@ -2,13 +2,13 @@ import { InvokeConfig } from "./core.js";
 import { InnerClient } from "./configuration.js";
 
 // Exposes functionality around secrets.
-export interface SecretsAPI {
+export interface SecretsApi {
   // Takes as input a secret reference and returns the secret to which it points.
   resolve(secretReference: string): Promise<string>;
 }
 
 // An implementation of the `SecretsAPI` that wraps a `Core`.
-export class SecretsSource implements SecretsAPI {
+export class SecretsSource implements SecretsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {

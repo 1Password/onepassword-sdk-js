@@ -1,5 +1,5 @@
 import * as os from "os";
-import { SecretsAPI, SecretsSource } from "./secrets.js";
+import { SecretsApi, SecretsSource } from "./secrets.js";
 import { ClientAuthConfig, Core, SharedCore } from "./core.js";
 import { ClientConfiguration, InnerClient } from "./configuration.js";
 
@@ -34,9 +34,9 @@ export async function createClientWithCore(
   core: Core,
 ): Promise<Client> {
   const authConfig = createClientAuthConfig(config);
-  const clientID = await core.initClient(authConfig);
+  const clientId = await core.initClient(authConfig);
   const inner: InnerClient = {
-    id: parseInt(clientID, 10),
+    id: parseInt(clientId, 10),
     core,
   };
   const client = new Client(inner);
@@ -47,7 +47,7 @@ export async function createClientWithCore(
 
 // Client represents a client instance of the SDK.
 export class Client {
-  public secrets: SecretsAPI;
+  public secrets: SecretsApi;
 
   public constructor(innerClient: InnerClient) {
     this.secrets = new SecretsSource(innerClient);
