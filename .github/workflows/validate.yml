@@ -10,7 +10,7 @@ on:
 jobs:
 
   test:
-    name:  Test
+    name: Lint & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +25,14 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm install
 
+      - name: Style
+        run: npm run prettier
+      
+      - name: Lint
+        run: npm run eslint
+
       - name: Test
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: npm test
+

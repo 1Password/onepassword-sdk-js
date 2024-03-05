@@ -1,0 +1,24 @@
+{
+	"extends": [
+		"@1password"
+	],
+	"overrides": [
+		{
+			"files": [
+				"*.ts"
+			],
+			"parserOptions": {
+				"project": [
+					"./tsconfig.json"
+				]
+			},
+			"rules": {
+				"no-shadow": "off",
+				"jsdoc/require-param": "off",
+				"jsdoc/require-returns": "off",
+				"import/no-unresolved": 0
+			}
+		}
+	],
+	"parser": "@typescript-eslint/parser"
+}

@@ -6,6 +6,8 @@
     "build": "tsc",
     "test": "npm run build && jest",
     "prettier": "prettier --check 'src/*.ts'",
+    "prettier-fix": "prettier --write 'src/*.ts'",
+    "eslint": "eslint -c .eslintrc.json 'src/*.ts'",
     "prepare": "npm run build"
   },
   "author": "1Password",

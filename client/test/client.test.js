@@ -1,9 +1,9 @@
-const { createClientAuthConfig, createClientWithCore } = require("../dist/client.js");
+const { clientAuthConfig, createClientWithCore } = require("../dist/client.js");
 const { TestCore } = require("./test_core");
 const { type } = require("os");
 
 test("the right configuration is created", () => {
-  const config = createClientAuthConfig({
+  const config = clientAuthConfig({
     auth: "ops_...",
     integrationName: "Test app",
     integrationVersion: "v1",
