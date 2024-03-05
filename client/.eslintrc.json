@@ -15,7 +15,8 @@
 			"rules": {
 				"no-shadow": "off",
 				"jsdoc/require-param": "off",
-				"jsdoc/require-returns": "off"
+				"jsdoc/require-returns": "off",
+				"import/no-unresolved": 0
 			}
 		}
 	],

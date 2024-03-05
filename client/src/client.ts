@@ -19,21 +19,19 @@ const finalizationRegistry = new FinalizationRegistry(
  * Creates a default 1Password SDK client.
  * @returns The authenticated 1Password SDK client.
  */
-export async function createClient(
+export const createClient = async (
   config: ClientConfiguration,
-): Promise<Client> {
-  return createClientWithCore(config, new SharedCore());
-}
+): Promise<Client> => createClientWithCore(config, new SharedCore());
 
 /**
  * Creates a 1Password SDK client with a given core implementation.
  * @returns The authenticated 1Password SDK client.
  */
-export async function createClientWithCore(
+export const createClientWithCore = async (
   config: ClientConfiguration,
   core: Core,
-): Promise<Client> {
-  const authConfig = createClientAuthConfig(config);
+): Promise<Client> => {
+  const authConfig = clientAuthConfig(config);
   const clientId = await core.initClient(authConfig);
   const inner: InnerClient = {
     id: parseInt(clientId, 10),
@@ -43,7 +41,7 @@ export async function createClientWithCore(
   // Cleans up associated memory from core when client instance goes out of scope.
   finalizationRegistry.register(client, inner);
   return client;
-}
+};
 
 // Client represents a client instance of the SDK.
 export class Client {
@@ -58,9 +56,9 @@ export class Client {
  * Creates a default client configuration.
  * @returns The client configuration to instantiate the client with.
  */
-export function createClientAuthConfig(
+export const clientAuthConfig = (
   userConfig: ClientConfiguration,
-): ClientAuthConfig {
+): ClientAuthConfig => {
   // TODO: Add logic for computing the correct sanitized version value for each platform
   const defaultOsVersion = "0.0.0";
   return {
@@ -76,4 +74,4 @@ export function createClientAuthConfig(
     osVersion: defaultOsVersion,
     architecture: os.arch(),
   };
-}
+};

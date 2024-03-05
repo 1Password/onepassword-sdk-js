@@ -10,7 +10,7 @@ on:
 jobs:
 
   test:
-    name: Style & Test
+    name: Lint & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +27,9 @@ jobs:
 
       - name: Style
         run: npm run prettier
+      
+      - name: Lint
+        run: npm run eslint
 
       - name: Test
         env:

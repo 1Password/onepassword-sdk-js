@@ -8,6 +8,7 @@
     "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples",
     "prepare": "npm run build --workspace client",
     "prettier": "npm run prettier --workspaces --if-present",
+    "prettier-fix": "npm run prettier-fix --workspaces --if-present",
     "eslint": "npm run eslint --workspaces --if-present"
   },
   "workspaces": [
