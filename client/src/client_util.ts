@@ -1,5 +1,4 @@
 import * as os from "os";
-import { SecretsApi, SecretsSource } from "./secrets.js";
 import { ClientAuthConfig, Core, SharedCore } from "./core.js";
 import { ClientConfiguration, InnerClient } from "./configuration.js";
 
@@ -42,15 +41,6 @@ export const createClientWithCore = async (
   finalizationRegistry.register(client, inner);
   return client;
 };
-
-// Client represents a client instance of the SDK.
-export class Client {
-  public secrets: SecretsApi;
-
-  public constructor(innerClient: InnerClient) {
-    this.secrets = new SecretsSource(innerClient);
-  }
-}
 
 /**
  * Creates a default client configuration.
