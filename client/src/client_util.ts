@@ -1,6 +1,7 @@
 import * as os from "os";
 import { ClientAuthConfig, Core, SharedCore } from "./core.js";
 import { ClientConfiguration, InnerClient } from "./configuration.js";
+import { Client } from "./client.js";
 
 export const DEFAULT_INTEGRATION_NAME = "Unknown";
 export const DEFAULT_INTEGRATION_VERSION = "Unknown";
