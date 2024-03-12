@@ -15,7 +15,7 @@ To use the 1Password JavaScript SDK in your project:
 export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
 ```
 
-3. Set the NPM_TOKEN required for downloading tha private sdk package:
+3. Set the environment variable `NPM_TOKEN` to the private beta token provided by 1Password:
 
 ```bash
 export NPM_TOKEN=<token-provided-by-1password-on-private-beta-registration>
