@@ -15,7 +15,13 @@ To use the 1Password JavaScript SDK in your project:
 export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
 ```
 
-2. Install the 1Password JavaScript SDK:
+3. Set the environment variable `NPM_TOKEN` to the private beta token provided by 1Password:
+
+```bash
+export NPM_TOKEN=<token-provided-by-1password-on-private-beta-registration>
+```
+
+4. Install the 1Password JavaScript SDK:
 
 ```bash
 ## NPM
@@ -32,7 +38,7 @@ pnpm add @1password/sdk
 yarn add @1password/sdk
 ```
 
-3. Use the SDK in your project:
+5. Use the SDK in your project:
 
 ```js
 import { createClient } from "@1password/sdk";
