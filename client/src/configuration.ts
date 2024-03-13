@@ -8,10 +8,11 @@ export interface InnerClient {
 
 // Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {
+  // Currently, Auth can only be a service account token. Read more on how to get started with service accounts: https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account 
   auth: Auth;
   integrationName: string;
   integrationVersion: string;
 }
 
-// Sets the authentication method. Use `string` to authenticate with a service account token.
+// Sets the authentication method. Use a token as a `string` to authenticate with a service account token.
 type Auth = string;
