@@ -7,7 +7,7 @@ body:
     attributes:
       label: Scenario & Reproduction Steps
       description: When do you encounter this problem?
-      placeholder: "Please share as much context as you can about when you encounter this problem. If you could, steps to reproduce are immensely helpful."
+      placeholder: "Please share as much context as you can about when you encounter this problem. If possible, sharing the steps to reproduce is immensely helpful."
     validations:
       required: true
   - type: textarea
