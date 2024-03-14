@@ -31,17 +31,17 @@ export NPM_TOKEN=<token-provided-by-1password-on-private-beta-registration>
 
 ```bash
 ## NPM
-npm install @1password/sdk
+npm install @1password/sdk@0.1.0-beta.2
 ```
 
 ```bash
 ## PNPM
-pnpm add @1password/sdk
+pnpm add @1password/sdk@0.1.0-beta.2
 ```
 
 ```bash
 ## Yarn
-yarn add @1password/sdk
+yarn add @1password/sdk@0.1.0-beta.2
 ```
 
 6. Use the SDK in your project:
