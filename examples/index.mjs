@@ -3,8 +3,8 @@ import { createClient } from "@1password/sdk";
 // Creates an authenticated client.
 const client = await createClient({
   auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-  integrationName: "My_Project_Name",
-  integrationVersion: "x.x.x",
+  integrationName: "My 1Password Integration",
+  integrationVersion: "v1.0.0",
 });
 
 // Fetches a secret.
