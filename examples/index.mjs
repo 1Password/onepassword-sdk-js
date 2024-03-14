@@ -1,10 +1,10 @@
-import { createClient, DEFAULT_INTEGRATION_NAME, DEFAULT_INTEGRATION_VERSION } from "@1password/sdk";
+import { createClient } from "@1password/sdk";
 
 // Creates an authenticated client.
 const client = await createClient({
   auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-  integrationName: DEFAULT_INTEGRATION_NAME,
-  integrationVersion: DEFAULT_INTEGRATION_VERSION,
+  integrationName: "My_Project_Name",
+  integrationVersion: "x.x.x",
 });
 
 // Fetches a secret.

@@ -4,8 +4,8 @@ async function fetchSecret() {
   // Creates an authenticated client.
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    integrationName: sdk.DEFAULT_INTEGRATION_NAME,
-    integrationVersion: sdk.DEFAULT_INTEGRATION_VERSION,
+    integrationName: "My_Project_Name",
+    integrationVersion: "x.x.x",
   });
 
   // Fetches a secret.
