@@ -2,7 +2,8 @@
 
 # Module: configuration
 
+Module defining configuration options for the 1Password SDK.
+
 ## Interfaces
 
 - [ClientConfiguration](../interfaces/configuration.ClientConfiguration.md)
-- [InnerClient](../interfaces/configuration.InnerClient.md)

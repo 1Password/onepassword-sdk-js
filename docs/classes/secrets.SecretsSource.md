@@ -4,39 +4,11 @@
 
 [secrets](../modules/secrets.md).SecretsSource
 
+Exposes functionality for retrieving secrets.
+
 ## Implements
 
 - [`SecretsApi`](../interfaces/secrets.SecretsApi.md)
-
-## Constructors
-
-### constructor
-
-• **new SecretsSource**(`inner`): [`SecretsSource`](secrets.SecretsSource.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `inner` | [`InnerClient`](../interfaces/configuration.InnerClient.md) |
-
-#### Returns
-
-[`SecretsSource`](secrets.SecretsSource.md)
-
-#### Defined in
-
-[secrets.ts:14](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/secrets.ts#L14)
-
-## Properties
-
-### #inner
-
-• `Private` **#inner**: [`InnerClient`](../interfaces/configuration.InnerClient.md)
-
-#### Defined in
-
-[secrets.ts:12](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/secrets.ts#L12)
 
 ## Methods
 
@@ -44,15 +16,19 @@
 
 ▸ **resolve**(`secretReference`): `Promise`\<`string`\>
 
+Takes as input a secret reference and returns the secret to which it points.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `secretReference` | `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `secretReference` | `string` | A string containing a secret reference (string of the form "op://vault/item/field"). |
 
 #### Returns
 
 `Promise`\<`string`\>
+
+The value of the referenced 1Password item field.
 
 #### Implementation of
 
@@ -60,4 +36,4 @@
 
 #### Defined in
 
-[secrets.ts:18](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/secrets.ts#L18)
+[secrets.ts:41](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/secrets.ts#L41)

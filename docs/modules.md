@@ -6,5 +6,4 @@
 
 - [client](modules/client.md)
 - [configuration](modules/configuration.md)
-- [core](modules/core.md)
 - [secrets](modules/secrets.md)

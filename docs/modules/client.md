@@ -2,6 +2,8 @@
 
 # Module: client
 
+Module containing the 1Password SDK Client, which can be used to authenticate and access data stored in 1Password programmatically.
+
 ## Classes
 
 - [Client](../classes/client.Client.md)
@@ -14,7 +16,7 @@
 
 #### Defined in
 
-[client.ts:6](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L6)
+[client.ts:10](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/client.ts#L10)
 
 ___
 
@@ -24,13 +26,13 @@ ___
 
 #### Defined in
 
-[client.ts:7](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L7)
+[client.ts:11](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/client.ts#L11)
 
 ## Functions
 
 ### clientAuthConfig
 
-▸ **clientAuthConfig**(`userConfig`): [`ClientAuthConfig`](../interfaces/core.ClientAuthConfig.md)
+▸ **clientAuthConfig**(`userConfig`): `ClientAuthConfig`
 
 Creates a default client configuration.
 
@@ -42,13 +44,13 @@ Creates a default client configuration.
 
 #### Returns
 
-[`ClientAuthConfig`](../interfaces/core.ClientAuthConfig.md)
+`ClientAuthConfig`
 
 The client configuration to instantiate the client with.
 
 #### Defined in
 
-[client.ts:59](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L59)
+[client.ts:63](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/client.ts#L63)
 
 ___
 
@@ -72,7 +74,7 @@ The authenticated 1Password SDK client.
 
 #### Defined in
 
-[client.ts:22](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L22)
+[client.ts:26](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/client.ts#L26)
 
 ___
 
@@ -87,7 +89,7 @@ Creates a 1Password SDK client with a given core implementation.
 | Name | Type |
 | :------ | :------ |
 | `config` | [`ClientConfiguration`](../interfaces/configuration.ClientConfiguration.md) |
-| `core` | [`Core`](../interfaces/core.Core.md) |
+| `core` | `Core` |
 
 #### Returns
 
@@ -97,4 +99,4 @@ The authenticated 1Password SDK client.
 
 #### Defined in
 
-[client.ts:30](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L30)
+[client.ts:34](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/client.ts#L34)

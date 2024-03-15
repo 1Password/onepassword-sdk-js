@@ -4,6 +4,8 @@
 
 [configuration](../modules/configuration.md).ClientConfiguration
 
+Defines all parameters that can be used to configure the 1Password SDK Client.
+
 ## Properties
 
 ### auth
@@ -12,7 +14,7 @@
 
 #### Defined in
 
-[configuration.ts:11](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/configuration.ts#L11)
+[configuration.ts:20](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/configuration.ts#L20)
 
 ___
 
@@ -22,7 +24,7 @@ ___
 
 #### Defined in
 
-[configuration.ts:12](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/configuration.ts#L12)
+[configuration.ts:21](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/configuration.ts#L21)
 
 ___
 
@@ -32,4 +34,4 @@ ___
 
 #### Defined in
 
-[configuration.ts:13](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/configuration.ts#L13)
+[configuration.ts:22](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/configuration.ts#L22)
