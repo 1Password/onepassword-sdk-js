@@ -8,13 +8,12 @@
     "prettier": "prettier --check 'src/*.ts'",
     "prettier-fix": "prettier --write 'src/*.ts'",
     "eslint": "eslint -c .eslintrc.json 'src/*.ts'",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "gen-docs": "typedoc ./src/*.ts --out ../docs"
   },
   "author": "1Password",
   "license": "MIT",
-  "files": [
-    "./dist"
-  ],
+  "files": ["./dist"],
   "exports": {
     ".": {
       "types": "./dist/client.d.ts",
@@ -40,6 +39,8 @@
     "typescript": "^5.3.3",
     "@types/node": "^20.11.0",
     "@babel/preset-env": "^7.23.8",
-    "babel-jest": "^29.7.0"
+    "babel-jest": "^29.7.0",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-markdown": "^3.17.1"
   }
 }

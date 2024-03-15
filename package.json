@@ -9,11 +9,8 @@
     "prepare": "npm run build --workspace client",
     "prettier": "npm run prettier --workspaces --if-present",
     "prettier-fix": "npm run prettier-fix --workspaces --if-present",
-    "eslint": "npm run eslint --workspaces --if-present"
+    "eslint": "npm run eslint --workspaces --if-present",
+    "gen-docs": "npm run gen-docs --workspace client"
   },
-  "workspaces": [
-    "client",
-    "examples",
-    "wasm"
-  ]
+  "workspaces": ["client", "examples", "wasm"]
 }

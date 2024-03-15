@@ -22,7 +22,7 @@
 
 #### Defined in
 
-client.ts:50
+[client.ts:50](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L50)
 
 ## Properties
 
@@ -32,4 +32,4 @@ client.ts:50
 
 #### Defined in
 
-client.ts:48
+[client.ts:48](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L48)

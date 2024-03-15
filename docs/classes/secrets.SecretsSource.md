@@ -4,8 +4,6 @@
 
 [secrets](../modules/secrets.md).SecretsSource
 
-Exposes functionality related to secret references.
-
 ## Implements
 
 - [`SecretsApi`](../interfaces/secrets.SecretsApi.md)
@@ -28,7 +26,7 @@ Exposes functionality related to secret references.
 
 #### Defined in
 
-secrets.ts:18
+[secrets.ts:14](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/secrets.ts#L14)
 
 ## Properties
 
@@ -38,15 +36,13 @@ secrets.ts:18
 
 #### Defined in
 
-secrets.ts:16
+[secrets.ts:12](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/secrets.ts#L12)
 
 ## Methods
 
 ### resolve
 
 ▸ **resolve**(`secretReference`): `Promise`\<`string`\>
-
-Takes as input a secret reference and returns the secret to which it points.
 
 #### Parameters
 
@@ -64,4 +60,4 @@ Takes as input a secret reference and returns the secret to which it points.
 
 #### Defined in
 
-secrets.ts:23
+[secrets.ts:18](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/secrets.ts#L18)

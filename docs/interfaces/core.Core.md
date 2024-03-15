@@ -26,7 +26,7 @@
 
 #### Defined in
 
-core.ts:6
+[core.ts:6](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L6)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-core.ts:8
+[core.ts:8](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L8)
 
 ___
 
@@ -66,4 +66,4 @@ ___
 
 #### Defined in
 
-core.ts:10
+[core.ts:10](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L10)

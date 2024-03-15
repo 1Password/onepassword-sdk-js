@@ -12,7 +12,7 @@
 
 #### Defined in
 
-core.ts:30
+[core.ts:30](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L30)
 
 ___
 
@@ -22,4 +22,4 @@ ___
 
 #### Defined in
 
-core.ts:31
+[core.ts:31](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L31)

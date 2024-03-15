@@ -12,7 +12,7 @@
 
 #### Defined in
 
-core.ts:24
+[core.ts:24](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L24)
 
 ___
 
@@ -22,7 +22,7 @@ ___
 
 #### Defined in
 
-core.ts:18
+[core.ts:18](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L18)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-core.ts:19
+[core.ts:19](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L19)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-core.ts:22
+[core.ts:22](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L22)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-core.ts:23
+[core.ts:23](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L23)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-core.ts:16
+[core.ts:16](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L16)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-core.ts:20
+[core.ts:20](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L20)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-core.ts:21
+[core.ts:21](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L21)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-core.ts:17
+[core.ts:17](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L17)
 
 ___
 
@@ -102,4 +102,4 @@ ___
 
 #### Defined in
 
-core.ts:15
+[core.ts:15](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L15)

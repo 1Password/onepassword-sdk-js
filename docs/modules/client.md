@@ -14,7 +14,7 @@
 
 #### Defined in
 
-client.ts:6
+[client.ts:6](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L6)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-client.ts:7
+[client.ts:7](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L7)
 
 ## Functions
 
@@ -48,7 +48,7 @@ The client configuration to instantiate the client with.
 
 #### Defined in
 
-client.ts:59
+[client.ts:59](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L59)
 
 ___
 
@@ -72,7 +72,7 @@ The authenticated 1Password SDK client.
 
 #### Defined in
 
-client.ts:22
+[client.ts:22](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L22)
 
 ___
 
@@ -97,4 +97,4 @@ The authenticated 1Password SDK client.
 
 #### Defined in
 
-client.ts:30
+[client.ts:30](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/client.ts#L30)

@@ -40,7 +40,7 @@
 
 #### Defined in
 
-core.ts:44
+[core.ts:44](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L44)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-core.ts:49
+[core.ts:49](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L49)
 
 ___
 
@@ -88,4 +88,4 @@ ___
 
 #### Defined in
 
-core.ts:54
+[core.ts:54](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/core.ts#L54)

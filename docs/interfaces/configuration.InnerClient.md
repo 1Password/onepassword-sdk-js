@@ -12,7 +12,7 @@
 
 #### Defined in
 
-configuration.ts:6
+[configuration.ts:6](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/configuration.ts#L6)
 
 ___
 
@@ -22,4 +22,4 @@ ___
 
 #### Defined in
 
-configuration.ts:5
+[configuration.ts:5](https://github.com/1Password/1password-js-sdk/blob/14cb468/client/src/configuration.ts#L5)
