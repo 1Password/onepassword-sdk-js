@@ -10,20 +10,6 @@ Exposes functionality related to secret references.
 
 - [`SecretsApi`](../interfaces/secrets.SecretsApi.md)
 
-## Table of contents
-
-### Constructors
-
-- [constructor](secrets.SecretsSource.md#constructor)
-
-### Properties
-
-- [#inner](secrets.SecretsSource.md##inner)
-
-### Methods
-
-- [resolve](secrets.SecretsSource.md#resolve)
-
 ## Constructors
 
 ### constructor

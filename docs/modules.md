@@ -2,9 +2,7 @@
 
 # @1password/sdk
 
-## Table of contents
-
-### Modules
+## Modules
 
 - [client](modules/client.md)
 - [configuration](modules/configuration.md)

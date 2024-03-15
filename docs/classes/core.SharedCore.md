@@ -8,18 +8,6 @@
 
 - [`Core`](../interfaces/core.Core.md)
 
-## Table of contents
-
-### Constructors
-
-- [constructor](core.SharedCore.md#constructor)
-
-### Methods
-
-- [initClient](core.SharedCore.md#initclient)
-- [invoke](core.SharedCore.md#invoke)
-- [releaseClient](core.SharedCore.md#releaseclient)
-
 ## Constructors
 
 ### constructor

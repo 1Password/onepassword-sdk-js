@@ -10,12 +10,6 @@ Exposes functionality related to secret references.
 
 - [`SecretsSource`](../classes/secrets.SecretsSource.md)
 
-## Table of contents
-
-### Methods
-
-- [resolve](secrets.SecretsApi.md#resolve)
-
 ## Methods
 
 ### resolve

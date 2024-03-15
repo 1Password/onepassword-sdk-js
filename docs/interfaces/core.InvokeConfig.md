@@ -4,13 +4,6 @@
 
 [core](../modules/core.md).InvokeConfig
 
-## Table of contents
-
-### Properties
-
-- [clientId](core.InvokeConfig.md#clientid)
-- [invocation](core.InvokeConfig.md#invocation)
-
 ## Properties
 
 ### clientId

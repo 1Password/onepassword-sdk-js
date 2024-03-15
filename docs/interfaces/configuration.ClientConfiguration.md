@@ -4,14 +4,6 @@
 
 [configuration](../modules/configuration.md).ClientConfiguration
 
-## Table of contents
-
-### Properties
-
-- [auth](configuration.ClientConfiguration.md#auth)
-- [integrationName](configuration.ClientConfiguration.md#integrationname)
-- [integrationVersion](configuration.ClientConfiguration.md#integrationversion)
-
 ## Properties
 
 ### auth

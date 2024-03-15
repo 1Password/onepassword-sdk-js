@@ -2,9 +2,7 @@
 
 # Module: configuration
 
-## Table of contents
-
-### Interfaces
+## Interfaces
 
 - [ClientConfiguration](../interfaces/configuration.ClientConfiguration.md)
 - [InnerClient](../interfaces/configuration.InnerClient.md)

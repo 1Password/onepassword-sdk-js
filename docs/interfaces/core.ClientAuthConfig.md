@@ -4,21 +4,6 @@
 
 [core](../modules/core.md).ClientAuthConfig
 
-## Table of contents
-
-### Properties
-
-- [architecture](core.ClientAuthConfig.md#architecture)
-- [integrationName](core.ClientAuthConfig.md#integrationname)
-- [integrationVersion](core.ClientAuthConfig.md#integrationversion)
-- [os](core.ClientAuthConfig.md#os)
-- [osVersion](core.ClientAuthConfig.md#osversion)
-- [programmingLanguage](core.ClientAuthConfig.md#programminglanguage)
-- [requestLibraryName](core.ClientAuthConfig.md#requestlibraryname)
-- [requestLibraryVersion](core.ClientAuthConfig.md#requestlibraryversion)
-- [sdkVersion](core.ClientAuthConfig.md#sdkversion)
-- [serviceAccountToken](core.ClientAuthConfig.md#serviceaccounttoken)
-
 ## Properties
 
 ### architecture

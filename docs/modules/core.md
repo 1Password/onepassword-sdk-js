@@ -2,13 +2,11 @@
 
 # Module: core
 
-## Table of contents
-
-### Classes
+## Classes
 
 - [SharedCore](../classes/core.SharedCore.md)
 
-### Interfaces
+## Interfaces
 
 - [ClientAuthConfig](../interfaces/core.ClientAuthConfig.md)
 - [Core](../interfaces/core.Core.md)

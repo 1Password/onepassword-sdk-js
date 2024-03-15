@@ -8,14 +8,6 @@
 
 - [`SharedCore`](../classes/core.SharedCore.md)
 
-## Table of contents
-
-### Methods
-
-- [initClient](core.Core.md#initclient)
-- [invoke](core.Core.md#invoke)
-- [releaseClient](core.Core.md#releaseclient)
-
 ## Methods
 
 ### initClient

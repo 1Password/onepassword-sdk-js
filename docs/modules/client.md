@@ -2,22 +2,9 @@
 
 # Module: client
 
-## Table of contents
-
-### Classes
+## Classes
 
 - [Client](../classes/client.Client.md)
-
-### Variables
-
-- [DEFAULT\_INTEGRATION\_NAME](client.md#default_integration_name)
-- [DEFAULT\_INTEGRATION\_VERSION](client.md#default_integration_version)
-
-### Functions
-
-- [clientAuthConfig](client.md#clientauthconfig)
-- [createClient](client.md#createclient)
-- [createClientWithCore](client.md#createclientwithcore)
 
 ## Variables
 

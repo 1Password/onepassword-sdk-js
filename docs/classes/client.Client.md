@@ -4,16 +4,6 @@
 
 [client](../modules/client.md).Client
 
-## Table of contents
-
-### Constructors
-
-- [constructor](client.Client.md#constructor)
-
-### Properties
-
-- [secrets](client.Client.md#secrets)
-
 ## Constructors
 
 ### constructor

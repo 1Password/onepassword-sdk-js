@@ -2,12 +2,10 @@
 
 # Module: secrets
 
-## Table of contents
-
-### Classes
+## Classes
 
 - [SecretsSource](../classes/secrets.SecretsSource.md)
 
-### Interfaces
+## Interfaces
 
 - [SecretsApi](../interfaces/secrets.SecretsApi.md)

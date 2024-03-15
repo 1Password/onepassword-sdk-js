@@ -4,13 +4,6 @@
 
 [configuration](../modules/configuration.md).InnerClient
 
-## Table of contents
-
-### Properties
-
-- [core](configuration.InnerClient.md#core)
-- [id](configuration.InnerClient.md#id)
-
 ## Properties
 
 ### core
