@@ -1,13 +1,13 @@
 /**
-  Internal module defining the 1Password SDK Core. Users of the SDK should import and use the `client` module instead of this one.
-  @internal
-  @module
-*/
+ Internal module defining the 1Password SDK Core. Users of the SDK should import and use the `client` module instead of this one.
+ @internal
+ @module
+ */
 import { init_client, invoke, release_client } from "@1password/sdk-core";
 
 /**
   Exposes the SDK core to the host JS SDK.
-*/
+ */
 export interface Core {
   // Allocates a new authenticated client and returns its id.
   initClient(config: ClientAuthConfig): Promise<string>;
@@ -19,7 +19,7 @@ export interface Core {
 
 /**
   Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
-*/
+ */
 export interface ClientAuthConfig {
   serviceAccountToken: string;
   programmingLanguage: string;
@@ -35,7 +35,7 @@ export interface ClientAuthConfig {
 
 /**
   Contains the information sent to the SDK core when you call (invoke) a function.
-*/
+ */
 export interface InvokeConfig {
   // Identifies the client instance for which you called the function.
   clientId: number;
@@ -44,7 +44,7 @@ export interface InvokeConfig {
 
 /**
   Calls certain logic from the SDK core, with the given parameters.
-*/
+ */
 interface Invocation {
   // Functionality name
   name: string;
@@ -54,7 +54,7 @@ interface Invocation {
 
 /**
   An implementation of the `Core` interface that shares resources across all clients.
-*/
+ */
 export class SharedCore implements Core {
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
