@@ -15,11 +15,13 @@ To use the 1Password JavaScript SDK in your project:
 export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
 ```
 
-3. Edit your `.npmrc` file (in your $HOME or in your project directory) to include the following: 
+3. Edit your `.npmrc` file (in your $HOME or in your project directory) to include the following literal string: 
 
 ```
 //registry.npmjs.org/:_authToken=${NPM_TOKEN}
 ```
+
+> ⚠️ The `.npmrc` file should contain literally the above string, you should not add your NPM token to this file! The token will be provisioned by the `npm` CLI from the environment variable set in the next step.
 
 4. Set the environment variable `NPM_TOKEN` to the private beta token provided by 1Password:
 
