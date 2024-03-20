@@ -54,8 +54,8 @@ import { createClient } from "@1password/sdk";
 // Creates an authenticated client.
 const client = await createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    integrationName: "<your_integration_name>",
-    integrationVersion: "<your_integration_version>",
+    integrationName: "My 1Password Integration",
+    integrationVersion: "v1.0.0",
 });
 
 // Fetches a secret.
@@ -63,3 +63,5 @@ const secret = await client.secrets.resolve("op://vault/item/field");
 ```
 
 Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secret-references/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
+
+Inside ```createClient(...)```, set ```integrationName``` to the name of your application and ```integrationVersion``` to the version of your application.
