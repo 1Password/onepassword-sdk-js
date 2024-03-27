@@ -61,7 +61,7 @@ export const clientAuthConfig = (
     requestLibraryName: "Fetch API",
     requestLibraryVersion: "Fetch API",
     // Only supported on Node.js
-    os: os.type(),
+    os: os.type().toLowerCase(),
     osVersion: defaultOsVersion,
     architecture: os.arch(),
   };
