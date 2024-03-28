@@ -18,7 +18,7 @@
   "exports": {
     ".": {
       "types": "./dist/client.d.ts",
-      "default": "./dist/client.js"
+      "default": "./dist/sdk.js"
     }
   },
   "main": "./dist/client.js",
