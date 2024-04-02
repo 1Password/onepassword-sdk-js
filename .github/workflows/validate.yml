@@ -34,7 +34,5 @@ jobs:
       - name: Test
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-        run: |
-          npm test
-          npm run commonjs-example
+        run: npm test
 
