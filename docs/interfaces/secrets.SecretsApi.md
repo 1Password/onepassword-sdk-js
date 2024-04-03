@@ -32,4 +32,4 @@ The value of the referenced 1Password item field.
 
 #### Defined in
 
-[secrets.ts:19](https://github.com/1Password/1password-js-sdk/blob/b037da5/client/src/secrets.ts#L19)
+[secrets.ts:17](https://github.com/1Password/1password-js-sdk/blob/8f949b4/client/src/secrets.ts#L17)
