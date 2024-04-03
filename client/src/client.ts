@@ -1,3 +1,7 @@
+/**
+  Module containing the 1Password SDK Client, which can be used to authenticate and access data stored in 1Password programmatically.
+  @module
+ */
 import { InnerClient } from "./core.js";
 import { SecretsApi, SecretsSource } from "./secrets.js";
 

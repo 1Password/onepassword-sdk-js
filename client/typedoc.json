@@ -1,0 +1,5 @@
+{
+  "plugin": ["typedoc-plugin-markdown"],
+  "hideInPageTOC": true,
+  "excludeInternal": true
+}
