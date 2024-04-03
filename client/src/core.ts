@@ -56,3 +56,9 @@ export class SharedCore implements Core {
     release_client(serializedId);
   }
 }
+
+// Represents the client instance on which a call is made.
+export interface InnerClient {
+  id: number;
+  core: Core;
+}

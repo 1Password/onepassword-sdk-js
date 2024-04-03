@@ -1,4 +1,4 @@
-import { InnerClient } from "./configuration.js";
+import { InnerClient } from "./core.js";
 import { SecretsApi, SecretsSource } from "./secrets.js";
 
 // Client represents a client instance of the SDK.
