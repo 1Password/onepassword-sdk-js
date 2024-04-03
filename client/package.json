@@ -16,12 +16,12 @@
   "files": ["./dist"],
   "exports": {
     ".": {
-      "types": "./dist/client.d.ts",
-      "default": "./dist/client.js"
+      "types": "./dist/sdk.d.ts",
+      "default": "./dist/sdk.js"
     }
   },
-  "main": "./dist/client.js",
-  "types": "./dist/client.d.ts",
+  "main": "./dist/sdk.js",
+  "types": "./dist/sdk.d.ts",
   "dependencies": {
     "@1password/sdk-core": "0.1.0-beta.2"
   },

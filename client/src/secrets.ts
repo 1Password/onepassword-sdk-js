@@ -1,11 +1,9 @@
 /**
  Module defining the Secrets API.
- 
  The Secrets API can be used to access secrets stored in 1Password via secret references (op://vault/item/field).
  It is implemented by the 1Passwor
  */
-import { InvokeConfig } from "./core.js";
-import { InnerClient } from "./configuration.js";
+import { InvokeConfig, InnerClient } from "./core.js";
 
 /**
  Exposes functionality for retrieving secrets.
