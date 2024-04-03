@@ -1,4 +1,5 @@
-const { clientAuthConfig, createClientWithCore } = require("../dist/sdk.js");
+const { createClientWithCore } = require("../dist/client_builder.js");
+const { clientAuthConfig } = require("../dist/configuration.js");
 const { TestCore } = require("./test_core");
 const { type } = require("os");
 
