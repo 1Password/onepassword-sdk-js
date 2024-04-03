@@ -1,4 +1,4 @@
-const { createClient, DEFAULT_INTEGRATION_VERSION } = require("../dist/client.js");
+const { createClient, DEFAULT_INTEGRATION_VERSION } = require("../dist/sdk.js");
 const { parentPort, isMainThread, workerData } = require('node:worker_threads');
 
 async function retrieveSecret() {

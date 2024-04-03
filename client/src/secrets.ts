@@ -1,5 +1,4 @@
-import { InvokeConfig } from "./core.js";
-import { InnerClient } from "./configuration.js";
+import { InvokeConfig, InnerClient } from "./core.js";
 
 // Exposes functionality around secrets.
 export interface SecretsApi {
