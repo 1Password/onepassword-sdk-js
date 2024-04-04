@@ -9,7 +9,7 @@ async function fetchSecret() {
   });
 
   // Fetches a secret.
-  return await client.secrets.resolve("op://vault/item/field");
+  return await client.secrets.resolve("op://gowwbvgow7kxocrfmfvtwni6vi/6ydrn7ne6mwnqc2prsbqx4i4aq/password");
 }
 
 fetchSecret().then(console.log)
