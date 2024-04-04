@@ -36,7 +36,7 @@ interface Invocation {
   // Functionality name
   name: string;
   // Parameters
-  parameters: string;
+  parameters: { [key: string]: unknown };
 }
 
 // An implementation of the `Core` interface that shares resources across all clients.

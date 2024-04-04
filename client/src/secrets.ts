@@ -1,4 +1,4 @@
-import { InvokeConfig, InnerClient } from "./core.js";
+import { InnerClient, InvokeConfig } from "./core.js";
 
 // Exposes functionality around secrets.
 export interface SecretsApi {
@@ -19,9 +19,13 @@ export class SecretsSource implements SecretsApi {
       clientId: this.#inner.id,
       invocation: {
         name: "Resolve",
-        parameters: secretReference,
+        parameters: {
+          secret_reference: secretReference,
+        },
       },
     };
-    return this.#inner.core.invoke(invocationConfig);
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+    ) as Promise<string>;
   }
 }

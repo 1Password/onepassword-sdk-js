@@ -16,7 +16,14 @@
 				"no-shadow": "off",
 				"jsdoc/require-param": "off",
 				"jsdoc/require-returns": "off",
-				"import/no-unresolved": 0
+				"import/no-unresolved": 0,
+				"@typescript-eslint/naming-convention": [
+					"warn",
+					{
+					  "selector": "property",
+					  "format": ["strictCamelCase", "snake_case"]
+					}
+				  ]
 			}
 		}
 	],
