@@ -9,7 +9,7 @@ async function fetchSecret() {
   });
 
   // Fetches a secret.
-  return await client.secrets.resolve("op://SDKs Test/Test Login/test_username");
+  return await client.secrets.resolve("op://SDKs Test/Test Login/username");
 }
 
 fetchSecret().then(console.log)
