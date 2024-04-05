@@ -37,4 +37,5 @@ jobs:
         run: |
           npm test
           npm run commonjs-example
+          npm run esm-example
 
