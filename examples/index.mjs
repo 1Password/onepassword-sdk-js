@@ -8,5 +8,6 @@ const client = await createClient({
 });
 
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
+// See syntax here: https://developer.1password.com/docs/cli/secrets-reference-syntax/
+const secret = await client.secrets.resolve("op://SDKs Test/Test Login/username");
 console.log(secret)

@@ -9,7 +9,8 @@ async function fetchSecret() {
   });
 
   // Fetches a secret.
-  return await client.secrets.resolve("op://vault/item/field");
+  // See syntax here: https://developer.1password.com/docs/cli/secrets-reference-syntax/
+  return await client.secrets.resolve("op://SDKs Test/Test Login/username");
 }
 
 fetchSecret().then(console.log)
