@@ -1,8 +1,8 @@
 # Examples
 
-This folder contains code snippets that demonstrate how to import and use the 1Password JS SDK, using either ES modules or CommonJS modules. 
+This folder contains code snippets that demonstrate how to use the 1Password JS SDK to retrieve a secret from 1Password, using either ES modules or CommonJS modules. 
 
-## How to run
+## Prerequisites
 
 1. Clone the repository.
 2. Make sure to export a valid service account token. For example:
