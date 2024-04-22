@@ -45,7 +45,7 @@ export interface ItemField {
 
 export interface ItemSection {
   id: string;
-  name: string;
+  title: string;
 }
 
 export interface Item {
