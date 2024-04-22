@@ -3,58 +3,57 @@
 */
 
 export enum ItemCategory {
-	Login = "Login",
-	SecureNote = "SecureNote",
-	CreditCard = "CreditCard",
-	CryptoWallet = "CryptoWallet",
-	Identity = "Identity",
-	Password = "Password",
-	Document = "Document",
-	ApiCredentials = "ApiCredentials",
-	BankAccount = "BankAccount",
-	Database = "Database",
-	DriverLicense = "DriverLicense",
-	Email = "Email",
-	MedicalRecord = "MedicalRecord",
-	Membership = "Membership",
-	OutdoorLicense = "OutdoorLicense",
-	Passport = "Passport",
-	Rewards = "Rewards",
-	Router = "Router",
-	Server = "Server",
-	SshKey = "SshKey",
-	SocialSecurityNumber = "SocialSecurityNumber",
-	SoftwareLicense = "SoftwareLicense",
-	VaultCollectionPiece = "VaultCollectionPiece",
-	Person = "Person",
-	Unsupported = "Unsupported",
+  Login = "Login",
+  SecureNote = "SecureNote",
+  CreditCard = "CreditCard",
+  CryptoWallet = "CryptoWallet",
+  Identity = "Identity",
+  Password = "Password",
+  Document = "Document",
+  ApiCredentials = "ApiCredentials",
+  BankAccount = "BankAccount",
+  Database = "Database",
+  DriverLicense = "DriverLicense",
+  Email = "Email",
+  MedicalRecord = "MedicalRecord",
+  Membership = "Membership",
+  OutdoorLicense = "OutdoorLicense",
+  Passport = "Passport",
+  Rewards = "Rewards",
+  Router = "Router",
+  Server = "Server",
+  SshKey = "SshKey",
+  SocialSecurityNumber = "SocialSecurityNumber",
+  SoftwareLicense = "SoftwareLicense",
+  VaultCollectionPiece = "VaultCollectionPiece",
+  Person = "Person",
+  Unsupported = "Unsupported",
 }
 
 export enum ItemFieldType {
-	Text = "Text",
-	Concealed = "Concealed",
-	Unsupported = "Unsupported",
+  Text = "Text",
+  Concealed = "Concealed",
+  Unsupported = "Unsupported",
 }
 
 export interface ItemField {
-	id: string;
-	title: string;
-	section_id: string;
-	field_type: ItemFieldType;
-	value: string;
+  id: string;
+  title: string;
+  section_id: string;
+  field_type: ItemFieldType;
+  value: string;
 }
 
 export interface ItemSection {
-	id: string;
-	name: string;
+  id: string;
+  name: string;
 }
 
 export interface Item {
-	id: string;
-	title: string;
-	category: ItemCategory;
-	vault_id: string;
-	fields: ItemField[];
-	sections: ItemSection[];
+  id: string;
+  title: string;
+  category: ItemCategory;
+  vault_id: string;
+  fields: ItemField[];
+  sections: ItemSection[];
 }
-
