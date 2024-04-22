@@ -25,7 +25,6 @@ export enum ItemCategory {
   SshKey = "SshKey",
   SocialSecurityNumber = "SocialSecurityNumber",
   SoftwareLicense = "SoftwareLicense",
-  VaultCollectionPiece = "VaultCollectionPiece",
   Person = "Person",
   Unsupported = "Unsupported",
 }
@@ -39,7 +38,7 @@ export enum ItemFieldType {
 export interface ItemField {
   id: string;
   title: string;
-  section_id: string;
+  section_id?: string;
   field_type: ItemFieldType;
   value: string;
 }
@@ -53,7 +52,7 @@ export interface Item {
   id: string;
   title: string;
   category: ItemCategory;
-  vault_id: string;
+  vault_id?: string;
   fields: ItemField[];
   sections: ItemSection[];
 }
