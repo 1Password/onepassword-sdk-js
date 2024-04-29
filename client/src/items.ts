@@ -1,29 +1,30 @@
 import { InvokeConfig, InnerClient } from "./core.js";
 import * as types from "./types.js";
 
-export interface SecretsApi {
-  resolve(secretReference: string): Promise<string>;
+export interface ItemsApi {
+  get(vaultId: string, itemId: string): Promise<types.Item>;
 }
 
-export class SecretsSource implements SecretsApi {
+export class ItemsSource implements ItemsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
   }
 
-  public async resolve(secretReference: string): Promise<string> {
+  public async get(vaultId: string, itemId: string): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
       invocation: {
-        name: "Resolve",
+        name: "Get",
         parameters: {
-          secret_reference: secretReference,
+          vault_id: vaultId,
+          item_id: itemId,
         },
       },
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
-    ) as Promise<string>;
+    ) as Promise<types.Item>;
   }
 }
