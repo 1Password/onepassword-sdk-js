@@ -19,7 +19,7 @@ export class ItemsSource implements ItemsApi {
       invocation: {
         name: "Create",
         parameters: {
-          item: item,
+          item,
         },
       },
     };
