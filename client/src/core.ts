@@ -1,16 +1,26 @@
 import { init_client, invoke, release_client } from "@1password/sdk-core";
 
-// Exposes the SDK core to the host JS SDK.
+/**
+ *  Exposes the SDK core to the host JS SDK.
+ */
 export interface Core {
-  // Allocates a new authenticated client and returns its id.
+  /**
+   *  Allocates a new authenticated client and returns its id.
+   */
   initClient(config: ClientAuthConfig): Promise<string>;
-  // Calls business logic from a given client and returns the result.
+  /**
+   *  Calls business logic from a given client and returns the result.
+   */
   invoke(config: InvokeConfig): Promise<string>;
-  // Deallocates memory held by the given client in the SDK core when it goes out of scope.
+  /**
+   *  Deallocates memory held by the given client in the SDK core when it goes out of scope.
+   */
   releaseClient(clientId: number): void;
 }
 
-// Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
+/**
+ *  Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
+ */
 export interface ClientAuthConfig {
   serviceAccountToken: string;
   programmingLanguage: string;
@@ -24,22 +34,34 @@ export interface ClientAuthConfig {
   architecture: string;
 }
 
-// Contains the information sent to the SDK core when you call (invoke) a function.
+/**
+ *  Contains the information sent to the SDK core when you call (invoke) a function.
+ */
 export interface InvokeConfig {
-  // Identifies the client instance for which you called the function.
+  /**
+   *  Identifies the client instance for which you called the function.
+   */
   clientId: number;
   invocation: Invocation;
 }
 
-// Calls certain logic from the SDK core, with the given parameters.
+/**
+ *  Calls certain logic from the SDK core, with the given parameters.
+ */
 interface Invocation {
-  // Functionality name
+  /**
+   *  Functionality name
+   */
   name: string;
-  // Parameters
+  /**
+   *  Parameters
+   */
   parameters: { [key: string]: unknown };
 }
 
-// An implementation of the `Core` interface that shares resources across all clients.
+/**
+ *  An implementation of the `Core` interface that shares resources across all clients.
+ */
 export class SharedCore implements Core {
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
@@ -57,7 +79,9 @@ export class SharedCore implements Core {
   }
 }
 
-// Represents the client instance on which a call is made.
+/**
+ *  Represents the client instance on which a call is made.
+ */
 export interface InnerClient {
   id: number;
   core: Core;
