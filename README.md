@@ -15,7 +15,7 @@ To use the 1Password JavaScript SDK in your project:
 export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
 ```
 
-3. Edit your `.npmrc` file (in your $HOME or in your project directory) to include the following literal string: 
+3. Edit your `.npmrc` file (in your $HOME or in your project directory) to include the following literal string:
 
 ```
 //registry.npmjs.org/:_authToken=${NPM_TOKEN}
@@ -33,17 +33,17 @@ export NPM_TOKEN=<token-provided-by-1password-on-private-beta-registration>
 
 ```bash
 ## NPM
-npm install @1password/sdk@0.1.0-beta.2
+npm install @1password/sdk@0.1.0-beta.4
 ```
 
 ```bash
 ## PNPM
-pnpm add @1password/sdk@0.1.0-beta.2
+pnpm add @1password/sdk@0.1.0-beta.4
 ```
 
 ```bash
 ## Yarn
-yarn add @1password/sdk@0.1.0-beta.2
+yarn add @1password/sdk@0.1.0-beta.4
 ```
 
 6. Use the SDK in your project:
@@ -53,16 +53,16 @@ import { createClient } from "@1password/sdk";
 
 // Creates an authenticated client.
 const client = await createClient({
-    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    integrationName: "My 1Password Integration",
-    integrationVersion: "v1.0.0",
+  auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+  integrationName: "My 1Password Integration",
+  integrationVersion: "v1.0.0",
 });
 
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
 ```
 
-Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secret-references/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code. 
+Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secret-references/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
 
 Note: The SDK doesn't yet support using secret references with query parameters, so you can't use secret references to retrieve file attachments or SSH keys, or to get more information about field metadata.
 
