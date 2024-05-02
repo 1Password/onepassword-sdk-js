@@ -4,6 +4,8 @@ import * as types from "./types.js";
 export interface ItemsApi {
   create(item: types.Item): Promise<types.Item>;
   get(vaultId: string, itemId: string): Promise<types.Item>;
+  update(item: types.Item): Promise<types.Item>;
+  delete(vaultId: string, itemId: string): Promise<void>;
 }
 
 export class ItemsSource implements ItemsApi {
@@ -42,5 +44,36 @@ export class ItemsSource implements ItemsApi {
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
     ) as Promise<types.Item>;
+  }
+
+  public async update(item: types.Item): Promise<types.Item> {
+    const invocationConfig: InvokeConfig = {
+      clientId: this.#inner.id,
+      invocation: {
+        name: "Update",
+        parameters: {
+          item,
+        },
+      },
+    };
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+    ) as Promise<types.Item>;
+  }
+
+  public async delete(vaultId: string, itemId: string): Promise<void> {
+    const invocationConfig: InvokeConfig = {
+      clientId: this.#inner.id,
+      invocation: {
+        name: "Delete",
+        parameters: {
+          vault_id: vaultId,
+          item_id: itemId,
+        },
+      },
+    };
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+    ) as Promise<void>;
   }
 }
