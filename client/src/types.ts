@@ -35,40 +35,72 @@ export enum ItemFieldType {
   Unsupported = "Unsupported",
 }
 
-// Stores a field's title and value.
+/**
+ *  Stores a field's title and value.
+ */
 export interface ItemField {
-  // The field's ID
+  /**
+   *  The field's ID
+   */
   id: string;
-  // The field's title
+  /**
+   *  The field's title
+   */
   title: string;
-  // The ID of the section containing the field
+  /**
+   *  The ID of the section containing the field
+   */
   section_id?: string;
-  // The type of value stored in the field
+  /**
+   *  The type of value stored in the field
+   */
   field_type: ItemFieldType;
-  // The string representation of the field's value
+  /**
+   *  The string representation of the field's value
+   */
   value: string;
 }
 
-// A section groups together multiple fields in an item.
+/**
+ *  A section groups together multiple fields in an item.
+ */
 export interface ItemSection {
-  // The ID of the section
+  /**
+   *  The ID of the section
+   */
   id: string;
-  // The title of the section
+  /**
+   *  The title of the section
+   */
   title: string;
 }
 
-// Represents a 1Password item.
+/**
+ *  Represents a 1Password item.
+ */
 export interface Item {
-  // The item's unique ID
+  /**
+   *  The item's unique ID
+   */
   id: string;
-  // The item's title
+  /**
+   *  The item's title
+   */
   title: string;
-  // The item's category
+  /**
+   *  The item's category
+   */
   category: ItemCategory;
-  // The ID of the vault where the item is saved
+  /**
+   *  The ID of the vault where the item is saved
+   */
   vault_id: string;
-  // The item's fields
+  /**
+   *  The item's fields
+   */
   fields: ItemField[];
-  // The item's sections
+  /**
+   *  The item's sections
+   */
   sections: ItemSection[];
 }
