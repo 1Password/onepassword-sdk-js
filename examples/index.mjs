@@ -9,4 +9,42 @@ const client = await createClient({
 
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
-console.log(secret)
+console.log(secret);
+
+// Creates an item
+let item = await client.items.create({
+  id: "",
+  title: "My Item",
+  category: sdk.ItemCategory.Login,
+  vault_id: "xw33qlvug6moegr3wkk5zkenoa",
+  fields: [
+    {
+      id: "username",
+      title: "username",
+      field_type: sdk.ItemFieldType.Text,
+      value: "my username",
+    },
+    {
+      id: "custom",
+      title: "my custom field",
+      section_id: "custom section",
+      field_type: sdk.ItemFieldType.Concealed,
+      value: "my secret value",
+    },
+  ],
+  sections: [
+    {
+      id: "custom section",
+      title: "my section",
+    },
+  ],
+});
+
+// Edits an item
+item.fields[0].value = "other value";
+let updatedItem = await client.items.update(item);
+
+console.log(updatedItem.fields);
+
+// Deletes an item
+await client.items.delete(item.vault_id, item.id);

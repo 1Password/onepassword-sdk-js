@@ -7,6 +7,7 @@ export const DEFAULT_INTEGRATION_NAME = "Unknown";
 export const DEFAULT_INTEGRATION_VERSION = "Unknown";
 
 export * from "./client.js";
+export * from "./types.js";
 
 /**
  * Creates a default 1Password SDK client.
