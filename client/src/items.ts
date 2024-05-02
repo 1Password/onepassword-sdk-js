@@ -72,8 +72,7 @@ export class ItemsSource implements ItemsApi {
         },
       },
     };
-    return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
-    ) as Promise<void>;
+
+    await this.#inner.core.invoke(invocationConfig);
   }
 }
