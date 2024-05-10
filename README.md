@@ -1,52 +1,109 @@
-# 1Password JavaScript SDK
+<p align="center">
+  <a href="https://1password.com">
+      <h1 align="center">1Password JavaScript SDK (beta)</h1>
+  </a>
+</p>
 
-> ❗ This project is still in its early, pre-alpha stages of development. Its stability is not yet fully assessed, and future iterations may bring backwards incompatible changes. Proceed with caution.
+<p align="center">
+ <h4 align="center"> ❗ The 1Password SDK project is in beta. Future iterations may bring backwards-incompatible changes.</h4>
+</p>
 
-The 1Password JavaScript SDK offers programmatic read access to your secrets in 1Password in an interface native to JavaScript. The SDK currently supports `Node.JS` and authentication with [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/).
+<p align="center">
+  <a href="https://developer.1password.com/docs/sdks/">Documentation</a> | <a href="https://github.com/1Password/onepassword-sdk-js/tree/main/examples">Examples</a>
+<br/>
 
-### Get started
+---
+The 1Password JavaScript SDK offers programmatic access to your secrets in 1Password with JavaScript. The SDK currently supports `Node.JS`. During the beta, you can retrieve, create, read, update, and delete items.
+
+## 🔑 Authentication
+
+1Password SDKs support authentication with [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/get-started/). You can create service accounts if you're an owner or administrator on your team. Otherwise, ask your administrator for a service account token.
+
+Before you get started, [create a service account](https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account) and give it the appropriate permissions in the vaults where the items you want to use with the SDK are saved.
+
+## ❗ Limitations
+
+1Password SDKs currently only support operations on text and concealed fields. If you update or delete an item that has information saved in other field types, that information will be permanently lost.
+
+1Password SDKs don't yet support using secret references with query parameters, so you can't retrieve file attachments or SSH keys, or get more information about field metadata.
+
+When managing items with 1Password SDKs, you must use [unique identifiers (IDs)](https://developer.1password.com/docs/sdks/concepts#unique-identifiers-ids) in place of vault, item, and field names.
+
+## 🚀 Get started
 
 To use the 1Password JavaScript SDK in your project:
 
-1. [Create a 1Password Service Account](https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account). You can create service accounts if you're an owner or administrator on your team. Otherwise, ask your administrator for a service account token.
-2. Export your service account token to the `OP_SERVICE_ACCOUNT_TOKEN` environment variable:
+1. Provision your [service account](#authentication) token. We recommend provisioning your token from the environment. For example, to export your token to the `OP_SERVICE_ACCOUNT_TOKEN` environment variable:
+    
+    **Mac**
+    
+    ```bash
+    export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
+    ```
+    
+    **Windows**
+    
+    ```powershell
+    $Env:OP_SERVICE_ACCOUNT_TOKEN = "<your-service-account-token>"
+    ```
 
-```bash
-export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
-```
+2. Install the 1Password JavaScript SDK in your project:
 
-3. Edit your `.npmrc` file (in your $HOME or in your project directory) to include the following literal string:
+    ```bash
+    ## NPM
+    npm install @1password/sdk@0.1.0-beta.4
+    ```
 
-```
-//registry.npmjs.org/:_authToken=${NPM_TOKEN}
-```
+    ```bash
+    ## PNPM
+    pnpm add @1password/sdk@0.1.0-beta.4
+    ```
 
-> ⚠️ The `.npmrc` file should contain literally the above string, you should not add your NPM token to this file! The token will be provisioned by the `npm` CLI from the environment variable set in the next step.
+    ```bash
+    ## Yarn
+    yarn add @1password/sdk@0.1.0-beta.4
+    ```
 
-4. Set the environment variable `NPM_TOKEN` to the private beta token provided by 1Password:
+3. Import the JavaScript SDK in your project:
 
-```bash
-export NPM_TOKEN=<token-provided-by-1password-on-private-beta-registration>
-```
+    **CommonJS**
 
-5. Install the 1Password JavaScript SDK:
+    ```js
+    const sdk = require("@1password/sdk");
+    ```
 
-```bash
-## NPM
-npm install @1password/sdk@0.1.0-beta.4
-```
+  **ES Modules**
 
-```bash
-## PNPM
-pnpm add @1password/sdk@0.1.0-beta.4
-```
+    ```js
+    ```
 
-```bash
-## Yarn
-yarn add @1password/sdk@0.1.0-beta.4
-```
+4. Initialize the SDK. Provision your service account token and use `integration_name` and `integration_version` to specify a name and version for your application.
 
-6. Use the SDK in your project:
+  **CommonJS**
+
+    ```js
+    async function fetchSecret() {
+    // Creates an authenticated client.
+      const client = await sdk.createClient({
+        auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+        integrationName: "My 1Password Integration",
+        integrationVersion: "v1.0.0",
+      });
+      // Use the SDK client to do something with the secret. See next steps for examples.
+    }
+    ```
+
+  **ES Modules**
+
+    ```
+    const client = await sdk.createClient({
+      auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+      integrationName: "My 1Password Integration",
+      integrationVersion: "v1.0.0",
+    });
+    ```
+
+### Example
 
 ```js
 import { createClient } from "@1password/sdk";
@@ -64,6 +121,10 @@ const secret = await client.secrets.resolve("op://vault/item/field");
 
 Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secret-references/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
 
-Note: The SDK doesn't yet support using secret references with query parameters, so you can't use secret references to retrieve file attachments or SSH keys, or to get more information about field metadata.
+## 📖 Learn more
+
+- [Load secrets with 1Password SDKs](https://developer.1password.com/docs/sdks/load-secrets)
+- [Manage items with 1Password SDKs](https://developer.1password.com/docs/sdks/manage-items)
+- [1Password SDK concepts](https://developer.1password.com/docs/sdks/concepts)
 
 Inside `createClient()`, set `integrationName` to the name of your application and `integrationVersion` to the version of your application.
