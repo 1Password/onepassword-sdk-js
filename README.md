@@ -64,46 +64,7 @@ To use the 1Password JavaScript SDK in your project:
     yarn add @1password/sdk@0.1.0-beta.4
     ```
 
-3. Import the JavaScript SDK in your project:
-
-    **CommonJS**
-
-    ```js
-    const sdk = require("@1password/sdk");
-    ```
-
-  **ES Modules**
-
-    ```js
-    ```
-
-4. Initialize the SDK. Provision your service account token and use `integration_name` and `integration_version` to specify a name and version for your application.
-
-  **CommonJS**
-
-    ```js
-    async function fetchSecret() {
-    // Creates an authenticated client.
-      const client = await sdk.createClient({
-        auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-        integrationName: "My 1Password Integration",
-        integrationVersion: "v1.0.0",
-      });
-      // Use the SDK client to do something with the secret. See next steps for examples.
-    }
-    ```
-
-  **ES Modules**
-
-    ```
-    const client = await sdk.createClient({
-      auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-      integrationName: "My 1Password Integration",
-      integrationVersion: "v1.0.0",
-    });
-    ```
-
-### Example
+3. Use the JavaScript SDK in your project:
 
 ```js
 import { createClient } from "@1password/sdk";
@@ -119,12 +80,6 @@ const client = await createClient({
 const secret = await client.secrets.resolve("op://vault/item/field");
 ```
 
-Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secret-references/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
-
-## 📖 Learn more
-
-- [Load secrets with 1Password SDKs](https://developer.1password.com/docs/sdks/load-secrets)
-- [Manage items with 1Password SDKs](https://developer.1password.com/docs/sdks/manage-items)
-- [1Password SDK concepts](https://developer.1password.com/docs/sdks/concepts)
+Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secrets-reference-syntax/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
 
 Inside `createClient()`, set `integrationName` to the name of your application and `integrationVersion` to the version of your application.
