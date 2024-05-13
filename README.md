@@ -13,7 +13,7 @@
 <br/>
 
 ---
-The 1Password JavaScript SDK offers programmatic access to your secrets in 1Password with JavaScript. The SDK currently supports `Node.js`. During the beta, you can retrieve, create, read, update, and delete items.
+The 1Password JavaScript SDK offers programmatic access to your secrets in 1Password with JavaScript. The SDK currently supports `Node.js`. During the beta, you can create, retrieve, update, and delete items and resolve secret references.
 
 ## 🔑 Authentication
 
