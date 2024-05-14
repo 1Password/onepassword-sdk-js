@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-   <a href="https://github.com/1Password/onepassword-sdk-js/tree/main/examples">Examples</a>
+   <a href="https://developer.1password.com/docs/sdks/">Documentation</a> | <a href="https://github.com/1Password/onepassword-sdk-js/tree/main/examples">Examples</a>
 <br/>
 
 ---
@@ -28,7 +28,7 @@ Before you get started, [create a service account](https://developer.1password.c
 
 1Password SDKs don't yet support using secret references with query parameters, so you can't retrieve file attachments or SSH keys, or get more information about field metadata.
 
-When managing items with 1Password SDKs, you must use unique identifiers (IDs) in place of vault, item, and field names.
+When managing items with 1Password SDKs, you must use [unique identifiers (IDs)](https://developer.1password.com/docs/sdks/concepts#unique-identifiers) in place of vault, item, and field names.
 
 ## 🚀 Get started
 
@@ -84,3 +84,9 @@ const secret = await client.secrets.resolve("op://vault/item/field");
 Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secrets-reference-syntax/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
 
 Inside `createClient()`, set `integrationName` to the name of your application and `integrationVersion` to the version of your application.
+
+## 📖 Learn more
+
+- [Load secrets with 1Password SDKs](https://developer.1password.com/docs/sdks/load-secrets)
+- [Manage items with 1Password SDKs](https://developer.1password.com/docs/sdks/manage-items)
+- [1Password SDK concepts](https://developer.1password.com/docs/sdks/concepts)
