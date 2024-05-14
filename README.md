@@ -51,17 +51,17 @@ To use the 1Password JavaScript SDK in your project:
 
     ```bash
     ## NPM
-    npm install @1password/sdk@0.1.0-beta.4
+    npm install @1password/sdk@beta
     ```
 
     ```bash
     ## PNPM
-    pnpm add @1password/sdk@0.1.0-beta.4
+    pnpm add @1password/sdk@beta
     ```
 
     ```bash
     ## Yarn
-    yarn add @1password/sdk@0.1.0-beta.4
+    yarn add @1password/sdk@beta
     ```
 
 3. Use the JavaScript SDK in your project:
