@@ -10,7 +10,7 @@
     "eslint": "eslint -c .eslintrc.json 'src/*.ts'",
     "prepare": "rm -rf ./dist && npm run build",
     "publish-test": "cp ../README.md . && npm publish --tag beta --dry-run && rm ./README.md",
-    "publish-real": "cp ../README.md . && npm publish --tag beta && npm dist-tag add @1password/sdk@beta latest && rm ./README.md"
+    "publish-beta": "cp ../README.md . && npm publish --tag beta && rm ./README.md"
   },
   "author": "1Password",
   "license": "MIT",
