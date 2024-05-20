@@ -1,6 +1,6 @@
 {
   "name": "@1password/sdk-core",
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0-beta.6",
   "author": "1Password",
   "license": "MIT",
   "description": "The 1Password Rust SDK core built with `wasm_bindgen`",
