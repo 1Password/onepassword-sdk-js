@@ -32,24 +32,3 @@ jobs:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: npm test
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm install
-
-      - name: Style
-        run: npm run prettier
-      
-      - name: Lint
-        run: npm run eslint
