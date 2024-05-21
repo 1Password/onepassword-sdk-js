@@ -39,10 +39,10 @@ export const clientAuthConfig = (
   };
 };
 
-function getOsName(): string {
+const getOsName = (): string => {
   const os_name = os.type().toLowerCase();
-  if (os_name == "windows_nt") {
+  if (os_name === "windows_nt") {
     return "Windows";
   }
   return os_name;
-}
+};
