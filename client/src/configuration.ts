@@ -32,9 +32,17 @@ export const clientAuthConfig = (
     integrationVersion: userConfig.integrationVersion,
     requestLibraryName: "Fetch API",
     requestLibraryVersion: "Fetch API",
-    // Only supported on Node.js
-    os: os.type().toLowerCase(),
+    os: getOsName(),
     osVersion: defaultOsVersion,
     architecture: os.arch(),
   };
+};
+
+export const getOsName = (): string => {
+  // Only supported on Node.js
+  const os_name = os.type().toLowerCase();
+  if (os_name === "windows_nt") {
+    return "windows";
+  }
+  return os_name;
 };
