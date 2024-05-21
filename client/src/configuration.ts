@@ -40,7 +40,7 @@ export const clientAuthConfig = (
 };
 
 export const getOsName = (): string => {
-  const os_name = os.type().toLowerCase();
+  const os_name = os.type();
   if (os_name === "windows_nt") {
     return "Windows";
   }
