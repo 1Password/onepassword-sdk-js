@@ -26,7 +26,7 @@
   "main": "./dist/sdk.js",
   "types": "./dist/sdk.d.ts",
   "dependencies": {
-    "@1password/sdk-core": "../wasm"
+    "@1password/sdk-core": "0.1.0-beta.8"
   },
   "devDependencies": {
     "@1password/eslint-config": "^4.0.0",
