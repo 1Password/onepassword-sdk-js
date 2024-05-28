@@ -15,7 +15,7 @@ test("the right configuration is created", () => {
   expect(config.requestLibraryName).toBe("Fetch API");
   expect(config.requestLibraryVersion).toBe("Fetch API");
   expect(config.programmingLanguage).toBe("JS");
-  expect(config.sdkVersion).toBe("0010008");
+  expect(config.sdkVersion).toBe("0010009");
   expect(config.os).toBe(getOsName());
   expect(config.osVersion).toBe("0.0.0");
   expect(config.architecture).toContain("64");
