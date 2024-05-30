@@ -11,11 +11,11 @@ export interface ItemsApi {
    */
   get(vaultId: string, itemId: string): Promise<types.Item>;
   /**
-   *  Update an existing item. Warning: Only text and concealed fields are currently supported. Other fields will be permanently lost when you update an item.
+   *  Update an existing item. You can currently only edit text and concealed fields.
    */
   update(item: types.Item): Promise<types.Item>;
   /**
-   *  Delete an item. Warning:  Information saved in fields other than text and concealed fields will be permanently lost.
+   *  Delete an item.
    */
   delete(vaultId: string, itemId: string): Promise<void>;
 }
