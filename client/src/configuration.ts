@@ -2,8 +2,8 @@ import * as os from "os";
 
 import { ClientAuthConfig } from "./core.js";
 
-const LANGUAGE = "JS";
-const VERSION = "0010009"; // v0.1.0-beta.9
+export const LANGUAGE = "JS";
+export const VERSION = "0010011"; // v0.1.0-beta.11
 
 // Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {

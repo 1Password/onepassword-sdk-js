@@ -1,5 +1,5 @@
 const { createClientWithCore } = require("../dist/client_builder.js");
-const { clientAuthConfig, getOsName } = require("../dist/configuration.js");
+const { clientAuthConfig, getOsName, VERSION, LANGUAGE } = require("../dist/configuration.js");
 const { TestCore } = require("./test_core");
 
 test("the right configuration is created", () => {
@@ -14,8 +14,8 @@ test("the right configuration is created", () => {
   expect(config.integrationVersion).toBe("v1");
   expect(config.requestLibraryName).toBe("Fetch API");
   expect(config.requestLibraryVersion).toBe("Fetch API");
-  expect(config.programmingLanguage).toBe("JS");
-  expect(config.sdkVersion).toBe("0010009");
+  expect(config.programmingLanguage).toBe(LANGUAGE);
+  expect(config.sdkVersion).toBe(VERSION);
   expect(config.os).toBe(getOsName());
   expect(config.osVersion).toBe("0.0.0");
   expect(config.architecture).toContain("64");
