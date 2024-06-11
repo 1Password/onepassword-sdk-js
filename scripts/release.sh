@@ -42,7 +42,7 @@ fi
   npm install --dry-run
   npm run publish-test --dry-run
   #npm run publish-beta
-  npm dist-tag add @1password/sdk@${version_sdk}latest --dry-run
+  npm dist-tag add @1password/sdk@${version_sdk} latest --dry-run
   cd ../examples 
   npm install @1password/sdk --save
   cd ../ && npm install --dry-run
