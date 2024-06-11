@@ -72,4 +72,4 @@ if [ -z "${GITHUB_TOKEN}" ]; then
   exit 1
 fi
 
-gh release create "${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/MOmarMiraj/onepassword-sdk-js
+gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/MOmarMiraj/onepassword-sdk-js
