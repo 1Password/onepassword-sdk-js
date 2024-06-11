@@ -5,6 +5,7 @@
 version_sdk=$(< client/src/version-sdk)
 version_sdk_core=$(< client/src/version-sdk-core)
 build=$(< client/src/version-build)
+changelog=$(<client/changelogs/"${version_sdk}"-"${build}")
 
 set -e
 core_modified="${1}"
