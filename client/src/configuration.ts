@@ -1,9 +1,10 @@
 import * as os from "os";
+import fs from "fs"
 
 import { ClientAuthConfig } from "./core.js";
 
 export const LANGUAGE = "JS";
-export const VERSION = "0010011"; // v0.1.0-beta.11
+export const VERSION = fs.readFileSync("version-build","utf-8")
 
 // Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {
