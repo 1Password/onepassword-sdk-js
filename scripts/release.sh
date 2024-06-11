@@ -26,7 +26,7 @@ if [ "$core_modified" = "true" ]; then
         # npm publish --tag beta
         npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest --dry-run
     elif [ "$files_are_ok" == "n" ]; then
-        echo "Please fix the bugs and restart the script"
+        echo "Files are incorrect, Exiting..."
         exit 0
     else
         echo "Invalid input. Please enter 'y' or 'n'."
@@ -42,12 +42,20 @@ fi
   
   npm install --dry-run
   npm run publish-test --dry-run
-  #npm run publish-beta
-  npm dist-tag add @1password/sdk@${version_sdk} latest --dry-run
-  cd ../examples 
-  npm install @1password/sdk --save
-  cd ../ && npm install --dry-run
-
+  read -p "Is everything good? (y/n)" files_are_ok
+  if [ "$files_are_ok" == "y" ]; then
+    #npm run publish-beta
+    npm dist-tag add @1password/sdk@${version_sdk} latest --dry-run
+    cd ../examples 
+    npm install @1password/sdk --save
+    cd ../ && npm install --dry-run
+  elif [ "$files_are_ok" == "n" ]; then
+        echo "Files are incorrect, Exiting..."
+        exit 0
+  else
+        echo "Invalid input. Please enter 'y' or 'n'."
+        exit 1
+  fi
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 
 # Get Current Branch Name
