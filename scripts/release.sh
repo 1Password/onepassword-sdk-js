@@ -31,8 +31,9 @@ if [ "$core_modified" = "true" ]; then
         echo "Invalid input. Please enter 'y' or 'n'."
         exit 1
     fi
+    cd ..
 fi
-  cd ../client
+  cd client
   if [ "$CORE_MODIFIED" = true ]; then
     npm install @1password/sdk-core --save
   fi
