@@ -37,7 +37,7 @@ fi
   if [ "$CORE_MODIFIED" = true ]; then
     npm install @1password/sdk-core --save
   fi
-  npm version "${version_number}"
+  npm version "${version_sdk}"
   
   npm install --dry-run
   npm run publish-test --dry-run
