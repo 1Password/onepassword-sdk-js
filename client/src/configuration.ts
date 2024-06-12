@@ -1,15 +1,18 @@
-import * as os from "os";
+import os from "os";
 import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
 
 import { ClientAuthConfig } from "./core.js";
-import path from "path";
-export const LANGUAGE = "JS";
+
 // Load VERSION_BUILD from .env file
-require("dotenv").config({
+dotenv.config({
   path: path.resolve(__dirname, "../../version-build.env"),
 });
 
-export const VERSION = process.env.VERSION_BUILD;
+const LANGUAGE = "JS";
+export const VERSION: string | undefined = process.env.VERSION_BUILD;
+
 // Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {
   // Auth currently only accepts a service account token. Read more about how to get started with service accounts: https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account
