@@ -1,20 +1,26 @@
 #!/bin/bash
 
-# Helper script to prepare a release for the Python SDK.
+# Helper script to prepare a release for the JS SDK.
 
-# Read the version number and build number from the respective files
-current_version_sdk_number=$(< client/src/version-sdk)
-current_version_sdk_core_number=$(< client/src/version-sdk-core)
-current_build_number=$(< client/src/version-build)
+# Read the build number from version-build to compare with new build number and ensure update has been made.
+current_build_number=$(< version-build)
 
-version_sdk_file="client/src/version-sdk"
-version_sdk_core_file="client/src/version-sdk-core"
-build_file="client/src/version-build"
+version_sdk_file="version-sdk"
+version_sdk_core_file="version-sdk-core"
+build_file="version-build"
 
 core_modified="${1}"
 
+enforce_latest_code() {
+    if [[ -n "$(git status --porcelain=v1)" ]]; then
+        echo "ERROR: working directory is not clean."
+        echo "Please stash your changes and try again."
+        exit 1
+    fi
+}
+
 # Function to validate the version number format x.y.z(-beta.w)
-validate_and_update_version_number() {
+validate_and_update_version() {
     if [ "${core_modified}" = "true" ]; then
         while true; do
             read -p "Enter the core version number (format: x.y.z(-beta.w)): " version
@@ -49,7 +55,7 @@ validate_and_update_version_number() {
 
 # Function to validate the build number format.
 # SEMVER Format: Mmmppbb - 7 Digits 
-update_and_validate_build_number() {
+update_and_validate_build() {
     while true; do
         # Prompt the user to input the build number
         read -p "Enter the build number (format: Mmmppbb): " build
@@ -66,12 +72,14 @@ update_and_validate_build_number() {
         fi
     done
 }
+# Ensure that the current working directory is clean
+enforce_latest_code
 
-# Update and Validate the version number
-validate_and_update_version_number
+# Update and validate the version number
+validate_and_update_version
 
-# Update and Validate the build number
-update_and_validate_build_number 
+# Update and validate the build number
+update_and_validate_build
 
 if [[ "$current_build_number" == "$build" ]]; then
     echo "Build version hasn't changed. Stopping." >&2
@@ -89,15 +97,10 @@ done
 changelog_file="client/changelogs/"${version_publish}"-"${build}""
 
 # Store the changelog input into a file
-{
-   echo "Release Notes for: v"${version_publish}""
-   echo ""
-   echo "${changelog_content}"
-   echo "[${build}]"
-   echo ""
-} >> "${changelog_file}"
+echo "${changelog_content}" >> "${changelog_file}"
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
 changelog is correctly filled out.
-Once confirmed, run make release to release the SDK!"
+Once confirmed, run 'make release' to release the SDK!"
+

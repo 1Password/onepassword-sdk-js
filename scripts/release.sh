@@ -2,9 +2,9 @@
 
 # Helper script to prepare a JS Release for the SDKs.
 
-version_sdk=$(< client/src/version-sdk)
-version_sdk_core=$(< client/src/version-sdk-core)
-build=$(< client/src/version-build)
+version_sdk=$(< version-sdk)
+version_sdk_core=$(< version-sdk-core)
+build=$(< version-build)
 changelog=$(<client/changelogs/"${version_sdk}"-"${build}")
 
 set -e
@@ -14,6 +14,12 @@ core_modified="${1}"
 if ! command -v gh &> /dev/null; then
 	echo "gh is not installed";\
 	exit 1;\
+fi
+
+# Ensure GITHUB_TOKEN env var is set
+if [ -z "${GITHUB_TOKEN}" ]; then
+  echo "GITHUB_TOKEN environment variable is not set."
+  exit 1
 fi
 
 if [ "$core_modified" = "true" ]; then
@@ -91,13 +97,8 @@ fi
 
 # Add changes and commit/push to branch
 git add .
-git commit -m "Release for ${version_sdk}"
+git commit -m "Release v${version_sdk}"
 git push origin ${branch}
 
-# Ensure GITHUB_TOKEN env var is set
-if [ -z "${GITHUB_TOKEN}" ]; then
-  echo "GITHUB_TOKEN environment variable is not set."
-  exit 1
-fi
-
 gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/1Password/onepassword-sdk-js
+
