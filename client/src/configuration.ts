@@ -10,7 +10,7 @@ dotenv.config({
   path: path.resolve(__dirname, "../../version-build.env"),
 });
 
-const LANGUAGE = "JS";
+export const LANGUAGE = "JS";
 export const VERSION: string | undefined = process.env.VERSION_BUILD;
 
 // Contains information necessary to configure an SDK client.
