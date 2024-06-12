@@ -63,7 +63,7 @@ update_and_validate_build() {
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
             # Write the valid build number to the file
-            echo "VERSION_BUILD=${build}" > "${build_file}"
+            echo "VERSION_BUILD=\"${build}\"" > "${build_file}"
             echo "New build number is: ${build}"
             return 0
         else
