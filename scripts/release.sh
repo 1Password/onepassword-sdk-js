@@ -4,7 +4,7 @@
 
 version_sdk=$(< version-sdk)
 version_sdk_core=$(< version-sdk-core)
-build=$(< version-build)
+build=$(< version-build.env cut -d '"' -f 2)
 changelog=$(<client/changelogs/"${version_sdk}"-"${build}")
 
 set -e

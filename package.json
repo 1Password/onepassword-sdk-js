@@ -19,5 +19,8 @@
     "client",
     "examples",
     "wasm"
-  ]
+  ],
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
 }

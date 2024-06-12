@@ -3,11 +3,11 @@
 # Helper script to prepare a release for the JS SDK.
 
 # Read the build number from version-build to compare with new build number and ensure update has been made.
-current_build_number=$(< version-build)
+current_build_number=$(< version-build.env cut -d '"' -f 2)
 
 version_sdk_file="version-sdk"
 version_sdk_core_file="version-sdk-core"
-build_file="version-build"
+build_file="version-build.env"
 
 core_modified="${1}"
 
@@ -63,7 +63,7 @@ update_and_validate_build() {
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
             # Write the valid build number to the file
-            echo "${build}" > "${build_file}"
+            echo "VERSION_BUILD=${build}" > "${build_file}"
             echo "New build number is: ${build}"
             return 0
         else
