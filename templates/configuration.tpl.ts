@@ -1,3 +1,4 @@
+// AUTO-GENERATED.. IF EDITING IS REQUIRED, EDIT THE ASSOCIATED TEMPLATE FILE
 import os from "os";
 
 import { ClientAuthConfig } from "./core.js";
