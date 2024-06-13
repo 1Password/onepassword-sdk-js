@@ -3,11 +3,11 @@
 # Helper script to prepare a release for the JS SDK.
 
 # Read the build number from version-build to compare with new build number and ensure update has been made.
-current_build_number=$(< version-build.env cut -d '"' -f 2)
+output_configuration_file="client/src/configuration.ts"
+configuration_template_file="templates/configuration.tpl.ts"
 
-version_sdk_file="version-sdk"
-version_sdk_core_file="version-sdk-core"
-build_file="version-build.env"
+# Extracts the current build number for comparison 
+current_build_number=$(awk -F "['\"]" '/VERSION =/{print $2}' "$output_configuration_file")
 
 core_modified="${1}"
 
@@ -43,7 +43,6 @@ update_and_validate_version() {
             # Validate the version number format
             if [[ "${version_publish}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
                 # Write the valid version number to the file
-                echo "${version_publish}" > "${version_sdk_file}"
                 echo "New version number is: ${version_publish}"
                 return 0
             else
@@ -63,7 +62,6 @@ update_and_validate_build() {
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
             # Write the valid build number to the file
-            echo "VERSION_BUILD=\"${build}\"" > "${build_file}"
             echo "New build number is: ${build}"
             return 0
         else
@@ -85,6 +83,8 @@ if [[ "$current_build_number" == "$build" ]]; then
     echo "Build version hasn't changed. Stopping." >&2
     exit 1
 fi
+
+sed -e "s/{{ BUILD }}/$build/" -e "s/{{ VERSION }}/$version_publish/" "$configuration_template_file" > "$output_configuration_file"
 
 echo "Enter your changelog for the release (press Ctrl+D when finished):"
 

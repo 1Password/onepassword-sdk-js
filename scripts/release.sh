@@ -2,12 +2,16 @@
 
 # Helper script to prepare a JS Release for the SDKs.
 
-version_sdk=$(< version-sdk)
+set -e
+
 version_sdk_core=$(< version-sdk-core)
-build=$(< version-build.env cut -d '"' -f 2)
+
+# Extract build and version_sdk number from the configuration.ts
+build=$(awk -F "['\"]" '/VERSION =/{print $2}' "client/src/configuration.ts")
+version_sdk=$(awk -F "['\"]" '/VERSION =/{sub(/\/\/ v/, "", $3); print $3}' "client/src/configuration.ts")
+
 changelog=$(<client/changelogs/"${version_sdk}"-"${build}")
 
-set -e
 core_modified="${1}"
 
 # Check if Github CLI is installed
