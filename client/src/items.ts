@@ -2,21 +2,9 @@ import { InvokeConfig, InnerClient } from "./core.js";
 import * as types from "./types.js";
 
 export interface ItemsApi {
-  /**
-   *  Create a new item
-   */
   create(item: types.Item): Promise<types.Item>;
-  /**
-   *  Get an item by vault and item ID
-   */
   get(vaultId: string, itemId: string): Promise<types.Item>;
-  /**
-   *  Update an existing item. You can currently only edit text and concealed fields.
-   */
   update(item: types.Item): Promise<types.Item>;
-  /**
-   *  Delete an item.
-   */
   delete(vaultId: string, itemId: string): Promise<void>;
 }
 
@@ -84,7 +72,8 @@ export class ItemsSource implements ItemsApi {
         },
       },
     };
-
-    await this.#inner.core.invoke(invocationConfig);
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+    ) as Promise<void>;
   }
 }
