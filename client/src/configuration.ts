@@ -1,7 +1,7 @@
 import os from "os";
 
-import { ClientAuthConfig } from "./core.js";
 import { SDK_BUILD_NUMBER } from "../release/version.js";
+import { ClientAuthConfig } from "./core.js";
 
 export const LANGUAGE = "JS";
 export const VERSION = SDK_BUILD_NUMBER;
