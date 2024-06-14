@@ -1,2 +1,2 @@
-const SDK_VERSION = "0.1.0-beta.12"
-const SDK_BUILD_NUMBER = "0010012"
+const SDK_VERSION = "0.1.0-beta.10"
+const SDK_BUILD_NUMBER = "0010010"
