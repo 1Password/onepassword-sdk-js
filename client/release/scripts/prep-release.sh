@@ -81,7 +81,7 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build
 
-if [[ "$current_build_number" == "$build" ]]; then
+if [[ "$current_build_number" -ge "$build" ]]; then
     echo "Build version hasn't changed. Stopping." >&2
     exit 1
 fi
@@ -110,8 +110,6 @@ fi
 git add .
 git commit -S -m "Release v${version}"
 git push --set-upstream origin "${branch}"
-
-
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
