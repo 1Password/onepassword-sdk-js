@@ -3,11 +3,13 @@
 # Helper script to prepare a release for the JS SDK.
 
 # Read the build number from version-build to compare with new build number and ensure update has been made.
-output_configuration_file="client/src/configuration.ts"
-configuration_template_file="templates/configuration.tpl.ts"
+output_version_file="client/release/version.ts"
+version_template_file="client/release/templates/version.tpl.ts"
 
 # Extracts the current build number for comparison 
-current_build_number=$(awk -F "['\"]" '/VERSION =/{print $2}' "$output_configuration_file")
+current_build_number=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_version_file")
+
+version_sdk_core_file="client/release/version-sdk-core"
 
 core_modified="${1}"
 
@@ -71,7 +73,7 @@ update_and_validate_build() {
     done
 }
 # Ensure that the current working directory is clean
-enforce_latest_code
+# enforce_latest_code
 
 # Update and validate the version number
 update_and_validate_version
@@ -84,23 +86,33 @@ if [[ "$current_build_number" == "$build" ]]; then
     exit 1
 fi
 
-sed -e "s/{{ BUILD }}/$build/" -e "s/{{ VERSION }}/$version_publish/" "$configuration_template_file" > "$output_configuration_file"
+sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" "$version_template_file" > "$output_version_file"
 
-echo "Enter your changelog for the release (press Ctrl+D when finished):"
+changelog_file="client/release/changelogs/"${version_publish}"-"${build}""
 
-# Read changelog input from the user until Ctrl+D is pressed
-changelog_content=""
-while IFS= read -r line; do
-    changelog_content+="${line}"$'\n' # Append each line to the variable with a newline character
-done
+printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
+read -r _ignore
+${EDITOR:-nano} "$changelog_file"
 
-changelog_file="client/changelogs/"${version_publish}"-"${build}""
+# Get Current Branch Name
+branch="$(git rev-parse --abbrev-ref HEAD)"
 
-# Store the changelog input into a file
-echo "${changelog_content}" >> "${changelog_file}"
+# if on main, then stash changes and create RC branch
+if [[ "${branch}" = "main" ]]; then
+    git stash
+    git fetch origin
+    git checkout -b rc/"${version}"
+    git stash apply
+fi
+
+# Add changes and commit/push to branch
+git add .
+git commit -S -m "Release v${version}"
+git push --set-upstream origin rc/"${version}"
+
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
 changelog is correctly filled out.
-Once confirmed, run 'make release' to release the SDK!"
+Once confirmed, run 'npm run release or npm run no-core-release' depending to release the SDK!"
 
