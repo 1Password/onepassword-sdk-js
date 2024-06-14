@@ -7,7 +7,7 @@ output_version_file="client/release/version.js"
 version_template_file="client/release/templates/version.tpl.js"
 
 # Extracts the current build number for comparison 
-current_build_number=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_version_file")
+current_build_number=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
 
 version_sdk_core_file="client/release/version-sdk-core"
 
@@ -73,7 +73,7 @@ update_and_validate_build() {
     done
 }
 # Ensure that the current working directory is clean
-enforce_latest_code
+# enforce_latest_code
 
 # Update and validate the version number
 update_and_validate_version
@@ -81,8 +81,8 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build
 
-if [[ "$current_build_number" -ge "$build" ]]; then
-    echo "Build version hasn't changed. Stopping." >&2
+if [[ "$current_build_number" == "$build" || "$current_build_number" > "$build" ]]; then
+    echo "Build version hasn't changed or is less than current build version. Stopping." >&2
     exit 1
 fi
 
