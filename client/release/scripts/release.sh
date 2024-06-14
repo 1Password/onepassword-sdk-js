@@ -4,11 +4,11 @@
 
 set -e
 
-version_sdk_core=$(< version-sdk-core)
+version_sdk_core=$(< client/release/version-sdk-core)
 
 # Extract build and version_sdk number from the configuration.ts
-build=$(awk -F "['\"]" '/VERSION =/{print $2}' "client/src/configuration.ts")
-version_sdk=$(awk -F "['\"]" '/VERSION =/{sub(/\/\/ v/, "", $3); print $3}' "client/src/configuration.ts")
+build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js")
+version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{sub(/\/\/ v/, "", $3); print $2}' "client/release/version.js")
 
 changelog=$(<client/changelogs/"${version_sdk}"-"${build}")
 
@@ -88,21 +88,8 @@ fi
 # Create release tag
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 
-# Get Current Branch Name
-branch="$(git rev-parse --abbrev-ref HEAD)"
-
-# if on main, then stash changes and create RC branch
-if [[ "${branch}" = "main" ]]; then
-    git stash
-    git fetch origin
-    git checkout -b rc/"${version_sdk}"
-    git stash pop
-fi
-
-# Add changes and commit/push to branch
-git add .
-git commit -m "Release v${version_sdk}"
-git push origin ${branch}
+# Push the tag to the branch
+git push origin tag "v${version_sdk}"
 
 gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/1Password/onepassword-sdk-js
 
