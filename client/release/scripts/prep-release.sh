@@ -73,7 +73,7 @@ update_and_validate_build() {
     done
 }
 # Ensure that the current working directory is clean
-# enforce_latest_code
+enforce_latest_code
 
 # Update and validate the version number
 update_and_validate_version
