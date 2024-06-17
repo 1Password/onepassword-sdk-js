@@ -27,7 +27,7 @@ if [ -z "${GITHUB_TOKEN}" ]; then
 fi
 
 if [ "$core_modified" = "true" ]; then
-    cd wasm/
+    cd onepassword-sdk-js/wasm
     # Update core version number to the latest
     npm version "${version_sdk_core}"
     # Check if all files pertaining to sdk core are included
@@ -37,7 +37,7 @@ if [ "$core_modified" = "true" ]; then
     if [ "$files_are_ok" == "y" ]; then
         # Publish and add latest tag to core
         # npm publish --tag beta
-        npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest --dry-run
+        # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest --dry-run
     elif [ "$files_are_ok" == "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
