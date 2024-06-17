@@ -90,7 +90,7 @@ sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" "$version_
 
 cd onepassword-sdk-js
 
-changelog_file="onepassword-sdk-js/client/release/changelogs/"${version_publish}"-"${build}""
+changelog_file="client/release/changelogs/"${version_publish}"-"${build}""
 
 printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
 read -r _ignore
