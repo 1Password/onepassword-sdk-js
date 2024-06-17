@@ -1,10 +1,10 @@
-import * as os from "os";
-import fs from "fs"
+import os from "os";
 
+import { SDK_BUILD_NUMBER } from "../release/version.js";
 import { ClientAuthConfig } from "./core.js";
 
 export const LANGUAGE = "JS";
-export const VERSION =  fs.readFileSync("version-build","utf-8")
+export const VERSION = SDK_BUILD_NUMBER;
 
 // Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {

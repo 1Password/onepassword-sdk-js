@@ -2,18 +2,28 @@
 
 # Helper script to prepare a JS Release for the SDKs.
 
-version_sdk=$(< client/src/version-sdk)
-version_sdk_core=$(< client/src/version-sdk-core)
-build=$(< client/src/version-build)
-changelog=$(<client/changelogs/"${version_sdk}"-"${build}")
-
 set -e
+
+version_sdk_core=$(< client/release/version-sdk-core)
+
+# Extract build and version_sdk number from the configuration.ts
+build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js" | tr -d '\n')
+version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version.js"| tr -d '\n')
+
+changelog=$(< client/release/changelogs/"${version_sdk}"-"${build}")
+
 core_modified="${1}"
 
 # Check if Github CLI is installed
 if ! command -v gh &> /dev/null; then
 	echo "gh is not installed";\
 	exit 1;\
+fi
+
+# Ensure GITHUB_TOKEN env var is set
+if [ -z "${GITHUB_TOKEN}" ]; then
+  echo "GITHUB_TOKEN environment variable is not set."
+  exit 1
 fi
 
 if [ "$core_modified" = "true" ]; then
@@ -78,26 +88,8 @@ fi
 # Create release tag
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 
-# Get Current Branch Name
-branch="$(git rev-parse --abbrev-ref HEAD)"
-
-# if on main, then stash changes and create RC branch
-if [[ "${branch}" = "main" ]]; then
-    git stash
-    git fetch origin
-    git checkout -b rc/"${version_sdk}"
-    git stash pop
-fi
-
-# Add changes and commit/push to branch
-git add .
-git commit -m "Release for ${version_sdk}"
-git push origin ${branch}
-
-# Ensure GITHUB_TOKEN env var is set
-if [ -z "${GITHUB_TOKEN}" ]; then
-  echo "GITHUB_TOKEN environment variable is not set."
-  exit 1
-fi
+# Push the tag to the branch
+git push origin tag "v${version_sdk}"
 
 gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/MOmarMiraj/onepassword-sdk-js
+
