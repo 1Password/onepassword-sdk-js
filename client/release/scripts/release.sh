@@ -4,13 +4,13 @@
 
 set -e
 
-version_sdk_core=$(< client/release/version-sdk-core)
+version_sdk_core=$(< onepassword-sdk-js/client/release/version-sdk-core)
 
 # Extract build and version_sdk number from the configuration.ts
-build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js" | tr -d '\n')
-version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version.js"| tr -d '\n')
+build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "onepassword-sdk-js/client/release/version.js" | tr -d '\n')
+version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "onepassword-sdk-js/client/release/version.js"| tr -d '\n')
 
-changelog=$(< client/release/changelogs/"${version_sdk}"-"${build}")
+changelog=$(< onepassword-sdk-js/client/release/changelogs/"${version_sdk}"-"${build}")
 
 core_modified="${1}"
 
@@ -36,8 +36,8 @@ if [ "$core_modified" = "true" ]; then
     read -p "Is everything good? (y/n)" files_are_ok
     if [ "$files_are_ok" == "y" ]; then
         # Publish and add latest tag to core
-        npm publish --tag beta
-        npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
+        # npm publish --tag beta
+        npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest --dry-run
     elif [ "$files_are_ok" == "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
@@ -67,8 +67,8 @@ fi
 
   if [ "$files_are_ok" == "y" ]; then
     # Publish and add latest tag
-    npm run publish-beta
-    npm dist-tag add @1password/sdk@${version_sdk} latest 
+    # npm run publish-beta
+    npm dist-tag add @1password/sdk@${version_sdk} latest --dry-run
     
     # Update dependancy in examples to run off the latest sdk
     cd ../examples 
