@@ -27,18 +27,18 @@ if [ -z "${GITHUB_TOKEN}" ]; then
 fi
 
 if [ "$core_modified" = "true" ]; then
-    cd wasm/
+    cd wasm
     # Update core version number to the latest
     npm version "${version_sdk_core}"
     # Check if all files pertaining to sdk core are included
     npm publish --dry-run --tag beta
 
     read -p "Is everything good? (y/n)" files_are_ok
-    if [ "$files_are_ok" == "y" ]; then
+    if [ "$files_are_ok" = "y" ]; then
         # Publish and add latest tag to core
         npm publish --tag beta
         npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
-    elif [ "$files_are_ok" == "n" ]; then
+    elif [ "$files_are_ok" = "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
     else
@@ -65,7 +65,7 @@ fi
   
   read -p "Is everything good? (y/n)" files_are_ok
 
-  if [ "$files_are_ok" == "y" ]; then
+  if [ "$files_are_ok" = "y" ]; then
     # Publish and add latest tag
     npm run publish-beta
     npm dist-tag add @1password/sdk@${version_sdk} latest 
@@ -77,7 +77,7 @@ fi
     # Check if the latest SDK client is pulled correctly
     cd ../ && npm install
   
-  elif [ "$files_are_ok" == "n" ]; then
+  elif [ "$files_are_ok" = "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
   else

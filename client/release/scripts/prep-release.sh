@@ -73,7 +73,7 @@ update_and_validate_build() {
     done
 }
 # Ensure that the current working directory is clean
-# enforce_latest_code
+enforce_latest_code
 
 # Update and validate the version number
 update_and_validate_version
@@ -99,7 +99,7 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 
 # if on main, then stash changes and create RC branch
 if [[ "${branch}" = "main" ]]; then
-    branch=rc/"${version}"
+    branch=rc/"${version_publish}"
     git stash
     git fetch origin
     git checkout -b "${branch}"
@@ -108,7 +108,7 @@ fi
 
 # Add changes and commit/push to branch
 git add .
-git commit -S -m "Release v${version}"
+git commit -S -m "Release v${version_publish}"
 git push --set-upstream origin "${branch}"
 
 echo "Release has been prepared..
