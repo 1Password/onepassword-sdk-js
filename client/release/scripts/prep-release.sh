@@ -3,13 +3,13 @@
 # Helper script to prepare a release for the JS SDK.
 
 # Read the build number from version-build to compare with new build number and ensure update has been made.
-output_version_file="client/release/version.js"
-version_template_file="client/release/templates/version.tpl.js"
+output_version_file="onepassword-sdk-js/client/release/version.js"
+version_template_file="onepassword-sdk-js/client/release/templates/version.tpl.js"
 
 # Extracts the current build number for comparison 
 current_build_number=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
 
-version_sdk_core_file="client/release/version-sdk-core"
+version_sdk_core_file="onepassword-sdk-js/client/release/version-sdk-core"
 
 core_modified="${1}"
 
@@ -88,7 +88,9 @@ fi
 
 sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" "$version_template_file" > "$output_version_file"
 
-changelog_file="client/release/changelogs/"${version_publish}"-"${build}""
+cd onepassword-sdk-js
+
+changelog_file="onepassword-sdk-js/client/release/changelogs/"${version_publish}"-"${build}""
 
 printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
 read -r _ignore
