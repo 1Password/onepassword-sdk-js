@@ -64,7 +64,7 @@ update_and_validate_version() {
         read -p "Enter the version number (format: x.y.z(-beta.w)): " version_publish
 
         # Validate the version number format
-        if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
+        if [[ "${version_publish}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
             if [[ "${current_version}" != "${version_publish}" ]]; then
                 # TODO: Check the less than case as well.
                 echo "New version number is: ${version_publish}"
