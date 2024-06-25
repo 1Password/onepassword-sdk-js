@@ -123,7 +123,7 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "${branch}" = "main" ]]; then
     branch=rc/"${version_publish}"
     git stash
-    git fetch origin
+    git fetch origin main
     git checkout -b "${branch}"
     git stash apply
 fi
