@@ -1,4 +1,0 @@
-This release fixes two bugs:
-
-[FIXED] The Go SDK no longer errors out for function calls that are executed after an unsuccessful operation.
-[IMPROVED] Item editing now contains additional validation to ensure item icons are not removed upon updating.

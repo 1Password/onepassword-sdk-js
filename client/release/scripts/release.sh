@@ -10,7 +10,7 @@ version_sdk_core=$(< client/release/version-sdk-core)
 build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js" | tr -d '\n')
 version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version.js"| tr -d '\n')
 
-changelog=$(< client/release/changelogs/"${version_sdk}"-"${build}")
+release_notes=$(< client/release/RELEASE-NOTES)
 
 core_modified="${1}"
 
@@ -91,5 +91,5 @@ git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 # Push the tag to the branch
 git push origin tag "v${version_sdk}"
 
-gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/1Password/onepassword-sdk-js
+gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/1Password/onepassword-sdk-js
 
