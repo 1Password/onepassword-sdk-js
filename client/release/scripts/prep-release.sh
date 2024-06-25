@@ -3,15 +3,31 @@
 # Helper script to prepare a release for the JS SDK.
 
 # Read the build number from version-build to compare with new build number and ensure update has been made.
-output_version_file="onepassword-sdk-js/client/release/version.js"
-version_template_file="onepassword-sdk-js/client/release/templates/version.tpl.js"
+output_version_file="client/release/version.js"
+version_template_file="client/release/templates/version.tpl.js"
 
 # Extracts the current build number for comparison 
-current_build_number=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
+current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
+current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "${output_version_file}" | tr -d '\n')
+current_core_version=$(< client/release/version-sdk-core)
 
-version_sdk_core_file="onepassword-sdk-js/client/release/version-sdk-core"
+version_sdk_core_file="client/release/version-sdk-core"
 
 core_modified="${1}"
+
+# Function to execute upon exit
+cleanup() {
+    echo "Performing cleanup tasks..."
+    # Revert changes to file if any
+    sed -e "s/{{ build }}/$current_build/" -e "s/{{ version }}/$current_version/" "$version_template_file" > "$output_version_file"
+    if [ "${core_modified}" = "true" ]; then
+        echo "${current_core_version}" > "${version_sdk_core_file}"
+    fi
+    exit 1   
+}
+
+# Set the trap to call the cleanup function on exit
+trap cleanup SIGINT
 
 enforce_latest_code() {
     if [[ -n "$(git status --porcelain=v1)" ]]; then
@@ -25,33 +41,42 @@ enforce_latest_code() {
 update_and_validate_version() {
     if [ "${core_modified}" = "true" ]; then
         while true; do
+            # Prompt the user to input the version number
             read -p "Enter the core version number (format: x.y.z(-beta.w)): " version
             # Validate the version number format
             if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
-                # Write the valid version number to the file
-                echo "${version}" > "${version_sdk_core_file}"
-                echo "New version number is: ${version}"
-                break
+                if [[ "${current_core_version}" != "${version}" ]]; then
+                    # TODO: Check the less than case as well.
+                    echo "${version}" > "${version_sdk_core_file}"
+                    echo "New version number is: ${version}"
+                    break
+                else
+                    echo "Core version hasn't changed."
+                fi        
             else
-                echo "Invalid core version number format: ${version}"
+                echo "Invalid version number format: ${version}"
                 echo "Please enter a version number in the 'x.y.z(-beta.w)' format."
-            fi    
+            fi
         done
     fi
     while true; do
-            # Prompt the user to input the version number
-            read -p "Enter the version number (format: x.y.z(-beta.w)): " version_publish
+        # Prompt the user to input the version number
+        read -p "Enter the version number (format: x.y.z(-beta.w)): " version_publish
 
-            # Validate the version number format
-            if [[ "${version_publish}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
-                # Write the valid version number to the file
+        # Validate the version number format
+        if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
+            if [[ "${current_version}" != "${version_publish}" ]]; then
+                # TODO: Check the less than case as well.
                 echo "New version number is: ${version_publish}"
                 return 0
             else
-                echo "Invalid version number format: ${version_publish}"
-                echo "Please enter a version number in the 'x.y.z(-beta.w)' format."
-            fi    
-        done
+                echo "Version hasn't changed."
+            fi        
+        else
+            echo "Invalid version number format: ${version_publish}"
+            echo "Please enter a version number in the 'x.y.z(-beta.w)' format."
+        fi
+    done
 }
 
 # Function to validate the build number format.
@@ -63,9 +88,13 @@ update_and_validate_build() {
 
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
-            # Write the valid build number to the file
-            echo "New build number is: ${build}"
-            return 0
+            if (( 10#$current_build < 10#$build )); then
+                # Write the valid build number to the file
+                echo "New build number is: ${build}"
+                return 0
+            else
+                echo "New build version should be higher than current build version."
+            fi
         else
             echo "Invalid build number format: ${build}"
             echo "Please enter a build number in the 'Mmmppbb' format."
@@ -73,7 +102,7 @@ update_and_validate_build() {
     done
 }
 # Ensure that the current working directory is clean
-# enforce_latest_code
+enforce_latest_code
 
 # Update and validate the version number
 update_and_validate_version
@@ -81,20 +110,11 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build
 
-if (( 10#$current_build_number >= 10#$build )); then
-    echo "Build version hasn't changed or is less than current build version. Stopping." >&2
-    exit 1
-fi
-
 sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" "$version_template_file" > "$output_version_file"
-
-cd onepassword-sdk-js
-
-changelog_file="client/release/changelogs/"${version_publish}"-"${build}""
 
 printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
 read -r _ignore
-${EDITOR:-nano} "$changelog_file"
+${EDITOR:-nano} "client/release/RELEASE-NOTES"
 
 # Get Current Branch Name
 branch="$(git rev-parse --abbrev-ref HEAD)"

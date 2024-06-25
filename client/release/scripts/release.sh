@@ -4,13 +4,13 @@
 
 set -e
 
-version_sdk_core=$(< onepassword-sdk-js/client/release/version-sdk-core)
+version_sdk_core=$(< client/release/version-sdk-core)
 
 # Extract build and version_sdk number from the configuration.ts
-build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "onepassword-sdk-js/client/release/version.js" | tr -d '\n')
-version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "onepassword-sdk-js/client/release/version.js"| tr -d '\n')
+build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js" | tr -d '\n')
+version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version.js"| tr -d '\n')
 
-changelog=$(< onepassword-sdk-js/client/release/changelogs/"${version_sdk}"-"${build}")
+release_notes=$(< client/release/RELEASE-NOTES)
 
 core_modified="${1}"
 
@@ -27,18 +27,18 @@ if [ -z "${GITHUB_TOKEN}" ]; then
 fi
 
 if [ "$core_modified" = "true" ]; then
-    cd onepassword-sdk-js/wasm
+    cd wasm
     # Update core version number to the latest
     npm version "${version_sdk_core}"
     # Check if all files pertaining to sdk core are included
     npm publish --dry-run --tag beta
 
     read -p "Is everything good? (y/n)" files_are_ok
-    if [ "$files_are_ok" == "y" ]; then
+    if [ "$files_are_ok" = "y" ]; then
         # Publish and add latest tag to core
-        # npm publish --tag beta
-        # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest --dry-run
-    elif [ "$files_are_ok" == "n" ]; then
+        npm publish --tag beta
+        npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
+    elif [ "$files_are_ok" = "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
     else
@@ -65,10 +65,10 @@ fi
   
   read -p "Is everything good? (y/n)" files_are_ok
 
-  if [ "$files_are_ok" == "y" ]; then
+  if [ "$files_are_ok" = "y" ]; then
     # Publish and add latest tag
-    # npm run publish-beta
-    npm dist-tag add @1password/sdk@${version_sdk} latest --dry-run
+    npm run publish-beta
+    npm dist-tag add @1password/sdk@${version_sdk} latest 
     
     # Update dependancy in examples to run off the latest sdk
     cd ../examples 
@@ -77,7 +77,7 @@ fi
     # Check if the latest SDK client is pulled correctly
     cd ../ && npm install
   
-  elif [ "$files_are_ok" == "n" ]; then
+  elif [ "$files_are_ok" = "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
   else
@@ -91,5 +91,5 @@ git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 # Push the tag to the branch
 git push origin tag "v${version_sdk}"
 
-gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${changelog}" --repo github.com/MOmarMiraj/onepassword-sdk-js
+gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/1Password/onepassword-sdk-js
 
