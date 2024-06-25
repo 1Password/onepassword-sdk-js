@@ -64,7 +64,7 @@ update_and_validate_version() {
         read -p "Enter the version number (format: x.y.z(-beta.w)): " version_publish
 
         # Validate the version number format
-        if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
+        if [[ "${version_publish}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
             if [[ "${current_version}" != "${version_publish}" ]]; then
                 # TODO: Check the less than case as well.
                 echo "New version number is: ${version_publish}"
@@ -123,7 +123,7 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "${branch}" = "main" ]]; then
     branch=rc/"${version_publish}"
     git stash
-    git fetch origin
+    git fetch origin 
     git checkout -b "${branch}"
     git stash apply
 fi

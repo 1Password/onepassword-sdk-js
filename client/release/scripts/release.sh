@@ -14,6 +14,21 @@ release_notes=$(< client/release/RELEASE-NOTES)
 
 core_modified="${1}"
 
+# Function to execute upon exit
+cleanup() {
+    echo "Performing cleanup tasks..."
+
+    # Revert all the updates to package.json back to main branch versions
+    git checkout main -- wasm/package.json
+    git checkout main -- client/package.json
+    git checkout main -- examples/package.json
+
+    exit 1   
+}
+
+# Set the trap to call the cleanup function on exit
+trap cleanup SIGINT ERR
+
 # Check if Github CLI is installed
 if ! command -v gh &> /dev/null; then
 	echo "gh is not installed";\
@@ -33,18 +48,24 @@ if [ "$core_modified" = "true" ]; then
     # Check if all files pertaining to sdk core are included
     npm publish --dry-run --tag beta
 
-    read -p "Is everything good? (y/n)" files_are_ok
-    if [ "$files_are_ok" = "y" ]; then
-        # Publish and add latest tag to core
-        npm publish --tag beta
-        npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
-    elif [ "$files_are_ok" = "n" ]; then
-        echo "Files are incorrect, Exiting..."
-        exit 0
-    else
-        echo "Invalid input. Please enter 'y' or 'n'."
-        exit 1
-    fi
+    read -p "Is everything good? (y/n) " files_are_ok
+
+    case "$files_are_ok" in
+        y)
+            # npm publish --tag beta
+            # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
+            echo "Publishing and tagging completed."
+            ;;
+        n)
+            echo "Files are incorrect, Exiting..."
+            cleanup
+            ;;
+        *)
+            echo "Invalid input. Please enter 'y' or 'n'."
+            cleanup
+            ;;
+    esac
+
     cd ..
 fi
 
@@ -65,25 +86,28 @@ fi
   
   read -p "Is everything good? (y/n)" files_are_ok
 
-  if [ "$files_are_ok" = "y" ]; then
-    # Publish and add latest tag
-    npm run publish-beta
-    npm dist-tag add @1password/sdk@${version_sdk} latest 
-    
-    # Update dependancy in examples to run off the latest sdk
-    cd ../examples 
-    npm install @1password/sdk --save
+    case "$files_are_ok" in
+        y)
+            # npm run publish-beta
+            # npm dist-tag add @1password/sdk@${version_sdk} latest
 
-    # Check if the latest SDK client is pulled correctly
-    cd ../ && npm install
-  
-  elif [ "$files_are_ok" = "n" ]; then
-        echo "Files are incorrect, Exiting..."
-        exit 0
-  else
-        echo "Invalid input. Please enter 'y' or 'n'."
-        exit 1
-  fi
+            # Update dependency in examples to run off the latest SDK
+            cd ../examples && npm install @1password/sdk --save
+
+            # Check if the latest SDK client is pulled correctly
+            cd ../ && npm install
+
+            echo "Update and installation completed."
+            ;;
+        n)
+            echo "Files are incorrect, Exiting..."
+            cleanup
+            ;;
+        *)
+            echo "Invalid input. Please enter 'y' or 'n'."
+            cleanup
+            ;;
+    esac
 
 # Create release tag
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
@@ -91,5 +115,5 @@ git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 # Push the tag to the branch
 git push origin tag "v${version_sdk}"
 
-gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/1Password/onepassword-sdk-js
+gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/MOmarMiraj/onepassword-sdk-js
 

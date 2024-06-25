@@ -12,7 +12,7 @@
     "eslint": "npm run eslint --workspaces --if-present",
     "prep-release-no-core": "client/release/scripts/prep-release.sh false",
     "prep-release": "client/release/scripts/prep-release.sh true",
-    "no-core-release": "client/release/scripts/release.sh false",
+    "release-no-core": "client/release/scripts/release.sh false",
     "release": "client/release/scripts/release.sh true"
   },
   "workspaces": [
