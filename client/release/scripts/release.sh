@@ -36,8 +36,8 @@ if [ "$core_modified" = "true" ]; then
     read -p "Is everything good? (y/n)" files_are_ok
     if [ "$files_are_ok" = "y" ]; then
         # Publish and add latest tag to core
-        npm publish --tag beta
-        npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
+        # npm publish --tag beta
+        # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
     elif [ "$files_are_ok" = "n" ]; then
         echo "Files are incorrect, Exiting..."
         exit 0
