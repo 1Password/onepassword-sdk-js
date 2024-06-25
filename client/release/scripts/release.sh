@@ -17,7 +17,7 @@ core_modified="${1}"
 # Function to execute upon exit
 cleanup() {
     echo "Performing cleanup tasks..."
-    
+
     # Revert all the updates to package.json back to main branch versions
     git checkout main -- wasm/package.json
     git checkout main -- client/package.json
@@ -27,7 +27,7 @@ cleanup() {
 }
 
 # Set the trap to call the cleanup function on exit
-trap cleanup SIGINT
+trap cleanup SIGINT ERR
 
 # Check if Github CLI is installed
 if ! command -v gh &> /dev/null; then
