@@ -33,18 +33,24 @@ if [ "$core_modified" = "true" ]; then
     # Check if all files pertaining to sdk core are included
     npm publish --dry-run --tag beta
 
-    read -p "Is everything good? (y/n)" files_are_ok
-    if [ "$files_are_ok" = "y" ]; then
-        # Publish and add latest tag to core
-        # npm publish --tag beta
-        # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest 
-    elif [ "$files_are_ok" = "n" ]; then
-        echo "Files are incorrect, Exiting..."
-        exit 0
-    else
-        echo "Invalid input. Please enter 'y' or 'n'."
-        exit 1
-    fi
+    read -p "Is everything good? (y/n) " files_are_ok
+
+    case "$files_are_ok" in
+        y)
+            # npm publish --tag beta
+            # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
+            echo "Publishing and tagging completed."
+            ;;
+        n)
+            echo "Files are incorrect, Exiting..."
+            exit 0
+            ;;
+        *)
+            echo "Invalid input. Please enter 'y' or 'n'."
+            exit 1
+            ;;
+    esac
+
     cd ..
 fi
 
@@ -65,25 +71,28 @@ fi
   
   read -p "Is everything good? (y/n)" files_are_ok
 
-  if [ "$files_are_ok" = "y" ]; then
-    # Publish and add latest tag
-    # npm run publish-beta
-    # npm dist-tag add @1password/sdk@${version_sdk} latest 
-    
-    # Update dependancy in examples to run off the latest sdk
-    cd ../examples 
-    npm install @1password/sdk --save
+    case "$files_are_ok" in
+        y)
+            # npm run publish-beta
+            # npm dist-tag add @1password/sdk@${version_sdk} latest
 
-    # Check if the latest SDK client is pulled correctly
-    cd ../ && npm install
-  
-  elif [ "$files_are_ok" = "n" ]; then
-        echo "Files are incorrect, Exiting..."
-        exit 0
-  else
-        echo "Invalid input. Please enter 'y' or 'n'."
-        exit 1
-  fi
+            # Update dependency in examples to run off the latest SDK
+            cd ../examples && npm install @1password/sdk --save
+
+            # Check if the latest SDK client is pulled correctly
+            cd ../ && npm install
+
+            echo "Update and installation completed."
+            ;;
+        n)
+            echo "Files are incorrect, Exiting..."
+            exit 0
+            ;;
+        *)
+            echo "Invalid input. Please enter 'y' or 'n'."
+            exit 1
+            ;;
+    esac
 
 # Create release tag
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
