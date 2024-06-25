@@ -14,6 +14,17 @@ release_notes=$(< client/release/RELEASE-NOTES)
 
 core_modified="${1}"
 
+# Function to execute upon exit
+cleanup() {
+    echo "Performing cleanup tasks..."
+    # Revert changes to file if any
+    npm ci
+    exit 1   
+}
+
+# Set the trap to call the cleanup function on exit
+trap cleanup SIGINT
+
 # Check if Github CLI is installed
 if ! command -v gh &> /dev/null; then
 	echo "gh is not installed";\
@@ -43,11 +54,11 @@ if [ "$core_modified" = "true" ]; then
             ;;
         n)
             echo "Files are incorrect, Exiting..."
-            exit 0
+            cleanup
             ;;
         *)
             echo "Invalid input. Please enter 'y' or 'n'."
-            exit 1
+            cleanup
             ;;
     esac
 
@@ -86,11 +97,11 @@ fi
             ;;
         n)
             echo "Files are incorrect, Exiting..."
-            exit 0
+            cleanup
             ;;
         *)
             echo "Invalid input. Please enter 'y' or 'n'."
-            exit 1
+            cleanup
             ;;
     esac
 
