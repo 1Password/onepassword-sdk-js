@@ -2,8 +2,6 @@
 
 # Helper script to prepare a JS Release for the SDKs.
 
-set -e
-
 version_sdk_core=$(< client/release/version-sdk-core)
 
 # Extract build and version_sdk number from the configuration.ts
@@ -115,5 +113,5 @@ git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 # Push the tag to the branch
 git push origin tag "v${version_sdk}"
 
-gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/MOmarMiraj/onepassword-sdk-js
+gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/1Password/onepassword-sdk-js
 
