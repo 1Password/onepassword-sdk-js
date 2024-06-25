@@ -17,8 +17,12 @@ core_modified="${1}"
 # Function to execute upon exit
 cleanup() {
     echo "Performing cleanup tasks..."
-    # Revert changes to file if any
-    npm ci
+    
+    # Revert all the updates to package.json back to main branch versions
+    git checkout main -- wasm/package.json
+    git checkout main -- client/package.json
+    git checkout main -- examples/package.json
+
     exit 1   
 }
 
