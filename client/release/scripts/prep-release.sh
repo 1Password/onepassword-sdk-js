@@ -112,6 +112,7 @@ update_and_validate_build
 
 sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" "$version_template_file" > "$output_version_file"
 
+
 printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
 read -r _ignore
 ${EDITOR:-nano} "client/release/RELEASE-NOTES"

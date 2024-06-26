@@ -26,4 +26,15 @@ if not then run:
 ```
 npm run release-no-core
 ```
+
+Note: If performing a stable release, the commands should be:
+```
+npm run release-stable
+```
+or
+```
+npm run release-no-core-stable
+```
+
 Step 6. Congratulations, you have released the newest JS SDK!
+

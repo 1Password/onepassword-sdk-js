@@ -11,16 +11,15 @@ version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version
 release_notes=$(< client/release/RELEASE-NOTES)
 
 core_modified="${1}"
+SDK_RELEASE="${2}"
 
 # Function to execute upon exit
 cleanup() {
     echo "Performing cleanup tasks..."
-
-    # Revert all the updates to package.json back to main branch versions
-    git checkout main -- wasm/package.json
-    git checkout main -- client/package.json
-    git checkout main -- examples/package.json
-
+    # Go to the root of the repo to ensure all files are restored
+    cd "$(git rev-parse --show-toplevel)"
+    # restores all files
+    git checkout -- .
     exit 1   
 }
 
@@ -44,15 +43,15 @@ if [ "$core_modified" = "true" ]; then
     # Update core version number to the latest
     npm version "${version_sdk_core}"
     # Check if all files pertaining to sdk core are included
-    npm publish --dry-run --tag beta
+    npm publish --dry-run --tag "${SDK_RELEASE}"
 
     read -p "Is everything good? (y/n) " files_are_ok
 
     case "$files_are_ok" in
         y)
-            # npm publish --tag beta
-            # npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
-            echo "Publishing and tagging completed."
+            npm publish --tag "${SDK_RELEASE}"
+            npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
+            echo "Publishing and tagging on NPM completed."
             ;;
         n)
             echo "Files are incorrect, Exiting..."
@@ -86,8 +85,8 @@ fi
 
     case "$files_are_ok" in
         y)
-            # npm run publish-beta
-            # npm dist-tag add @1password/sdk@${version_sdk} latest
+            npm run publish-beta
+            npm dist-tag add @1password/sdk@${version_sdk} latest
 
             # Update dependency in examples to run off the latest SDK
             cd ../examples && npm install @1password/sdk --save
@@ -107,11 +106,15 @@ fi
             ;;
     esac
 
+branch="$(git rev-parse --abbrev-ref HEAD)"
+# Add and Commit the package.json's
+git commit -am "Update package.json's"
+
 # Create release tag
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
 
-# Push the tag to the branch
-git push origin tag "v${version_sdk}"
+# Push the commits and tags to the branch
+git push --atomic origin "${branch}" "v${version_sdk}"
 
 gh release create "v${version_sdk}" --title "Release ${version_sdk}" --notes "${release_notes}" --repo github.com/1Password/onepassword-sdk-js
 
