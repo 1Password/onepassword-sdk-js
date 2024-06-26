@@ -4,11 +4,11 @@ Before running this script, the user must make sure that they have the write per
 Step 1. Make any changes to the SDK as required on a feature branch or main branch.
 NOTE: If ran on a main branch, a release branch will be created.
 
-Step 2. Go to the root of the repo if the SDK core has been updated than run
+Step 2. Go to the root of the repo if the SDK core has been updated then run
 ```
 npm run prep-release
 ```
-but if it hasn't changed than run 
+but if it hasn't changed then run 
 ```
 npm run prep-release-no-core
 ```
@@ -22,7 +22,7 @@ Step 5. If everything looks good and if SDK Core has been updated, at the root o
 ```
 npm run release
 ```
-if not than run:
+if not then run:
 ```
 npm run release-no-core
 ```
