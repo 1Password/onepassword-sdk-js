@@ -9,8 +9,9 @@
     "prettier-fix": "prettier --write 'src/*.ts'",
     "eslint": "eslint -c .eslintrc.json 'src/*.ts'",
     "prepare": "rm -rf ./dist && npm run build",
-    "publish-test": "cp ../README.md . && npm publish --tag beta --dry-run && rm ./README.md",
-    "publish-beta": "cp ../README.md . && npm publish --tag beta && rm ./README.md"
+    "publish-test": "cp ../README.md . && npm publish --tag \"${RELEASE_CHANNEL:-beta}\" --dry-run && rm ./README.md",
+    "publish-prod": "cp ../README.md . && npm publish --tag \"${RELEASE_CHANNEL:-beta}\" && rm ./README.md"
+
   },
   "author": "1Password",
   "license": "MIT",
