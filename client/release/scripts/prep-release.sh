@@ -6,6 +6,9 @@
 output_version_file="client/release/version.js"
 version_template_file="client/release/templates/version.tpl.js"
 
+current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
+current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "${output_version_file}" | tr -d '\n')
+
 # Extracts the current build number for comparison 
 current_core_version=$(awk -F "['\"]" '/SDK_CORE_VERSION =/{print $2}' "${output_version_file}" | tr -d '\n')
 
