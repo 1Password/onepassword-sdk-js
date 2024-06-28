@@ -78,13 +78,12 @@ fi
   npm install 
 
   # Check if all files pertaining to sdk are included
-  cp ../README.md . && npm publish --tag "${RELEASE_CHANNEL:-beta}" --dry-run && rm ./README.md
-
+  npm run publish-test RELEASE_CHANNEL="${RELEASE_CHANNEL}"
   read -p "Is everything good? (y/n)" files_are_ok
 
     case "$files_are_ok" in
         y)
-            cp ../README.md . && npm publish --tag "${RELEASE_CHANNEL:-beta}" && rm ./README.md
+            npm run publish-prod RELEASE_CHANNEL="${RELEASE_CHANNEL}"
             npm dist-tag add @1password/sdk@${version_sdk} latest
 
             # Update dependency in examples to run off the latest SDK
