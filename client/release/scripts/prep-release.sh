@@ -7,11 +7,7 @@ output_version_file="client/release/version.js"
 version_template_file="client/release/templates/version.tpl.js"
 
 # Extracts the current build number for comparison 
-current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
-current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "${output_version_file}" | tr -d '\n')
-current_core_version=$(< client/release/version-sdk-core)
-
-version_sdk_core_file="client/release/version-sdk-core"
+current_core_version=$(awk -F "['\"]" '/SDK_CORE_VERSION =/{print $2}' "${output_version_file}" | tr -d '\n')
 
 core_modified="${1}"
 
@@ -19,10 +15,7 @@ core_modified="${1}"
 cleanup() {
     echo "Performing cleanup tasks..."
     # Revert changes to file if any
-    sed -e "s/{{ build }}/$current_build/" -e "s/{{ version }}/$current_version/" "$version_template_file" > "$output_version_file"
-    if [ "${core_modified}" = "true" ]; then
-        echo "${current_core_version}" > "${version_sdk_core_file}"
-    fi
+    git checkout -- "${output_version_file}"
     exit 1   
 }
 
@@ -47,7 +40,6 @@ update_and_validate_version() {
             if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
                 if [[ "${current_core_version}" != "${version}" ]]; then
                     # TODO: Check the less than case as well.
-                    echo "${version}" > "${version_sdk_core_file}"
                     echo "New version number is: ${version}"
                     break
                 else
@@ -61,8 +53,8 @@ update_and_validate_version() {
     fi
     while true; do
         # Prompt the user to input the version number
-        read -p "Enter the version number (format: x.y.z(-beta.w)): " version_publish
-
+        read -p "Enter the JS SDK client's version number (format: x.y.z(-beta.w)): " version_publish
+        
         # Validate the version number format
         if [[ "${version_publish}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
             if [[ "${current_version}" != "${version_publish}" ]]; then
@@ -102,7 +94,7 @@ update_and_validate_build() {
     done
 }
 # Ensure that the current working directory is clean
-enforce_latest_code
+# enforce_latest_code
 
 # Update and validate the version number
 update_and_validate_version
@@ -110,8 +102,11 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build
 
-sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" "$version_template_file" > "$output_version_file"
-
+if [ "${core_modified}" = "true" ]; then
+    sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" -e "s/{{ core_version }}/$version/" "$version_template_file" > "$output_version_file"
+else
+    sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" -e "s/{{ core_version }}/$current_core_version/" "$version_template_file" > "$output_version_file"
+fi
 
 printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
 read -r _ignore

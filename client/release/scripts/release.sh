@@ -2,16 +2,15 @@
 
 # Helper script to prepare a JS Release for the SDKs.
 
-version_sdk_core=$(< client/release/version-sdk-core)
-
 # Extract build and version_sdk number from the configuration.ts
 build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js" | tr -d '\n')
 version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version.js"| tr -d '\n')
+version_sdk_core=$(awk -F "['\"]" '/SDK_CORE_VERSION =/{print $2}' "client/release/version.js" | tr -d '\n')
 
 release_notes=$(< client/release/RELEASE-NOTES)
 
 core_modified="${1}"
-SDK_RELEASE="${2}"
+RELEASE_CHANNEL="${2}"
 
 # Function to execute upon exit
 cleanup() {
@@ -43,13 +42,13 @@ if [ "$core_modified" = "true" ]; then
     # Update core version number to the latest
     npm version "${version_sdk_core}"
     # Check if all files pertaining to sdk core are included
-    npm publish --dry-run --tag "${SDK_RELEASE}"
+    npm publish --dry-run --tag "${RELEASE_CHANNEL}"
 
     read -p "Is everything good? (y/n) " files_are_ok
 
     case "$files_are_ok" in
         y)
-            npm publish --tag "${SDK_RELEASE}"
+            npm publish --tag "${RELEASE_CHANNEL}"
             npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
             echo "Publishing and tagging on NPM completed."
             ;;
@@ -79,13 +78,13 @@ fi
   npm install 
 
   # Check if all files pertaining to sdk are included
-  npm run publish-test --dry-run
-  
+  cp ../README.md . && npm publish --tag "${RELEASE_CHANNEL:-beta}" --dry-run && rm ./README.md
+
   read -p "Is everything good? (y/n)" files_are_ok
 
     case "$files_are_ok" in
         y)
-            npm run publish-beta
+            cp ../README.md . && npm publish --tag "${RELEASE_CHANNEL:-beta}" && rm ./README.md
             npm dist-tag add @1password/sdk@${version_sdk} latest
 
             # Update dependency in examples to run off the latest SDK
