@@ -9,7 +9,13 @@
     "prepare": "npm run build --workspace client",
     "prettier": "npm run prettier --workspaces --if-present",
     "prettier-fix": "npm run prettier-fix --workspaces --if-present",
-    "eslint": "npm run eslint --workspaces --if-present"
+    "eslint": "npm run eslint --workspaces --if-present",
+    "prep-release-no-core": "client/release/scripts/prep-release.sh false",
+    "prep-release": "client/release/scripts/prep-release.sh true",
+    "release-no-core": "client/release/scripts/release.sh false beta",
+    "release": "client/release/scripts/release.sh true beta",
+    "release-no-core-stable": "client/release/scripts/release.sh false stable",
+    "release-stable": "client/release/scripts/release.sh true stable"
   },
   "workspaces": [
     "client",
