@@ -22,7 +22,6 @@ async function manageItems() {
 
   // Create an item
   let item = await client.items.create({
-    id: "",
     title: "My Item",
     category: sdk.ItemCategory.Login,
     vault_id: "xw33qlvug6moegr3wkk5zkenoa",
