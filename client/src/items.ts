@@ -1,19 +1,25 @@
 import { InvokeConfig, InnerClient } from "./core.js";
 import * as types from "./types.js";
 
+/**
+ *  The Items API holds all operations the SDK client can perform on 1Password items.
+ */
 export interface ItemsApi {
   /**
    *  Create a new item
    */
-  create(item: types.Item): Promise<types.Item>;
+  create(params: types.ItemCreateParams): Promise<types.Item>;
+
   /**
    *  Get an item by vault and item ID
    */
   get(vaultId: string, itemId: string): Promise<types.Item>;
+
   /**
-   *  Update an existing item. You can currently only edit text and concealed fields.
+   *  Update an existing item.
    */
-  update(item: types.Item): Promise<types.Item>;
+  put(item: types.Item): Promise<types.Item>;
+
   /**
    *  Delete an item.
    */
@@ -27,13 +33,16 @@ export class ItemsSource implements ItemsApi {
     this.#inner = inner;
   }
 
-  public async create(item: types.Item): Promise<types.Item> {
+  /**
+   *  Create a new item
+   */
+  public async create(params: types.ItemCreateParams): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
       invocation: {
         name: "Create",
         parameters: {
-          item,
+          params,
         },
       },
     };
@@ -42,6 +51,9 @@ export class ItemsSource implements ItemsApi {
     ) as Promise<types.Item>;
   }
 
+  /**
+   *  Get an item by vault and item ID
+   */
   public async get(vaultId: string, itemId: string): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
@@ -58,11 +70,14 @@ export class ItemsSource implements ItemsApi {
     ) as Promise<types.Item>;
   }
 
-  public async update(item: types.Item): Promise<types.Item> {
+  /**
+   *  Update an existing item.
+   */
+  public async put(item: types.Item): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
       invocation: {
-        name: "Update",
+        name: "Put",
         parameters: {
           item,
         },
@@ -73,6 +88,9 @@ export class ItemsSource implements ItemsApi {
     ) as Promise<types.Item>;
   }
 
+  /**
+   *  Delete an item.
+   */
   public async delete(vaultId: string, itemId: string): Promise<void> {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
@@ -84,7 +102,6 @@ export class ItemsSource implements ItemsApi {
         },
       },
     };
-
     await this.#inner.core.invoke(invocationConfig);
   }
 }
