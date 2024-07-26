@@ -31,6 +31,13 @@ let item = await client.items.create({
       field_type: sdk.ItemFieldType.Concealed,
       value: "my secret value",
     },
+    {
+      id: "onetimepassword",
+      title: "one-time password",
+      section_id: "custom section",
+      field_type: sdk.ItemFieldType.Totp,
+      value: "vrcsrxcrfrdxdsrcxfdv",
+    },
   ],
   sections: [
     {
@@ -38,6 +45,21 @@ let item = await client.items.create({
       title: "my section",
     },
   ],
+});
+
+item.fields.forEach((element) => {
+  if (element.field_type == sdk.ItemFieldType.Totp) {
+    switch (element.details.type) {
+      case 'Otp': {
+        if (element.details.content.error_message == undefined) {
+          console.log(element.details.content.code)
+        } else {
+          console.error(element.details.content.error_message)
+        }
+      }
+      default:
+    }
+  }
 });
 
 // Edits an item
