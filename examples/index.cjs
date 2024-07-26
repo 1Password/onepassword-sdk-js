@@ -22,7 +22,6 @@ async function manageItems() {
 
   // Create an item
   let item = await client.items.create({
-    id: "",
     title: "My Item",
     category: sdk.ItemCategory.Login,
     vault_id: "xw33qlvug6moegr3wkk5zkenoa",
@@ -51,7 +50,7 @@ async function manageItems() {
 
   // Edit an item
   item.fields[0].value = "other value";
-  let updatedItem = await client.items.update(item);
+  let updatedItem = await client.items.put(item);
   console.log(updatedItem.fields);
 
   // Delete an item
