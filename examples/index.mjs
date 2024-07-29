@@ -25,9 +25,8 @@ let item = await client.items.create({
       value: "my username",
     },
     {
-      id: "custom",
-      title: "my custom field",
-      section_id: "custom section",
+      id: "password",
+      title: "password",
       field_type: sdk.ItemFieldType.Concealed,
       value: "my secret value",
     },
