@@ -54,6 +54,7 @@ async function manageItems() {
     ],
   });
 
+  // Get a one-time password code.
   item.fields.forEach((element) => {
     if (element.field_type == sdk.ItemFieldType.Totp) {
       switch (element.details.type) {

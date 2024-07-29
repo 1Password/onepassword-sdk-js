@@ -46,6 +46,7 @@ let item = await client.items.create({
   ],
 });
 
+// Get a one-time password code.
 item.fields.forEach((element) => {
   if (element.field_type == sdk.ItemFieldType.Totp) {
     switch (element.details.type) {
