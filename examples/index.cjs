@@ -24,7 +24,7 @@ async function manageItems() {
   let item = await client.items.create({
     title: "My Item",
     category: sdk.ItemCategory.Login,
-    vault_id: "xw33qlvug6moegr3wkk5zkenoa",
+    vault_id: "7turaasywpymt3jecxoxk5roli",
     fields: [
       {
         id: "username",
@@ -55,20 +55,20 @@ async function manageItems() {
   });
 
   // Get a one-time password code.
-  item.fields.forEach((element) => {
-    if (element.field_type == sdk.ItemFieldType.Totp) {
-      switch (element.details.type) {
-        case 'Otp': {
-          if (element.details.content.error_message == undefined) {
-            console.log(element.details.content.code)
-          } else {
-            console.error(element.details.content.error_message)
-          }
-        }
-        default:
+  let element = item.fields.find((element) => {
+    return element.field_type == sdk.ItemFieldType.Totp
+  })
+
+  switch (element.details.type) {
+    case 'Otp': {
+      if (element.details.content.code) {
+        console.log(element.details.content.code)
+      } else {
+        console.error(element.details.content.error_message)
       }
     }
-  });
+    default:
+  }
 
   // Edit an item
   item.fields[0].value = "other value";
