@@ -32,75 +32,81 @@ export enum ItemCategory {
 export enum ItemFieldType {
   Text = "Text",
   Concealed = "Concealed",
+  CreditCardType = "CreditCardType",
+  Phone = "Phone",
+  Url = "Url",
+  Totp = "Totp",
   Unsupported = "Unsupported",
 }
 
-/**
- *  Stores a field's title and value.
- */
+/** Field type-specific attributes. */
+export type ItemFieldDetails =
+  /** The computed OTP code and other details */
+  { type: "Otp"; content: OtpFieldDetails };
+
+/** Represents a field within an item. */
 export interface ItemField {
-  /**
-   *  The field's ID
-   */
+  /** The field's ID */
   id: string;
-  /**
-   *  The field's title
-   */
+  /** The field's title */
   title: string;
-  /**
-   *  The ID of the section containing the field
-   */
+  /** The ID of the section containing the field. Built-in fields such as usernames and passwords don't require a section. */
   section_id?: string;
-  /**
-   *  The type of value stored in the field
-   */
+  /** The field's type */
   field_type: ItemFieldType;
-  /**
-   *  The string representation of the field's value
-   */
+  /** The string representation of the field's value */
   value: string;
+  /** Field type-specific attributes. */
+  details?: ItemFieldDetails;
 }
 
-/**
- *  A section groups together multiple fields in an item.
- */
+/** A section groups together multiple fields in an item. */
 export interface ItemSection {
-  /**
-   *  The ID of the section
-   */
+  /** The section's unique ID */
   id: string;
-  /**
-   *  The title of the section
-   */
+  /** The section's title */
   title: string;
 }
 
-/**
- *  Represents a 1Password item.
- */
+/** Represents a 1Password item. */
 export interface Item {
-  /**
-   *  The item's unique ID
-   */
+  /** The item's ID */
   id: string;
-  /**
-   *  The item's title
-   */
+  /** The item's title */
   title: string;
-  /**
-   *  The item's category
-   */
+  /** The item's category */
   category: ItemCategory;
-  /**
-   *  The ID of the vault where the item is saved
-   */
+  /** The ID of the vault where the item is saved */
   vault_id: string;
-  /**
-   *  The item's fields
-   */
+  /** The item's tags */
+  tags: string[];
+  /** The item's fields */
   fields: ItemField[];
-  /**
-   *  The item's sections
-   */
+  /** The item's sections */
   sections: ItemSection[];
+  /** The item's version */
+  version: number;
+}
+
+export interface ItemCreateParams {
+  /** The item's category */
+  category: ItemCategory;
+  /** The ID of the vault where the item is saved */
+  vault_id: string;
+  /** The item's title */
+  title: string;
+  /** The item's fields */
+  fields: ItemField[];
+  /** The item's sections */
+  sections: ItemSection[];
+  /** The item's tags */
+  tags: string[];
+}
+
+/** Additional attributes for OTP fields. */
+export interface OtpFieldDetails {
+  /** The OTP code, if successfully computed */
+  code?: string;
+  /** The error message, if the OTP code could not be computed */
+  error_message?: string;
 }
