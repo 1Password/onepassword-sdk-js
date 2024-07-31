@@ -59,6 +59,11 @@ async function manageItems() {
     return element.field_type == sdk.ItemFieldType.Totp
   })
 
+  if (!element) {
+    console.error("no totp field found on item");
+    return;
+  }
+
   switch (element.details.type) {
     case 'Otp': {
       if (element.details.content.code) {

@@ -51,15 +51,19 @@ let element = item.fields.find((element) => {
   return element.field_type == sdk.ItemFieldType.Totp
  })
 
-switch (element.details.type) {
-  case 'Otp': {
-    if (element.details.content.code) {
-      console.log(element.details.content.code)
-    } else {
-      console.error(element.details.content.error_message)
+if (!element) {
+  console.error("no totp field found on item");
+} else {
+  switch (element.details.type) {
+    case 'Otp': {
+      if (element.details.content.code) {
+        console.log(element.details.content.code)
+      } else {
+        console.error(element.details.content.error_message)
+      }
     }
+    default:
   }
-  default:
 }
 
 // Edits an item
