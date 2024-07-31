@@ -11,6 +11,10 @@ const client = await sdk.createClient({
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret);
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPr7/pM9FYdmvCqexf+VlzgaH3LxKJg/kfKkk5yQJHYj
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINbkJLPiqfPav0m60j8yRJp1lKKT+q+v/bm3VzTHvyOl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzj6HhbJnFTn1KwVi3gW/cwT0fDSsNRvQTcR3WC3QH+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKrkOzq5xIlrABjBMgtT8gf17gFWuGFxfoDPYQunW9gk
 
 // Creates an item
 let item = await client.items.create({
