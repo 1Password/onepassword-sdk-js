@@ -78,18 +78,29 @@ export interface Item {
   category: ItemCategory;
   /** The ID of the vault where the item is saved */
   vault_id: string;
+  /** The item's tags */
+  tags: string[];
   /** The item's fields */
   fields: ItemField[];
   /** The item's sections */
   sections: ItemSection[];
+  /** The item's version */
+  version: number;
 }
 
 export interface ItemCreateParams {
+  /** The item's category */
   category: ItemCategory;
+  /** The ID of the vault where the item is saved */
   vault_id: string;
+  /** The item's title */
   title: string;
+  /** The item's fields */
   fields: ItemField[];
+  /** The item's sections */
   sections: ItemSection[];
+  /** The item's tags */
+  tags: string[];
 }
 
 /** Additional attributes for OTP fields. */
