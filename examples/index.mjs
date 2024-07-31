@@ -14,10 +14,9 @@ console.log(secret);
 
 // Creates an item
 let item = await client.items.create({
-  id: "",
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vault_id: "xw33qlvug6moegr3wkk5zkenoa",
+  vault_id: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
@@ -26,11 +25,17 @@ let item = await client.items.create({
       value: "my username",
     },
     {
-      id: "custom",
-      title: "my custom field",
-      section_id: "custom section",
+      id: "password",
+      title: "password",
       field_type: sdk.ItemFieldType.Concealed,
       value: "my secret value",
+    },
+    {
+      id: "onetimepassword",
+      title: "one-time password",
+      section_id: "custom section",
+      field_type: sdk.ItemFieldType.Totp,
+      value: "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
     },
   ],
   sections: [
@@ -41,9 +46,29 @@ let item = await client.items.create({
   ],
 });
 
+// Get a one-time password code.
+let element = item.fields.find((element) => {
+  return element.field_type == sdk.ItemFieldType.Totp
+ })
+
+if (!element) {
+  console.error("no totp field found on item");
+} else {
+  switch (element.details.type) {
+    case 'Otp': {
+      if (element.details.content.code) {
+        console.log(element.details.content.code)
+      } else {
+        console.error(element.details.content.error_message)
+      }
+    }
+    default:
+  }
+}
+
 // Edits an item
 item.fields[0].value = "other value";
-let updatedItem = await client.items.update(item);
+let updatedItem = await client.items.put(item);
 
 console.log(updatedItem.fields);
 

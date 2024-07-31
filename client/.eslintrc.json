@@ -17,6 +17,11 @@
 				"jsdoc/require-param": "off",
 				"jsdoc/require-returns": "off",
 				"import/no-unresolved": 0,
+				// turning this check off because the way Typeshare generates enums
+				// with only one variant is not compliant with it. However, with us
+				// adding more variants in the future to that enum, enforcing the 
+				// current typing is a requirement for future compatibility.
+				"@typescript-eslint/consistent-type-definitions": "off",
 				"@typescript-eslint/naming-convention": [
 					"warn",
 					{
