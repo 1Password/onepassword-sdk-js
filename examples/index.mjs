@@ -35,7 +35,7 @@ let item = await client.items.create({
       title: "one-time password",
       section_id: "custom section",
       field_type: sdk.ItemFieldType.Totp,
-      value: "vrcsrxcrfrdxdsrcxfdv",
+      value: "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
     },
   ],
   sections: [
