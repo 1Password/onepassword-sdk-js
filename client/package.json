@@ -1,6 +1,6 @@
 {
   "name": "@1password/sdk",
-  "version": "0.1.0-beta.13",
+  "version": "0.1.0-beta.14",
   "description": "The 1Password JavaScript SDK offers programmatic read access to your secrets in 1Password in an interface native to JavaScript. The SDK currently supports `Node.JS`",
   "scripts": {
     "build": "tsc",
