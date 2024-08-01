@@ -68,6 +68,7 @@ fi
   cd client
   if [ "$core_modified" = true ]; then
     # Update @1password/sdk-core dependancy to the latest
+    # TODO: this doesn't work as intended. We must update such that it strictly installs using the latest core version.
     npm install @1password/sdk-core --save
   fi
 
@@ -78,12 +79,12 @@ fi
   npm install 
 
   # Check if all files pertaining to sdk are included
-  npm run publish-test RELEASE_CHANNEL="${RELEASE_CHANNEL}"
+  RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-test 
   read -p "Is everything good? (y/n)" files_are_ok
 
     case "$files_are_ok" in
         y)
-            npm run publish-prod RELEASE_CHANNEL="${RELEASE_CHANNEL}"
+            RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-prod 
             npm dist-tag add @1password/sdk@${version_sdk} latest
 
             # Update dependency in examples to run off the latest SDK
