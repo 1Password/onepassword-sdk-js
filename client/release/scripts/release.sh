@@ -68,6 +68,7 @@ fi
   cd client
   if [ "$core_modified" = true ]; then
     # Update @1password/sdk-core dependancy to the latest
+    # TODO: this doesn't work as intended. We must update such that it strictly installs using the latest core version.
     npm install @1password/sdk-core --save
   fi
 
