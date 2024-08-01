@@ -1,6 +1,6 @@
-Adds OTP support.
-Brings improvements to the SDKs:
-   Changes the structure of creating an item to use the new `ItemCreateParams`.
-   Changes the name of `Update` to `Put` to better capture its functionality.
-   Includes other bug fixes, such as:
-      Fixing a bug with the `Secrets.Resolve` function, which was unable to resolve secret references containing periods.
+This release includes:
+
+- Support for reading and writing OTP field information such as the TOTP code and seed, through the Item API.
+- The `Update` operation is renamed to `Put` to create more realistic expectation with regard to the effect of the operation.
+- The item creation operation now takes as input `ItemCreateParams`.
+- Support for a few more field types: Phone, Url, CreditCardType.
