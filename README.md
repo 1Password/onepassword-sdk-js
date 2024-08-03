@@ -16,7 +16,7 @@
 
 ## Supported functionality
 
-1Password SDKs are in active development. We're keen to hear what you'd like to see next. Let us know by [upvoting](https://github.com/1Password/onepassword-sdk-go/issues) or [filing](https://github.com/1Password/onepassword-sdk-go/issues/new/choose) an issue.
+1Password SDKs are in active development. We're keen to hear what you'd like to see next. Let us know by [upvoting](https://github.com/1Password/onepassword-sdk-js/issues) or [filing](https://github.com/1Password/onepassword-sdk-js/issues/new/choose) an issue.
 
 ### Item management
 
