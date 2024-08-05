@@ -1,5 +1,6 @@
 import { InvokeConfig, InnerClient } from "./core.js";
 import * as types from "./types.js";
+import { SdkIterable } from "./iterator.js";
 
 /**
  *  The Secrets API includes all operations the SDK client can perform on secrets.
@@ -26,7 +27,7 @@ export class SecretsSource implements SecretsApi {
     const invocationConfig: InvokeConfig = {
       clientId: this.#inner.id,
       invocation: {
-        name: "Resolve",
+        name: "SecretsResolve",
         parameters: {
           secret_reference: secretReference,
         },
