@@ -3,8 +3,8 @@
 # Helper script to prepare a release for the JS SDK.
 
 # Read the build number from version-build to compare with new build number and ensure update has been made.
-output_version_file="client/release/version.js"
-version_template_file="client/release/templates/version.tpl.js"
+output_version_file="client/version.ts"
+version_template_file="client/release/templates/version.tpl.ts"
 
 current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "${output_version_file}" | tr -d '\n')
 current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "${output_version_file}" | tr -d '\n')
