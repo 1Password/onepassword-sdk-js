@@ -3,9 +3,9 @@
 # Helper script to prepare a JS Release for the SDKs.
 
 # Extract build and version_sdk number from the configuration.ts
-build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/release/version.js" | tr -d '\n')
-version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/release/version.js"| tr -d '\n')
-version_sdk_core=$(awk -F "['\"]" '/SDK_CORE_VERSION =/{print $2}' "client/release/version.js" | tr -d '\n')
+build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "client/src/version.ts" | tr -d '\n')
+version_sdk=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "client/src/version.ts"| tr -d '\n')
+version_sdk_core=$(awk -F "['\"]" '/SDK_CORE_VERSION =/{print $2}' "client/src/version.ts" | tr -d '\n')
 
 release_notes=$(< client/release/RELEASE-NOTES)
 

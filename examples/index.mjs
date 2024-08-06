@@ -8,6 +8,16 @@ const client = await sdk.createClient({
   integrationVersion: "v1.0.0",
 });
 
+const vaults = await client.vaults.listAll()
+
+for await (const vault of vaults) {
+  console.log(vault.id + " " + vault.title)
+  const items = await client.items.listAll(vault.id)
+  for await (const item of items) {
+    console.log(item.id + " " + item.title)
+  }
+}
+
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret);
@@ -16,25 +26,25 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vault_id: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
       title: "username",
-      field_type: sdk.ItemFieldType.Text,
+      fieldType: sdk.ItemFieldType.Text,
       value: "my username",
     },
     {
       id: "password",
       title: "password",
-      field_type: sdk.ItemFieldType.Concealed,
+      fieldType: sdk.ItemFieldType.Concealed,
       value: "my secret value",
     },
     {
       id: "onetimepassword",
       title: "one-time password",
-      section_id: "custom section",
-      field_type: sdk.ItemFieldType.Totp,
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Totp,
       value: "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
     },
   ],
@@ -44,11 +54,12 @@ let item = await client.items.create({
       title: "my section",
     },
   ],
+  tags: [],
 });
 
 // Get a one-time password code.
 let element = item.fields.find((element) => {
-  return element.field_type == sdk.ItemFieldType.Totp
+  return element.fieldType == sdk.ItemFieldType.Totp
  })
 
 if (!element) {
@@ -59,7 +70,7 @@ if (!element) {
       if (element.details.content.code) {
         console.log(element.details.content.code)
       } else {
-        console.error(element.details.content.error_message)
+        console.error(element.details.content.errorMessage)
       }
     }
     default:
@@ -73,4 +84,4 @@ let updatedItem = await client.items.put(item);
 console.log(updatedItem.fields);
 
 // Deletes an item
-await client.items.delete(item.vault_id, item.id);
+await client.items.delete(item.vaultId, item.id);
