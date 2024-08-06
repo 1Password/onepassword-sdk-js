@@ -35,7 +35,7 @@ test("authenticated client resolves secrets correctly", () => {
     expect(core.id).toBe(1);
     client.secrets.resolve("secret_ref").then((secret) => {
       expect(secret).toBe(
-        "method Resolve called on client 0 with parameters {\"secret_reference\":\"secret_ref\"}",
+        "method SecretsResolve called on client 0 with parameters {\"secret_reference\":\"secret_ref\"}",
       );
     });
   });
