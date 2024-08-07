@@ -99,7 +99,6 @@ Field types:
 - [x] URLs
 - [x] Phone numbers
 - [x] Credit card types
-- [ ] Credit card numbers
 - [ ] File attachments and Document items
 
 ### Vault management
