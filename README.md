@@ -37,17 +37,17 @@ To use the 1Password JavaScript SDK in your project:
 
    ```bash
    ## NPM
-   npm install @1password/sdk@beta
+   npm install @1password/sdk
    ```
 
    ```bash
    ## PNPM
-   pnpm add @1password/sdk@beta
+   pnpm add @1password/sdk
    ```
 
    ```bash
    ## Yarn
-   yarn add @1password/sdk@beta
+   yarn add @1password/sdk
    ```
 
 4. Use the JavaScript SDK in your project:
@@ -85,7 +85,7 @@ Operations:
 - [x] [Update items](https://developer.1password.com/docs/sdks/manage-items#edit-an-item)
 - [x] [Delete items](https://developer.1password.com/docs/sdks/manage-items#delete-an-item)
 - [x] [List items](https://developer.1password.com/docs/sdks/list-vaults-items/)
-- [ ] Add & update tags on items 
+- [ ] Add & update tags on items
 
 Field types:
 - [x] API Keys
@@ -95,7 +95,7 @@ Field types:
 - [x] Notes
 - [x] SSH private keys (partially supported: supported in resolving secret references, not yet supported in item create/get/update)
 - [ ] SSH public keys, fingerprint and key type
-- [x] One-time passwords 
+- [x] One-time passwords
 - [x] URLs
 - [x] Phone numbers
 - [x] Credit card types
