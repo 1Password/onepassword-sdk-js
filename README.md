@@ -14,63 +14,6 @@
 
 ---
 
-## Supported functionality
-
-1Password SDKs are in active development. We're keen to hear what you'd like to see next. Let us know by [upvoting](https://github.com/1Password/onepassword-sdk-js/issues) or [filing](https://github.com/1Password/onepassword-sdk-js/issues/new/choose) an issue.
-
-### Item management
-
-Operations:
-
-- [x] [Retrieve secrets](https://developer.1password.com/docs/sdks/load-secrets)
-- [x] [Retrieve items](https://developer.1password.com/docs/sdks/manage-items#get-an-item)
-- [x] [Create items](https://developer.1password.com/docs/sdks/manage-items#create-an-item)
-- [x] [Update items](https://developer.1password.com/docs/sdks/manage-items#edit-an-item)
-- [x] [Delete items](https://developer.1password.com/docs/sdks/manage-items#delete-an-item)
-- [ ] List items
-- [ ] Add & update tags on items 
-
-Field types:
-- [x] API Keys
-- [x] Passwords
-- [x] Concealed fields
-- [x] Text fields
-- [x] Notes
-- [x] SSH private keys (partially supported: supported in resolving secret references, not yet supported in item create/get/update)
-- [ ] SSH public keys, fingerprint and key type
-- [ ] One-time passwords \
-- [ ] Files attachments and Document items
-- [x] URLs
-- [x] Credit card number & type
-- [x] Phone numbers
-
-### Vault management
-- [ ] Retrieve vaults
-- [ ] Create vaults ([#50](https://github.com/1Password/onepassword-sdk-js/issues/50))
-- [ ] Update vaults
-- [ ] Delete vaults
-- [ ] List vaults
-
-### User & access management
-- [ ] Provision users
-- [ ] Retrieve users
-- [ ] List users
-- [ ] Suspend users
-- [ ] Create groups
-- [ ] Update group membership
-- [ ] Update vault access & permissions
-
-### Compliance & reporting
-- [ ] Watchtower insights
-- [ ] Travel mode
-- [ ] Events. For now, use [1Password Events Reporting API](https://developer.1password.com/docs/events-api/) directly.
-
-### Authentication
-
-- [x] [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/get-started/)
-- [ ] User authentication
-- [ ] 1Password Connect. For now, use [1Password/connect-sdk-go](https://github.com/1Password/connect-sdk-go).
-
 ## 🚀 Get started
 
 To use the 1Password JavaScript SDK in your project:
@@ -127,6 +70,63 @@ const secret = await client.secrets.resolve("op://vault/item/field");
 Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secrets-reference-syntax/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
 
 Inside `createClient()`, set `integrationName` to the name of your application and `integrationVersion` to the version of your application.
+
+## Supported functionality
+
+1Password SDKs are in active development. We're keen to hear what you'd like to see next. Let us know by [upvoting](https://github.com/1Password/onepassword-sdk-js/issues) or [filing](https://github.com/1Password/onepassword-sdk-js/issues/new/choose) an issue.
+
+### Item management
+
+Operations:
+
+- [x] [Retrieve secrets](https://developer.1password.com/docs/sdks/load-secrets)
+- [x] [Retrieve items](https://developer.1password.com/docs/sdks/manage-items#get-an-item)
+- [x] [Create items](https://developer.1password.com/docs/sdks/manage-items#create-an-item)
+- [x] [Update items](https://developer.1password.com/docs/sdks/manage-items#edit-an-item)
+- [x] [Delete items](https://developer.1password.com/docs/sdks/manage-items#delete-an-item)
+- [x] [List items](https://developer.1password.com/docs/sdks/list-vaults-items/)
+- [ ] Add & update tags on items 
+
+Field types:
+- [x] API Keys
+- [x] Passwords
+- [x] Concealed fields
+- [x] Text fields
+- [x] Notes
+- [x] SSH private keys (partially supported: supported in resolving secret references, not yet supported in item create/get/update)
+- [ ] SSH public keys, fingerprint and key type
+- [x] One-time passwords 
+- [x] URLs
+- [x] Phone numbers
+- [x] Credit card types
+- [ ] File attachments and Document items
+
+### Vault management
+- [ ] Retrieve vaults
+- [ ] Create vaults ([#50](https://github.com/1Password/onepassword-sdk-js/issues/50))
+- [ ] Update vaults
+- [ ] Delete vaults
+- [x] [List vaults](https://developer.1password.com/docs/sdks/list-vaults-items/)
+
+### User & access management
+- [ ] Provision users
+- [ ] Retrieve users
+- [ ] List users
+- [ ] Suspend users
+- [ ] Create groups
+- [ ] Update group membership
+- [ ] Update vault access & permissions
+
+### Compliance & reporting
+- [ ] Watchtower insights
+- [ ] Travel mode
+- [ ] Events. For now, use [1Password Events Reporting API](https://developer.1password.com/docs/events-api/) directly.
+
+### Authentication
+
+- [x] [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/get-started/)
+- [ ] User authentication
+- [ ] 1Password Connect. For now, use [1Password/connect-sdk-go](https://github.com/1Password/connect-sdk-go).
 
 ## 📖 Learn more
 
