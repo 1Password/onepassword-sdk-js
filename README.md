@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://1password.com">
-      <h1 align="center">1Password JavaScript SDK (beta)</h1>
+      <h1 align="center">1Password JavaScript SDK</h1>
   </a>
 </p>
 
 <p align="center">
- <h4 align="center"> ❗ The 1Password SDK project is in beta. Future iterations may bring backwards-incompatible changes.</h4>
+ <h4 align="center">Build integrations that programmatically access your secrets in 1Password.</h4>
 </p>
 
 <p align="center">
@@ -37,17 +37,17 @@ To use the 1Password JavaScript SDK in your project:
 
    ```bash
    ## NPM
-   npm install @1password/sdk@beta
+   npm install @1password/sdk
    ```
 
    ```bash
    ## PNPM
-   pnpm add @1password/sdk@beta
+   pnpm add @1password/sdk
    ```
 
    ```bash
    ## Yarn
-   yarn add @1password/sdk@beta
+   yarn add @1password/sdk
    ```
 
 4. Use the JavaScript SDK in your project:
@@ -85,7 +85,7 @@ Operations:
 - [x] [Update items](https://developer.1password.com/docs/sdks/manage-items#edit-an-item)
 - [x] [Delete items](https://developer.1password.com/docs/sdks/manage-items#delete-an-item)
 - [x] [List items](https://developer.1password.com/docs/sdks/list-vaults-items/)
-- [ ] Add & update tags on items 
+- [ ] Add & update tags on items
 
 Field types:
 - [x] API Keys
@@ -95,7 +95,7 @@ Field types:
 - [x] Notes
 - [x] SSH private keys (partially supported: supported in resolving secret references, not yet supported in item create/get/update)
 - [ ] SSH public keys, fingerprint and key type
-- [x] One-time passwords 
+- [x] One-time passwords
 - [x] URLs
 - [x] Phone numbers
 - [x] Credit card types
@@ -132,4 +132,5 @@ Field types:
 
 - [Load secrets with 1Password SDKs](https://developer.1password.com/docs/sdks/load-secrets)
 - [Manage items with 1Password SDKs](https://developer.1password.com/docs/sdks/manage-items)
+- [List vaults and items with 1Password SDKs](https://developer.1password.com/docs/sdks/list-vaults-items)
 - [1Password SDK concepts](https://developer.1password.com/docs/sdks/concepts)
