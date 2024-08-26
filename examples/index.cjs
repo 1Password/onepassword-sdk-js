@@ -90,16 +90,14 @@ async function manageItems() {
   // Edit an item (change the password)
   let newItem = {
     ...item,
-    fields: item.fields
-      .filter((f) => {
-        return f.id == "password";
-      })
-      .map((f) => {
-        f.value = "new password";
+    fields: item.fields.map((f) => {
+      if (f.title == "password") {
+        return { ...f, value: "my-new-password" };
+      } else {
         return f;
-      }),
+      }
+    }),
   };
-
   let updatedItem = await client.items.put(newItem);
   console.log(updatedItem.fields);
 
