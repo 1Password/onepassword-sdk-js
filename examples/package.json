@@ -3,9 +3,14 @@
   "description": "Working examples that use the 1Password JS SDK",
   "scripts": {
     "esm-example": "node index.mjs",
-    "commonjs-example": "node index.cjs"
+    "commonjs-example": "node index.cjs",
+    "prettier": "prettier --check index.*js",
+    "prettier-fix": "prettier --write index.*js"
   },
   "dependencies": {
     "@1password/sdk": "0.1.1"
+  },
+  "devDependencies": {
+    "prettier": "3.1.1"
   }
 }

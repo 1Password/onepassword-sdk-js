@@ -8,13 +8,13 @@ const client = await sdk.createClient({
   integrationVersion: "v1.0.0",
 });
 
-const vaults = await client.vaults.listAll()
+const vaults = await client.vaults.listAll();
 
 for await (const vault of vaults) {
-  console.log(vault.id + " " + vault.title)
-  const items = await client.items.listAll(vault.id)
+  console.log(vault.id + " " + vault.title);
+  const items = await client.items.listAll(vault.id);
   for await (const item of items) {
-    console.log(item.id + " " + item.title)
+    console.log(item.id + " " + item.title);
   }
 }
 
@@ -45,7 +45,8 @@ let item = await client.items.create({
       title: "one-time password",
       sectionId: "custom section",
       fieldType: sdk.ItemFieldType.Totp,
-      value: "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
+      value:
+        "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
     },
   ],
   sections: [
@@ -59,27 +60,36 @@ let item = await client.items.create({
 
 // Get a one-time password code.
 let element = item.fields.find((element) => {
-  return element.fieldType == sdk.ItemFieldType.Totp
- })
+  return element.fieldType == sdk.ItemFieldType.Totp;
+});
 
 if (!element) {
   console.error("no totp field found on item");
 } else {
   switch (element.details.type) {
-    case 'Otp': {
+    case "Otp": {
       if (element.details.content.code) {
-        console.log(element.details.content.code)
+        console.log(element.details.content.code);
       } else {
-        console.error(element.details.content.errorMessage)
+        console.error(element.details.content.errorMessage);
       }
     }
     default:
   }
 }
 
-// Edits an item
-item.fields[0].value = "other value";
-let updatedItem = await client.items.put(item);
+// Edit an item (change the password)
+let newItem = {
+  ...item,
+  fields: item.fields.map((f) => {
+    if (f.title == "password") {
+      return { ...f, value: "my-new-password" };
+    } else {
+      return f;
+    }
+  }),
+};
+let updatedItem = await client.items.put(newItem);
 
 console.log(updatedItem.fields);
 
