@@ -127,7 +127,7 @@ Field types:
 
 - [x] [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/get-started/)
 - [ ] User authentication
-- [ ] 1Password Connect. For now, use [1Password/connect-sdk-go](https://github.com/1Password/connect-sdk-go).
+- [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
 
 ## 📖 Learn more
 
