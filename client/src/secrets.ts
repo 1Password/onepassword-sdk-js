@@ -25,11 +25,13 @@ export class SecretsSource implements SecretsApi {
    */
   public async resolve(secretReference: string): Promise<string> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "SecretsResolve",
-        parameters: {
-          secret_reference: secretReference,
+        clientId: this.#inner.id,
+        parameter: {
+          name: "SecretsResolve",
+          parameters: {
+            secret_reference: secretReference,
+          },
         },
       },
     };

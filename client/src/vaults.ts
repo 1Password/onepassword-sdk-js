@@ -1,4 +1,4 @@
-import { InvokeConfig, InnerClient } from "./core.js";
+import { InvokeConfig, InnerClient, Parameters } from "./core.js";
 import * as types from "./types.js";
 import { SdkIterable } from "./iterator.js";
 
@@ -24,10 +24,12 @@ export class VaultsSource implements VaultsApi {
    */
   public async listAll(): Promise<SdkIterable<types.VaultOverview>> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "VaultsListAll",
-        parameters: {},
+        clientId: this.#inner.id,
+        parameter: {
+          name: "VaultsListAll",
+          parameters: {},
+        },
       },
     };
     return new SdkIterable<types.VaultOverview>(

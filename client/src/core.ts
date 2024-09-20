@@ -41,7 +41,6 @@ export interface InvokeConfig {
   /**
    *  Identifies the client instance for which you called the function.
    */
-  clientId: number;
   invocation: Invocation;
 }
 
@@ -49,6 +48,15 @@ export interface InvokeConfig {
  *  Calls certain logic from the SDK core, with the given parameters.
  */
 interface Invocation {
+  /**
+   *  Identifies the client instance for which you called the function.
+   */
+  clientId?: number;
+
+  parameter: Parameters;
+}
+
+export interface Parameters {
   /**
    *  Functionality name
    */
