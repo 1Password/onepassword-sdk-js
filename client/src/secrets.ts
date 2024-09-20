@@ -27,7 +27,7 @@ export class SecretsSource implements SecretsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "SecretsResolve",
           parameters: {
             secret_reference: secretReference,

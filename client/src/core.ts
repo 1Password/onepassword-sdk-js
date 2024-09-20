@@ -53,7 +53,7 @@ interface Invocation {
    */
   clientId?: number;
 
-  parameter: Parameters;
+  parameters: Parameters;
 }
 
 export interface Parameters {

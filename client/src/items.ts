@@ -46,7 +46,7 @@ export class ItemsSource implements ItemsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "ItemsCreate",
           parameters: {
             params,
@@ -66,7 +66,7 @@ export class ItemsSource implements ItemsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "ItemsGet",
           parameters: {
             vault_id: vaultId,
@@ -87,7 +87,7 @@ export class ItemsSource implements ItemsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "ItemsPut",
           parameters: {
             item,
@@ -107,7 +107,7 @@ export class ItemsSource implements ItemsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "ItemsDelete",
           parameters: {
             vault_id: vaultId,
@@ -128,7 +128,7 @@ export class ItemsSource implements ItemsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "ItemsListAll",
           parameters: {
             vault_id: vaultId,

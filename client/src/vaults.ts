@@ -26,7 +26,7 @@ export class VaultsSource implements VaultsApi {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
-        parameter: {
+        parameters: {
           name: "VaultsListAll",
           parameters: {},
         },
