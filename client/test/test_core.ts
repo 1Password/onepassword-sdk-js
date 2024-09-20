@@ -19,7 +19,7 @@ export class TestCore implements Core {
       " called on client " +
       config.invocation.clientId +
       " with parameters " +
-      JSON.stringify(config.invocation.parameters))
+      JSON.stringify(config.invocation.parameters.parameters))
   }
 
   async releaseClient(clientId: number) { }
