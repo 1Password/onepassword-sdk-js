@@ -93,7 +93,7 @@ if (!element) {
 // [developer-docs.sdk.js.get-totp-item-crud]-end
 
 // [developer-docs.sdk.js.get-item]-start
-let retrievedItem = client.items.get(item.vault_id, item.id);
+let retrievedItem = await client.items.get(item.vaultId, item.id);
 // [developer-docs.sdk.js.get-item]-end
 
 // [developer-docs.sdk.js.update-item]-start
