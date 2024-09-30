@@ -1,6 +1,6 @@
-// [developer-docs.sdk.js.sdk-import]-start
+// [developer-docs.sdk.js/es-modules.sdk-import]-start
 import sdk from "@1password/sdk";
-// [developer-docs.sdk.js.sdk-import]-end
+// [developer-docs.sdk.js/es-modules.sdk-import]-end
 
 // [developer-docs.sdk.js.client-initialization]-start
 // Creates an authenticated client.

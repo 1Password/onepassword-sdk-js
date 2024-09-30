@@ -1,4 +1,6 @@
+// [developer-docs.sdk.js/common-js.sdk-import]-start
 const sdk = require("@1password/sdk");
+// [developer-docs.sdk.js/common-js.sdk-import]-end
 
 async function fetchSecret() {
   // Creates an authenticated client.
