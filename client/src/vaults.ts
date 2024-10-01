@@ -12,7 +12,7 @@ export interface VaultsApi {
   listAll(): Promise<SdkIterable<types.VaultOverview>>;
 }
 
-export class VaultsSource implements VaultsApi {
+export class Vaults implements VaultsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {

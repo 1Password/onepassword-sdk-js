@@ -32,7 +32,7 @@ export interface ItemsApi {
   listAll(vaultId: string): Promise<SdkIterable<types.ItemOverview>>;
 }
 
-export class ItemsSource implements ItemsApi {
+export class Items implements ItemsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {

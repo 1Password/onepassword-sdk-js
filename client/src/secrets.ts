@@ -13,7 +13,7 @@ export interface SecretsApi {
   resolve(secretReference: string): Promise<string>;
 }
 
-export class SecretsSource implements SecretsApi {
+export class Secrets implements SecretsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {

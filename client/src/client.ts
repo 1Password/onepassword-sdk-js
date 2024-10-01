@@ -1,7 +1,7 @@
 import { InnerClient } from "./core.js";
-import { SecretsApi, SecretsSource } from "./secrets.js";
-import { ItemsApi, ItemsSource } from "./items.js";
-import { VaultsApi, VaultsSource } from "./vaults.js";
+import { SecretsApi, Secrets } from "./secrets.js";
+import { ItemsApi, Items } from "./items.js";
+import { VaultsApi, Vaults } from "./vaults.js";
 
 export class Client {
   public secrets: SecretsApi;
@@ -9,8 +9,8 @@ export class Client {
   public vaults: VaultsApi;
 
   public constructor(innerClient: InnerClient) {
-    this.secrets = new SecretsSource(innerClient);
-    this.items = new ItemsSource(innerClient);
-    this.vaults = new VaultsSource(innerClient);
+    this.secrets = new Secrets(innerClient);
+    this.items = new Items(innerClient);
+    this.vaults = new Vaults(innerClient);
   }
 }
