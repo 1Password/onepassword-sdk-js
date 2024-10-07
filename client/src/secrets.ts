@@ -13,7 +13,7 @@ export interface SecretsApi {
   resolve(secretReference: string): Promise<string>;
 }
 
-export class SecretsSource implements SecretsApi {
+export class Secrets implements SecretsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {
@@ -25,11 +25,13 @@ export class SecretsSource implements SecretsApi {
    */
   public async resolve(secretReference: string): Promise<string> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "SecretsResolve",
+        clientId: this.#inner.id,
         parameters: {
-          secret_reference: secretReference,
+          name: "SecretsResolve",
+          parameters: {
+            secret_reference: secretReference,
+          },
         },
       },
     };

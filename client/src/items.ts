@@ -32,7 +32,7 @@ export interface ItemsApi {
   listAll(vaultId: string): Promise<SdkIterable<types.ItemOverview>>;
 }
 
-export class ItemsSource implements ItemsApi {
+export class Items implements ItemsApi {
   #inner: InnerClient;
 
   public constructor(inner: InnerClient) {
@@ -44,11 +44,13 @@ export class ItemsSource implements ItemsApi {
    */
   public async create(params: types.ItemCreateParams): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "ItemsCreate",
+        clientId: this.#inner.id,
         parameters: {
-          params,
+          name: "ItemsCreate",
+          parameters: {
+            params,
+          },
         },
       },
     };
@@ -62,12 +64,14 @@ export class ItemsSource implements ItemsApi {
    */
   public async get(vaultId: string, itemId: string): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "ItemsGet",
+        clientId: this.#inner.id,
         parameters: {
-          vault_id: vaultId,
-          item_id: itemId,
+          name: "ItemsGet",
+          parameters: {
+            vault_id: vaultId,
+            item_id: itemId,
+          },
         },
       },
     };
@@ -81,11 +85,13 @@ export class ItemsSource implements ItemsApi {
    */
   public async put(item: types.Item): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "ItemsPut",
+        clientId: this.#inner.id,
         parameters: {
-          item,
+          name: "ItemsPut",
+          parameters: {
+            item,
+          },
         },
       },
     };
@@ -99,12 +105,14 @@ export class ItemsSource implements ItemsApi {
    */
   public async delete(vaultId: string, itemId: string): Promise<void> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "ItemsDelete",
+        clientId: this.#inner.id,
         parameters: {
-          vault_id: vaultId,
-          item_id: itemId,
+          name: "ItemsDelete",
+          parameters: {
+            vault_id: vaultId,
+            item_id: itemId,
+          },
         },
       },
     };
@@ -118,11 +126,13 @@ export class ItemsSource implements ItemsApi {
     vaultId: string,
   ): Promise<SdkIterable<types.ItemOverview>> {
     const invocationConfig: InvokeConfig = {
-      clientId: this.#inner.id,
       invocation: {
-        name: "ItemsListAll",
+        clientId: this.#inner.id,
         parameters: {
-          vault_id: vaultId,
+          name: "ItemsListAll",
+          parameters: {
+            vault_id: vaultId,
+          },
         },
       },
     };

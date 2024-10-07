@@ -15,11 +15,11 @@ export class TestCore implements Core {
 
   async invoke(config: InvokeConfig): Promise<string> {
     return JSON.stringify("method " +
-      config.invocation.name +
+      config.invocation.parameters.name +
       " called on client " +
-      config.clientId +
+      config.invocation.clientId +
       " with parameters " +
-      JSON.stringify(config.invocation.parameters))
+      JSON.stringify(config.invocation.parameters.parameters))
   }
 
   async releaseClient(clientId: number) { }
