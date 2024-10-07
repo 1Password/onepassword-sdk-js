@@ -26,6 +26,15 @@ for await (const item of items) {
 }
 // [developer-docs.sdk.js.list-items]-end
 
+// [developer-docs.sdk.js.secrets-validate]-start
+// Validate a secret reference
+try {
+  await sdk.Secrets.validateSecretReference("op://vault/item/field");
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.secrets-validate]-end
+
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
@@ -66,7 +75,7 @@ let item = await client.items.create({
       title: "my section",
     },
   ],
-  tags: [],
+  tags: ["test tag 1", "test tag 2"],
 });
 // [developer-docs.sdk.js.create-item]-end
 
