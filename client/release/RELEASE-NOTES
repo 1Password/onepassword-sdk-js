@@ -1,4 +1,4 @@
-This is the v0 release of the 1Password JavaScript SDK.
+This is the v-1 release of the 1Password JavaScript SDK.
 
 The 1Password JavaScript SDK allows you to build secrets management integrations that can programmatically access secrets stored in 1Password. With this SDK, you can:
 
