@@ -81,7 +81,9 @@ let item = await client.items.create({
 
 // [developer-docs.sdk.js.resolve-totp-code]-start
 // Fetches a TOTP code.
-const code = await client.secrets.resolve(`op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp`);
+const code = await client.secrets.resolve(
+  `op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp`,
+);
 console.log(code);
 // [developer-docs.sdk.js.resolve-totp-code]-end
 
