@@ -68,6 +68,7 @@ fi
   cd client
   if [ "$core_modified" = true ]; then
     # Update @1password/sdk-core dependancy to the latest
+    # WARNING: THIS COMMAND DOESNT WORK... FIX THIS OR UNTILL ITS FIXED UPDATE IT MANUALLY BEFORE PUBLISHING 1pasword-sdk at the dry run stage
     npm install @1password/sdk-core@latest --save-exact
   fi
 
@@ -87,6 +88,7 @@ fi
             npm dist-tag add @1password/sdk@${version_sdk} latest
 
             # Update dependency in examples to run off the latest SDK
+            # WARNING: THIS COMMAND DOESNT WORK... FIX THIS BEFORE MERGING RC BRANCH TO MAIN
             cd ../examples && npm install @1password/sdk@latest --save-exact
 
             # Check if the latest SDK client is pulled correctly
