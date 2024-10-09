@@ -26,15 +26,6 @@ for await (const item of items) {
 }
 // [developer-docs.sdk.js.list-items]-end
 
-// [developer-docs.sdk.js.secrets-validate]-start
-// Validate a secret reference
-try {
-  await sdk.Secrets.validateSecretReference("op://vault/item/field");
-} catch (error) {
-  console.error(error);
-}
-// [developer-docs.sdk.js.secrets-validate]-end
-
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");

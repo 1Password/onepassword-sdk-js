@@ -1,5 +1,4 @@
 The v0.1.2 release of the Javascript SDK brings:
 * Support for item tags. You can now create, get, and edit tags within your 1Password items using item CRUD functions.
 * Support for fetching one-time password codes using secret references. You can now fetch your TOTP code with the `secrets.resolve` function, using a secret reference for the TOTP field in your item. For example: "op://vault/item/field?=attribute=totp"
-* Support for validating secret references. You can now check that a secret reference is formatted correctly without having to resolve it or even authenticate, using the `validateSecretReference` function.
 * Item creation now only requires specifying the vault ID, item category, and item title.
