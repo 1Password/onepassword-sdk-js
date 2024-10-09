@@ -1,4 +1,4 @@
-import { init_client, invoke, release_client } from "@1password/sdk-core";
+import { init_client, invoke, release_client, sync_invoke } from "@1password/sdk-core";
 
 /**
  *  Exposes the SDK core to the host JS SDK.
@@ -9,9 +9,13 @@ export interface Core {
    */
   initClient(config: ClientAuthConfig): Promise<string>;
   /**
-   *  Calls business logic from a given client and returns the result.
+   *  Calls async business logic from a given client and returns the result.
    */
-  invoke(config: InvokeConfig): Promise<string>;
+  invoke(config: AsyncInvocation): Promise<string>;
+  /**
+   *  Calls sync business logic from a given client and returns the result.
+   */
+  sync_invoke(config: SyncInvocation): string;
   /**
    *  Deallocates memory held by the given client in the SDK core when it goes out of scope.
    */
@@ -35,19 +39,9 @@ export interface ClientAuthConfig {
 }
 
 /**
- *  Contains the information sent to the SDK core when you call (invoke) a function.
- */
-export interface InvokeConfig {
-  /**
-   *  Identifies the client instance for which you called the function.
-   */
-  invocation: Invocation;
-}
-
-/**
  *  Calls certain logic from the SDK core, with the given parameters.
  */
-interface Invocation {
+export interface AsyncInvocation {
   /**
    *  Identifies the client instance for which you called the function.
    */
@@ -55,6 +49,15 @@ interface Invocation {
 
   parameters: Parameters;
 }
+
+/**
+ *  Calls certain logic from the SDK core, with the given parameters.
+ */
+export interface SyncInvocation {
+
+  parameters: Parameters;
+}
+
 
 export interface Parameters {
   /**
@@ -71,12 +74,18 @@ export interface Parameters {
  *  An implementation of the `Core` interface that shares resources across all clients.
  */
 export class SharedCore implements Core {
+
+  public sync_invoke(config: SyncInvocation): string {
+    const serializedConfig = JSON.stringify(config);
+    return sync_invoke(serializedConfig);
+  }
+
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     return init_client(serializedConfig);
   }
 
-  public async invoke(config: InvokeConfig): Promise<string> {
+  public async invoke(config: AsyncInvocation): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     return invoke(serializedConfig);
   }
