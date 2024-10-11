@@ -11,11 +11,11 @@ export interface Core {
   /**
    *  Calls async business logic from a given client and returns the result.
    */
-  invoke(config: AsyncInvocation): Promise<string>;
+  invoke(config: InvokeConfig): Promise<string>;
   /**
    *  Calls sync business logic from a given client and returns the result.
    */
-  sync_invoke(config: SyncInvocation): string;
+  sync_invoke(config: InvokeConfig): string;
   /**
    *  Deallocates memory held by the given client in the SDK core when it goes out of scope.
    */
@@ -39,9 +39,19 @@ export interface ClientAuthConfig {
 }
 
 /**
+ *  Contains the information sent to the SDK core when you call (invoke) a function.
+ */
+export interface InvokeConfig {
+  /**
+   *  Identifies the client instance for which you called the function.
+   */
+  invocation: Invocation;
+}
+
+/**
  *  Calls certain logic from the SDK core, with the given parameters.
  */
-export interface AsyncInvocation {
+interface Invocation {
   /**
    *  Identifies the client instance for which you called the function.
    */
@@ -49,16 +59,6 @@ export interface AsyncInvocation {
 
   parameters: Parameters;
 }
-
-/**
- *  Calls certain logic from the SDK core, with the given parameters.
- */
-export interface SyncInvocation {
-
-  parameters: Parameters;
-}
-
-
 export interface Parameters {
   /**
    *  Functionality name
@@ -75,7 +75,7 @@ export interface Parameters {
  */
 export class SharedCore implements Core {
 
-  public sync_invoke(config: SyncInvocation): string {
+  public sync_invoke(config: InvokeConfig): string {
     const serializedConfig = JSON.stringify(config);
     return sync_invoke(serializedConfig);
   }
@@ -85,7 +85,7 @@ export class SharedCore implements Core {
     return init_client(serializedConfig);
   }
 
-  public async invoke(config: AsyncInvocation): Promise<string> {
+  public async invoke(config: InvokeConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     return invoke(serializedConfig);
   }
