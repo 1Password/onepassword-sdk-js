@@ -71,9 +71,9 @@ let item = await client.items.create({
     {
       url: "example.com",
       label: "url",
-      autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite
-    }
-  ]
+      autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite,
+    },
+  ],
 });
 // [developer-docs.sdk.js.create-item]-end
 

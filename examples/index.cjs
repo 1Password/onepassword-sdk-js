@@ -70,9 +70,9 @@ async function manageItems() {
       {
         url: "example.com",
         label: "url",
-        autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite
-      }
-    ]
+        autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite,
+      },
+    ],
   });
 
   // Get a one-time password code.
