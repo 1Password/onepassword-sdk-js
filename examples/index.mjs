@@ -67,6 +67,13 @@ let item = await client.items.create({
     },
   ],
   tags: ["test tag 1", "test tag 2"],
+  websites: [
+    {
+      url: "example.com",
+      label: "url",
+      autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite
+    }
+  ]
 });
 // [developer-docs.sdk.js.create-item]-end
 

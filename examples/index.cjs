@@ -65,7 +65,14 @@ async function manageItems() {
         title: "my section",
       },
     ],
-    tags: [],
+    tags: ["test tag 1", "test tag 2"],
+    websites: [
+      {
+        url: "example.com",
+        label: "url",
+        autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite
+      }
+    ]
   });
 
   // Get a one-time password code.
