@@ -93,7 +93,7 @@ export interface Website {
    *
    * For more information, visit https://support.1password.com/autofill-behavior/
    */
-  autofill_behavior: AutofillBehavior;
+  autofillBehavior: AutofillBehavior;
 }
 
 /** Represents a 1Password item. */
