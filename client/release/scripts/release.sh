@@ -70,7 +70,7 @@ fi
     # Sleep for about 12s to allow npm registry to publish the latest version
     sleep 12
     # Update @1password/sdk-core dependancy to the latest
-    npm install @1password/sdk-core@"${version_sdk_core}" -E
+    npm install @1password/sdk-core -E
 
   fi
 
@@ -92,7 +92,7 @@ fi
             # Sleep for about 12s to allow npm registry to publish the latest version
             sleep 12
             # Update dependency in examples to run off the latest SDK
-            cd ../examples && npm install @1password/sdk@"${version_sdk}" -E
+            cd ../examples && npm install @1password/sdk -E
 
             # Check if the latest SDK client is pulled correctly
             cd ../ && npm install
