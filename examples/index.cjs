@@ -3,10 +3,10 @@ const sdk = require("@1password/sdk");
 // [developer-docs.sdk.js/common-js.sdk-import]-end
 
 async function fetchSecret() {
-  // Creates an authenticated client.
+  // Creates a client authenticated with your service account token.
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    // Set the following to your own integration name and version.
+    // TODO: Set the following to your own integration name and version.
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
@@ -75,7 +75,7 @@ async function manageItems() {
     ],
   });
 
-  // Gets a one-time password code.
+  // Gets a one-time password code from the item created in the previous step.
   let element = item.fields.find((element) => {
     return element.fieldType == sdk.ItemFieldType.Totp;
   });
@@ -96,7 +96,7 @@ async function manageItems() {
     default:
   }
 
-  // Updates an item by changing its password.
+  // Updates the item by changing its password.
   let newItem = {
     ...item,
     fields: item.fields.map((f) => {
@@ -110,7 +110,7 @@ async function manageItems() {
   let updatedItem = await client.items.put(newItem);
   console.log(updatedItem.fields);
 
-  // Deletes an item.
+  // Deletes the item.
   await client.items.delete(item.vaultId, item.id);
 }
 
