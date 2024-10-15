@@ -3,7 +3,7 @@ const sdk = require("@1password/sdk");
 // [developer-docs.sdk.js/common-js.sdk-import]-end
 
 async function fetchSecret() {
-  // Creates a client authenticated with your service account token.
+  // Creates an authenticated client.
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
     // TODO: Set the following to your own integration name and version.
