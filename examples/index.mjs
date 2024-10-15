@@ -110,7 +110,7 @@ if (!element) {
 // [developer-docs.sdk.js.get-totp-item-crud]-end
 
 // [developer-docs.sdk.js.get-item]-start
-// Gets the item.
+// Retrieves an item.
 let retrievedItem = await client.items.get(item.vaultId, item.id);
 // [developer-docs.sdk.js.get-item]-end
 
@@ -132,6 +132,6 @@ let updatedItem = await client.items.put(newItem);
 console.log(updatedItem.fields);
 
 // [developer-docs.sdk.js.delete-item]-start
-// Deletes the item.
+// Deletes an item.
 await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end

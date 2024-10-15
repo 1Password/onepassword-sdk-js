@@ -75,7 +75,7 @@ async function manageItems() {
     ],
   });
 
-  // Gets a one-time password code from the item created in the previous step.
+  // Gets a one-time password code from an item.
   let element = item.fields.find((element) => {
     return element.fieldType == sdk.ItemFieldType.Totp;
   });
@@ -96,7 +96,7 @@ async function manageItems() {
     default:
   }
 
-  // Updates the item by changing its password.
+  // Updates an item by changing its password.
   let newItem = {
     ...item,
     fields: item.fields.map((f) => {
@@ -110,7 +110,7 @@ async function manageItems() {
   let updatedItem = await client.items.put(newItem);
   console.log(updatedItem.fields);
 
-  // Deletes the item.
+  // Deletes an item.
   await client.items.delete(item.vaultId, item.id);
 }
 
