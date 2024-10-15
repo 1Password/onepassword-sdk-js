@@ -67,9 +67,11 @@ fi
 
   cd client
   if [ "$core_modified" = true ]; then
+    # Sleep for about 12s to allow npm registry to publish the latest version
+    sleep 12
     # Update @1password/sdk-core dependancy to the latest
-    # WARNING: THIS COMMAND DOESNT WORK... FIX THIS OR UNTILL ITS FIXED UPDATE IT MANUALLY BEFORE PUBLISHING 1pasword-sdk at the dry run stage
-    npm install @1password/sdk-core@latest --save-exact
+    npm install @1password/sdk-core@"${version_sdk_core}" -E
+
   fi
 
   # Update sdk version number to the latest
@@ -87,9 +89,10 @@ fi
             RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-prod 
             npm dist-tag add @1password/sdk@${version_sdk} latest
 
+            # Sleep for about 12s to allow npm registry to publish the latest version
+            sleep 12
             # Update dependency in examples to run off the latest SDK
-            # WARNING: THIS COMMAND DOESNT WORK... FIX THIS BEFORE MERGING RC BRANCH TO MAIN
-            cd ../examples && npm install @1password/sdk@latest --save-exact
+            cd ../examples && npm install @1password/sdk@"${version_sdk}" -E
 
             # Check if the latest SDK client is pulled correctly
             cd ../ && npm install
