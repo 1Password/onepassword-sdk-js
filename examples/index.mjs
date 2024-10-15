@@ -13,6 +13,7 @@ const client = await sdk.createClient({
 // [developer-docs.sdk.js.client-initialization]-end
 
 // [developer-docs.sdk.js.list-vaults]-start
+// Lists all vaults in an account.
 const vaults = await client.vaults.listAll();
 for await (const vault of vaults) {
   console.log(vault.id + " " + vault.title);
@@ -20,6 +21,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
+// Lists all items in a vault.
 const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
@@ -27,13 +29,13 @@ for await (const item of items) {
 // [developer-docs.sdk.js.list-items]-end
 
 // [developer-docs.sdk.js.resolve-secret]-start
-// Fetches a secret.
+// Fetches the value of a field using a secret reference.
 const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
 // [developer-docs.sdk.js.create-item]-start
-// Creates an item
+// Creates an item with a username, password, one-time password, autofill website, and tags.
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
@@ -78,7 +80,7 @@ let item = await client.items.create({
 // [developer-docs.sdk.js.create-item]-end
 
 // [developer-docs.sdk.js.resolve-totp-code]-start
-// Fetches a TOTP code.
+// Gets a one-time password code using the Resolve function with a secret reference.
 const code = await client.secrets.resolve(
   `op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp`,
 );
@@ -86,7 +88,7 @@ console.log(code);
 // [developer-docs.sdk.js.resolve-totp-code]-end
 
 // [developer-docs.sdk.js.get-totp-item-crud]-start
-// Get a one-time password code.
+// Gets a one-time password code from an item.
 let element = item.fields.find((element) => {
   return element.fieldType == sdk.ItemFieldType.Totp;
 });
@@ -112,7 +114,7 @@ let retrievedItem = await client.items.get(item.vaultId, item.id);
 // [developer-docs.sdk.js.get-item]-end
 
 // [developer-docs.sdk.js.update-item]-start
-// Edit an item (change the password)
+// Updates an item by changing its password.
 let newItem = {
   ...retrievedItem,
   fields: retrievedItem.fields.map((f) => {
@@ -129,6 +131,6 @@ let updatedItem = await client.items.put(newItem);
 console.log(updatedItem.fields);
 
 // [developer-docs.sdk.js.delete-item]-start
-// Deletes an item
+// Deletes an item.
 await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end
