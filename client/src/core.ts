@@ -1,4 +1,4 @@
-import { init_client, invoke, release_client, sync_invoke } from "@1password/sdk-core";
+import { init_client, invoke, release_client, invoke_sync } from "@1password/sdk-core";
 
 /**
  *  Exposes the SDK core to the host JS SDK.
@@ -15,7 +15,7 @@ export interface Core {
   /**
    *  Calls sync business logic from a given client and returns the result.
    */
-  sync_invoke(config: InvokeConfig): string;
+  invoke_sync(config: InvokeConfig): string;
   /**
    *  Deallocates memory held by the given client in the SDK core when it goes out of scope.
    */
@@ -75,9 +75,9 @@ export interface Parameters {
  */
 export class SharedCore implements Core {
 
-  public sync_invoke(config: InvokeConfig): string {
+  public invoke_sync(config: InvokeConfig): string {
     const serializedConfig = JSON.stringify(config);
-    return sync_invoke(serializedConfig);
+    return invoke_sync(serializedConfig);
   }
 
   public async initClient(config: ClientAuthConfig): Promise<string> {
