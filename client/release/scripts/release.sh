@@ -22,6 +22,27 @@ cleanup() {
     exit 1   
 }
 
+# waits for NPM to publish on internal registry to update package json
+wait_for_npm_publish(){
+    package_name="${1}"
+
+    # Assign the correct version based off if its core or not
+    updated_npm_version=$( [[ "$package_name" == *"core"* ]] && echo "$version_sdk_core" || echo "$version_sdk" )
+    
+    while true; do
+    npm_verison=$(npm view "$package_name" version)
+    # if package matches npm registry than break out of loop and update package.json
+    if [ "$npm_verison" == "$updated_npm_version" ]; then
+        echo "The package version $npm_verison is up to date!"
+        break
+    else
+        # Sleep for another 5 seconds if it still didnt sync
+        echo "The package version $npm_verison is not up to date. Latest version is $updated_npm_version."
+        sleep 5
+    fi
+done
+}
+
 # Set the trap to call the cleanup function on exit
 trap cleanup SIGINT ERR
 
@@ -67,11 +88,10 @@ fi
 
   cd client
   if [ "$core_modified" = true ]; then
-    # Sleep for about 12s to allow npm registry to publish the latest version
-    sleep 12
+    # Wait for npm to be update to the latest version
+    wait_for_npm_publish @1password/sdk-core
     # Update @1password/sdk-core dependancy to the latest
-    npm install @1password/sdk-core -E
-
+    npm install @1password/sdk-core@latest -E
   fi
 
   # Update sdk version number to the latest
@@ -90,9 +110,9 @@ fi
             npm dist-tag add @1password/sdk@${version_sdk} latest
 
             # Sleep for about 12s to allow npm registry to publish the latest version
-            sleep 12
+            wait_for_npm_publish @1password/sdk
             # Update dependency in examples to run off the latest SDK
-            cd ../examples && npm install @1password/sdk -E
+            cd ../examples && npm install @1password/sdk@latest -E
 
             # Check if the latest SDK client is pulled correctly
             cd ../ && npm install
