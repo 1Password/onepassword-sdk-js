@@ -22,6 +22,25 @@ cleanup() {
     exit 1   
 }
 
+# waits for NPM to publish on internal registry to update package json
+wait_for_npm_publish(){
+    package_name="${1}"
+    updated_npm_version="${2}"
+
+    while true; do
+    npm_version=$(npm view "$package_name" version)
+    # if package matches npm registry than break out of loop and update package.json
+    if [ "$npm_version" == "$updated_npm_version" ]; then
+        echo "The package version $npm_version is up to date!"
+        break
+    else
+        # Sleep for another 5 seconds if it still didnt sync
+        echo "The $updated_npm_version package version is not yet published to NPM. Waiting..."
+        sleep 5
+    fi
+done
+}
+
 # Set the trap to call the cleanup function on exit
 trap cleanup SIGINT ERR
 
@@ -67,9 +86,10 @@ fi
 
   cd client
   if [ "$core_modified" = true ]; then
+    # Wait for npm to be update to the latest version
+    wait_for_npm_publish @1password/sdk-core "${version_sdk_core}"
     # Update @1password/sdk-core dependancy to the latest
-    # WARNING: THIS COMMAND DOESNT WORK... FIX THIS OR UNTILL ITS FIXED UPDATE IT MANUALLY BEFORE PUBLISHING 1pasword-sdk at the dry run stage
-    npm install @1password/sdk-core@latest --save-exact
+    npm install @1password/sdk-core@latest -E
   fi
 
   # Update sdk version number to the latest
@@ -86,10 +106,11 @@ fi
         y)
             RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-prod 
             npm dist-tag add @1password/sdk@${version_sdk} latest
-
+            
+            # Wait for npm to be update to the latest version
+            wait_for_npm_publish @1password/sdk "${version_sdk}"
             # Update dependency in examples to run off the latest SDK
-            # WARNING: THIS COMMAND DOESNT WORK... FIX THIS BEFORE MERGING RC BRANCH TO MAIN
-            cd ../examples && npm install @1password/sdk@latest --save-exact
+            cd ../examples && npm install @1password/sdk@latest -E
 
             # Check if the latest SDK client is pulled correctly
             cd ../ && npm install
