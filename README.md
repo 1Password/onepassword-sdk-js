@@ -97,7 +97,7 @@ Field types:
 - [ ] SSH public keys, fingerprint and key type
 - [x] One-time passwords
 - [x] URLs
-- [ ] Websites (used to suggest and autofill logins)
+- [x] Websites (used to suggest and autofill logins)
 - [x] Phone numbers
 - [x] Credit card types
 - [ ] File attachments and Document items
