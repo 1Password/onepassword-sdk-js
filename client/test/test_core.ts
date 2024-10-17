@@ -7,6 +7,12 @@ export class TestCore implements Core {
   constructor() {
     this.id = 0;
   }
+  invoke_sync(config: InvokeConfig): string {
+    return JSON.stringify("method " +
+      config.invocation.parameters.name +
+      " with parameters " +
+      JSON.stringify(config.invocation.parameters.parameters))
+  }
   async initClient(config: ClientAuthConfig): Promise<string> {
     const res = this.id.toString();
     this.id++;
