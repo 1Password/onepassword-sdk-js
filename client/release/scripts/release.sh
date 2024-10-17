@@ -106,8 +106,8 @@ fi
         y)
             RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-prod 
             npm dist-tag add @1password/sdk@${version_sdk} latest
-
-            # Sleep for about 12s to allow npm registry to publish the latest version
+            
+            # Wait for npm to be update to the latest version
             wait_for_npm_publish @1password/sdk "${version_sdk}"
             # Update dependency in examples to run off the latest SDK
             cd ../examples && npm install @1password/sdk@latest -E
