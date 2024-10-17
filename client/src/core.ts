@@ -1,4 +1,9 @@
-import { init_client, invoke, release_client, invoke_sync } from "@1password/sdk-core";
+import {
+  init_client,
+  invoke,
+  release_client,
+  invoke_sync,
+} from "@1password/sdk-core";
 
 /**
  *  Exposes the SDK core to the host JS SDK.
@@ -74,7 +79,6 @@ export interface Parameters {
  *  An implementation of the `Core` interface that shares resources across all clients.
  */
 export class SharedCore implements Core {
-
   public invoke_sync(config: InvokeConfig): string {
     const serializedConfig = JSON.stringify(config);
     return invoke_sync(serializedConfig);
