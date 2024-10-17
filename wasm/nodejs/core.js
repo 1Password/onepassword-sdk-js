@@ -248,14 +248,14 @@ module.exports.invoke = function(parameters) {
 * @param {string} parameters
 * @returns {string}
 */
-module.exports.sync_invoke = function(parameters) {
+module.exports.invoke_sync = function(parameters) {
     let deferred3_0;
     let deferred3_1;
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(parameters, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.sync_invoke(retptr, ptr0, len0);
+        wasm.invoke_sync(retptr, ptr0, len0);
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
@@ -674,8 +674,8 @@ module.exports.__wbindgen_memory = function() {
     return addHeapObject(ret);
 };
 
-module.exports.__wbindgen_closure_wrapper4801 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 1436, __wbg_adapter_26);
+module.exports.__wbindgen_closure_wrapper5321 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 1521, __wbg_adapter_26);
     return addHeapObject(ret);
 };
 

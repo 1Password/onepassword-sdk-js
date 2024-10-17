@@ -17,7 +17,7 @@ export function invoke(parameters: string): Promise<string>;
 * @param {string} parameters
 * @returns {string}
 */
-export function sync_invoke(parameters: string): string;
+export function invoke_sync(parameters: string): string;
 /**
 * Drops a client, releasing the memory allocated for it.
 * @param {string} client_id

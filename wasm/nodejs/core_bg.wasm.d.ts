@@ -3,7 +3,7 @@
 export const memory: WebAssembly.Memory;
 export function init_client(a: number, b: number): number;
 export function invoke(a: number, b: number): number;
-export function sync_invoke(a: number, b: number, c: number): void;
+export function invoke_sync(a: number, b: number, c: number): void;
 export function release_client(a: number, b: number, c: number): void;
 export function __wbindgen_malloc(a: number, b: number): number;
 export function __wbindgen_realloc(a: number, b: number, c: number, d: number): number;
