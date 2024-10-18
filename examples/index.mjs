@@ -88,7 +88,7 @@ console.log(code);
 // [developer-docs.sdk.js.resolve-totp-code]-end
 
 // [developer-docs.sdk.js.get-totp-item-crud]-start
-// Gets a one-time password code.
+// Gets a one-time password code from an item.
 let element = item.fields.find((element) => {
   return element.fieldType == sdk.ItemFieldType.Totp;
 });
