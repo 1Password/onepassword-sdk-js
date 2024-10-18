@@ -110,12 +110,12 @@ if (!element) {
 // [developer-docs.sdk.js.get-totp-item-crud]-end
 
 // [developer-docs.sdk.js.get-item]-start
-// Retrieves an item.
+// Retrieves an item from a vault.
 let retrievedItem = await client.items.get(item.vaultId, item.id);
 // [developer-docs.sdk.js.get-item]-end
 
 // [developer-docs.sdk.js.update-item]-start
-// Updates the item by changing its password.
+// Updates an item by changing its password.
 let newItem = {
   ...retrievedItem,
   fields: retrievedItem.fields.map((f) => {
