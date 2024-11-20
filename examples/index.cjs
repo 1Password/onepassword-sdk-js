@@ -123,7 +123,5 @@ async function manageItems() {
   await client.items.delete(item.vaultId, item.id);
 }
 
-
-
 manageItems();
 fetchSecret().then(console.log);
