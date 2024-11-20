@@ -41,4 +41,22 @@ export class Secrets implements SecretsApi {
       await this.#inner.core.invoke(invocationConfig),
     ) as Promise<string>;
   }
+
+  /**
+   * Validate the secret reference to ensure there are no syntax errors.
+   */
+  public static validateSecretReference(secretReference: string) {
+    const sharedCore = new SharedCore();
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        parameters: {
+          name: "ValidateSecretReference",
+          parameters: {
+            secret_reference: secretReference,
+          },
+        },
+      },
+    };
+    sharedCore.invoke_sync(invocationConfig);
+  }
 }
