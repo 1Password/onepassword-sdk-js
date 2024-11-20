@@ -11,6 +11,15 @@ async function fetchSecret() {
     integrationVersion: "v1.0.0",
   });
 
+  // [developer-docs.sdk.js.secrets-validate]-start
+  // Validate a secret reference
+  try {
+    sdk.Secrets.validateSecretReference("op://vault/item/field");
+  } catch (error) {
+    console.error(error);
+  }
+  // [developer-docs.sdk.js.secrets-validate]-end
+
   return await client.secrets.resolve("op://vault/item/field");
 }
 

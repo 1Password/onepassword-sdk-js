@@ -8,7 +8,7 @@
     "prettier-fix": "prettier --write index.*js"
   },
   "dependencies": {
-    "@1password/sdk": "0.1.2"
+    "@1password/sdk": "0.1.4"
   },
   "devDependencies": {
     "prettier": "3.1.1"
