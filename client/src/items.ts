@@ -26,7 +26,7 @@ export interface ItemsApi {
   /**
    * Delete an item.
    */
-  delete(vaultId: string, itemId: string): Promise<void>;
+  delete(vaultId: string, itemId: string);
 
   /**
    * List all items
@@ -105,7 +105,7 @@ export class Items implements ItemsApi {
   /**
    * Delete an item.
    */
-  public async delete(vaultId: string, itemId: string): Promise<void> {
+  public async delete(vaultId: string, itemId: string) {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
