@@ -6,7 +6,9 @@ import { createClientWithCore } from "./client_builder.js";
 export const DEFAULT_INTEGRATION_NAME = "Unknown";
 export const DEFAULT_INTEGRATION_VERSION = "Unknown";
 
+// auto-generated static exports
 export { Secrets } from "./secrets.js";
+
 export * from "./client.js";
 export * from "./types.js";
 
