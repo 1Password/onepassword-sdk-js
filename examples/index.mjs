@@ -37,7 +37,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
   fields: [
     {
       id: "username",
@@ -128,7 +128,7 @@ let updatedItem = await client.items.put(newItem);
 
 console.log(updatedItem.fields);
 
-pinPassword = sdk.Secrets.generatePassword({
+let pinPassword = sdk.Secrets.generatePassword({
   type: "Pin",
   parameters: {
     length: 8,
@@ -137,7 +137,7 @@ pinPassword = sdk.Secrets.generatePassword({
 
 console.log(pinPassword);
 
-memorablePassword = sdk.Secrets.generatePassword({
+let memorablePassword = sdk.Secrets.generatePassword({
   type: "Memorable",
   parameters: {
     separatorType: sdk.SeparatorType.Digits,
@@ -148,7 +148,7 @@ memorablePassword = sdk.Secrets.generatePassword({
 });
 console.log(memorablePassword);
 
-randomPassword = sdk.Secrets.generatePassword({
+let randomPassword = sdk.Secrets.generatePassword({
   type: "Random",
   parameters: {
     includeDigits: true,
