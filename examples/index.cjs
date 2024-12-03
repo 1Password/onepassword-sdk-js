@@ -123,5 +123,42 @@ async function manageItems() {
   await client.items.delete(item.vaultId, item.id);
 }
 
+function generatePassword(){
+  try {
+    pinPassword = sdk.Secrets.generatePassword({
+      type: "Pin",
+      parameters: {
+        length: 8,
+      },
+    });
+    console.log(pinPassword)
+
+    memorablePassword = sdk.Secrets.generatePassword({
+      type: "Memorable",
+      parameters: {
+        separatorType: sdk.SeparatorType.Digits,
+        capitalize: true,
+        wordListType: sdk.WordListType.FullWords,
+        wordCount: 8,
+      },
+    });
+    console.log(memorablePassword)
+
+    randomPassword = sdk.Secrets.generatePassword({
+      type: "Random",
+      parameters: {
+        includeDigits: true,
+        includeSymbols: true,
+        length: 8,
+      },
+    });
+    console.log(randomPassword)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 manageItems();
+generatePassword();
 fetchSecret().then(console.log);

@@ -128,6 +128,37 @@ let updatedItem = await client.items.put(newItem);
 
 console.log(updatedItem.fields);
 
+  pinPassword = sdk.Secrets.generatePassword({
+    type: "Pin",
+    parameters: {
+      length: 8,
+    },
+  });
+
+  console.log(pinPassword)
+
+  memorablePassword = sdk.Secrets.generatePassword({
+    type: "Memorable",
+    parameters: {
+      separatorType: sdk.SeparatorType.Digits,
+      capitalize: true,
+      wordListType: sdk.WordListType.FullWords,
+      wordCount: 8,
+    },
+  });
+  console.log(memorablePassword)
+
+  randomPassword = sdk.Secrets.generatePassword({
+    type: "Random",
+    parameters: {
+      includeDigits: true,
+      includeSymbols: true,
+      length: 8,
+    },
+  });
+  console.log(randomPassword)
+
+
 // [developer-docs.sdk.js.delete-item]-start
 // Deletes an item
 await client.items.delete(item.vaultId, item.id);
