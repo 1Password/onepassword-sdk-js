@@ -11,14 +11,14 @@ async function fetchSecret() {
     integrationVersion: "v1.0.0",
   });
 
-  // [developer-docs.sdk.js.secrets-validate]-start
+  // [developer-docs.sdk.js.validate-secret-reference]-start
   // Validate a secret reference
   try {
     sdk.Secrets.validateSecretReference("op://vault/item/field");
   } catch (error) {
     console.error(error);
   }
-  // [developer-docs.sdk.js.secrets-validate]-end
+  // [developer-docs.sdk.js.validate-secret-reference]-end
 
   return await client.secrets.resolve("op://vault/item/field");
 }
@@ -124,6 +124,7 @@ async function manageItems() {
 }
 
 function generatePassword() {
+  // [developer-docs.sdk.js.generate-pin-password]-start
   try {
     pinPassword = sdk.Secrets.generatePassword({
       type: "Pin",
@@ -132,7 +133,13 @@ function generatePassword() {
       },
     });
     console.log(pinPassword);
+  } catch (error) {
+    console.error(error);
+  }
+  // [developer-docs.sdk.js.generate-pin-password]-end
 
+  // [developer-docs.sdk.js.generate-memorable-password]-start
+  try {
     memorablePassword = sdk.Secrets.generatePassword({
       type: "Memorable",
       parameters: {
@@ -143,7 +150,13 @@ function generatePassword() {
       },
     });
     console.log(memorablePassword);
+  } catch (error) {
+    console.error(error);
+  }
+  // [developer-docs.sdk.js.generate-memorable-password]-end
 
+  // [developer-docs.sdk.js.generate-random-password]-start
+  try {
     randomPassword = sdk.Secrets.generatePassword({
       type: "Random",
       parameters: {
@@ -156,6 +169,7 @@ function generatePassword() {
   } catch (error) {
     console.error(error);
   }
+  // [developer-docs.sdk.js.generate-random-password]-end
 }
 
 manageItems();
