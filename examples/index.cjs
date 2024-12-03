@@ -126,7 +126,7 @@ async function manageItems() {
 function generatePassword() {
   // [developer-docs.sdk.js.generate-pin-password]-start
   try {
-    pinPassword = sdk.Secrets.generatePassword({
+    let pinPassword = sdk.Secrets.generatePassword({
       type: "Pin",
       parameters: {
         length: 8,
@@ -140,7 +140,7 @@ function generatePassword() {
 
   // [developer-docs.sdk.js.generate-memorable-password]-start
   try {
-    memorablePassword = sdk.Secrets.generatePassword({
+    let memorablePassword = sdk.Secrets.generatePassword({
       type: "Memorable",
       parameters: {
         separatorType: sdk.SeparatorType.Digits,
@@ -157,7 +157,7 @@ function generatePassword() {
 
   // [developer-docs.sdk.js.generate-random-password]-start
   try {
-    randomPassword = sdk.Secrets.generatePassword({
+    let randomPassword = sdk.Secrets.generatePassword({
       type: "Random",
       parameters: {
         includeDigits: true,
