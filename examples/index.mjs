@@ -37,7 +37,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+  vaultId: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
