@@ -26,6 +26,15 @@ for await (const item of items) {
 }
 // [developer-docs.sdk.js.list-items]-end
 
+// [developer-docs.sdk.js.validate-secret-reference]-start
+// Validate a secret reference
+try {
+  sdk.Secrets.validateSecretReference("op://vault/item/field");
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.validate-secret-reference]-end
+
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
 const secret = await client.secrets.resolve("op://vault/item/field");
@@ -127,6 +136,53 @@ let updatedItem = await client.items.put(newItem);
 // [developer-docs.sdk.js.update-item]-end
 
 console.log(updatedItem.fields);
+
+// [developer-docs.sdk.js.generate-pin-password]-start
+try {
+  let pinPassword = sdk.Secrets.generatePassword({
+    type: "Pin",
+    parameters: {
+      length: 8,
+    },
+  });
+  console.log(pinPassword);
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.generate-pin-password]-end
+
+// [developer-docs.sdk.js.generate-memorable-password]-start
+try {
+  let memorablePassword = sdk.Secrets.generatePassword({
+    type: "Memorable",
+    parameters: {
+      separatorType: sdk.SeparatorType.Digits,
+      capitalize: true,
+      wordListType: sdk.WordListType.FullWords,
+      wordCount: 8,
+    },
+  });
+  console.log(memorablePassword);
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.generate-memorable-password]-end
+
+// [developer-docs.sdk.js.generate-random-password]-start
+try {
+  let randomPassword = sdk.Secrets.generatePassword({
+    type: "Random",
+    parameters: {
+      includeDigits: true,
+      includeSymbols: true,
+      length: 8,
+    },
+  });
+  console.log(randomPassword);
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.generate-random-password]-end
 
 // [developer-docs.sdk.js.delete-item]-start
 // Deletes an item

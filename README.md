@@ -86,6 +86,7 @@ Operations:
 - [x] [Delete items](https://developer.1password.com/docs/sdks/manage-items#delete-an-item)
 - [x] [List items](https://developer.1password.com/docs/sdks/list-vaults-items/)
 - [x] Add & update tags on items
+- [x] Generate PIN, random and memorable passwords
 
 Field types:
 - [x] API Keys
@@ -100,6 +101,7 @@ Field types:
 - [x] Websites (used to suggest and autofill logins)
 - [x] Phone numbers
 - [x] Credit card types
+- [x] Credit card numbers
 - [ ] File attachments and Document items
 
 ### Vault management

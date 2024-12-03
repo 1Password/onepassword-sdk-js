@@ -10,16 +10,6 @@ async function fetchSecret() {
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
-
-  // [developer-docs.sdk.js.secrets-validate]-start
-  // Validate a secret reference
-  try {
-    sdk.Secrets.validateSecretReference("op://vault/item/field");
-  } catch (error) {
-    console.error(error);
-  }
-  // [developer-docs.sdk.js.secrets-validate]-end
-
   return await client.secrets.resolve("op://vault/item/field");
 }
 
@@ -123,5 +113,49 @@ async function manageItems() {
   await client.items.delete(item.vaultId, item.id);
 }
 
+function generatePassword() {
+  try {
+    let pinPassword = sdk.Secrets.generatePassword({
+      type: "Pin",
+      parameters: {
+        length: 8,
+      },
+    });
+    console.log(pinPassword);
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    let memorablePassword = sdk.Secrets.generatePassword({
+      type: "Memorable",
+      parameters: {
+        separatorType: sdk.SeparatorType.Digits,
+        capitalize: true,
+        wordListType: sdk.WordListType.FullWords,
+        wordCount: 8,
+      },
+    });
+    console.log(memorablePassword);
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    let randomPassword = sdk.Secrets.generatePassword({
+      type: "Random",
+      parameters: {
+        includeDigits: true,
+        includeSymbols: true,
+        length: 8,
+      },
+    });
+    console.log(randomPassword);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 manageItems();
+generatePassword();
 fetchSecret().then(console.log);
