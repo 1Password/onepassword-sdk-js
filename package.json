@@ -5,7 +5,9 @@
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
+    "test:esm-example": "npm run build --workspace client && npm run test:esm-example --workspace tests",
     "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples",
+    "test:commonjs-example": "npm run build --workspace client && npm run test:commonjs-example --workspace tests",
     "prepare": "npm run build --workspace client",
     "prettier": "npm run prettier --workspaces --if-present",
     "prettier-fix": "npm run prettier-fix --workspaces --if-present",
@@ -20,6 +22,7 @@
   "workspaces": [
     "client",
     "examples",
-    "wasm"
+    "wasm",
+	"tests"
   ]
 }
