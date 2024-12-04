@@ -6,13 +6,14 @@ import sdk from "@1password/sdk";
 // Creates an authenticated client.
 const client = await sdk.createClient({
   auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-  // Set the following to your own integration name and version.
+  // TODO: Set the following to your own integration name and version.
   integrationName: "My 1Password Integration",
   integrationVersion: "v1.0.0",
 });
 // [developer-docs.sdk.js.client-initialization]-end
 
 // [developer-docs.sdk.js.list-vaults]-start
+// Lists all vaults in an account.
 const vaults = await client.vaults.listAll();
 for await (const vault of vaults) {
   console.log(vault.id + " " + vault.title);
@@ -20,6 +21,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
+// Lists all items in a vault.
 const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
@@ -36,13 +38,13 @@ try {
 // [developer-docs.sdk.js.validate-secret-reference]-end
 
 // [developer-docs.sdk.js.resolve-secret]-start
-// Fetches a secret.
+// Fetches the value of a field in 1Password using a secret reference.
 const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
 // [developer-docs.sdk.js.create-item]-start
-// Creates an item
+// Creates an item with a username, password, one-time password, autofill website, and tags.
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
@@ -87,7 +89,7 @@ let item = await client.items.create({
 // [developer-docs.sdk.js.create-item]-end
 
 // [developer-docs.sdk.js.resolve-totp-code]-start
-// Fetches a TOTP code.
+// Gets a one-time password code using a secret reference with the totp query parameter.
 const code = await client.secrets.resolve(
   `op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp`,
 );
@@ -95,7 +97,7 @@ console.log(code);
 // [developer-docs.sdk.js.resolve-totp-code]-end
 
 // [developer-docs.sdk.js.get-totp-item-crud]-start
-// Get a one-time password code.
+// Gets a one-time password code from an item.
 let element = item.fields.find((element) => {
   return element.fieldType == sdk.ItemFieldType.Totp;
 });
@@ -117,11 +119,12 @@ if (!element) {
 // [developer-docs.sdk.js.get-totp-item-crud]-end
 
 // [developer-docs.sdk.js.get-item]-start
+// Retrieves an item from a vault.
 let retrievedItem = await client.items.get(item.vaultId, item.id);
 // [developer-docs.sdk.js.get-item]-end
 
 // [developer-docs.sdk.js.update-item]-start
-// Edit an item (change the password)
+// Updates an item by changing its password.
 let newItem = {
   ...retrievedItem,
   fields: retrievedItem.fields.map((f) => {
@@ -185,6 +188,6 @@ try {
 // [developer-docs.sdk.js.generate-random-password]-end
 
 // [developer-docs.sdk.js.delete-item]-start
-// Deletes an item
+// Deletes an item.
 await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end

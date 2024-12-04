@@ -6,7 +6,7 @@ async function fetchSecret() {
   // Creates an authenticated client.
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    // Set the following to your own integration name and version.
+    // TODO: Set the following to your own integration name and version.
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
@@ -31,7 +31,7 @@ async function manageItems() {
     }
   }
 
-  // Create an item
+  // Creates an item with a username, password, one-time password, autofill website, and tags.
   let item = await client.items.create({
     title: "My Item",
     category: sdk.ItemCategory.Login,
@@ -74,7 +74,7 @@ async function manageItems() {
     ],
   });
 
-  // Get a one-time password code.
+  // Gets a one-time password code from an item.
   let element = item.fields.find((element) => {
     return element.fieldType == sdk.ItemFieldType.Totp;
   });
@@ -95,7 +95,7 @@ async function manageItems() {
     default:
   }
 
-  // Edit an item (change the password)
+  // Updates an item by changing its password.
   let newItem = {
     ...item,
     fields: item.fields.map((f) => {
@@ -109,7 +109,7 @@ async function manageItems() {
   let updatedItem = await client.items.put(newItem);
   console.log(updatedItem.fields);
 
-  // Delete an item
+  // Deletes an item.
   await client.items.delete(item.vaultId, item.id);
 }
 
