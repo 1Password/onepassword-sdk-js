@@ -46,6 +46,8 @@ export enum ItemFieldType {
   Phone = "Phone",
   Url = "Url",
   Totp = "Totp",
+  Email = "Email",
+  Reference = "Reference",
   Unsupported = "Unsupported",
 }
 

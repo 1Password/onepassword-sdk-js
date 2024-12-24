@@ -29,6 +29,11 @@ export interface ItemsApi {
   delete(vaultId: string, itemId: string);
 
   /**
+   * Archive an item.
+   */
+  archive(vaultId: string, itemId: string);
+
+  /**
    * List all items
    */
   listAll(vaultId: string): Promise<SdkIterable<types.ItemOverview>>;
@@ -111,6 +116,25 @@ export class Items implements ItemsApi {
         clientId: this.#inner.id,
         parameters: {
           name: "ItemsDelete",
+          parameters: {
+            vault_id: vaultId,
+            item_id: itemId,
+          },
+        },
+      },
+    };
+    await this.#inner.core.invoke(invocationConfig);
+  }
+
+  /**
+   * Archive an item.
+   */
+  public async archive(vaultId: string, itemId: string) {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "ItemsArchive",
           parameters: {
             vault_id: vaultId,
             item_id: itemId,
