@@ -20,7 +20,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
+const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -37,7 +37,7 @@ try {
 
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://tst-vault/.Login/username");
+const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
@@ -46,7 +46,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+  vaultId: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
