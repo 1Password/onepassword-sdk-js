@@ -183,8 +183,51 @@ try {
   console.error(error);
 }
 // [developer-docs.sdk.js.generate-random-password]-end
-
+shareItem(client, item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-start
-// Deletes an item
+// Delete an item from your vault.
 await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end
+
+async function shareItem(client, vaultId, itemId) {
+  // [developer-docs.sdk.js.item-share-get-item]-start
+  let item = await client.items.get(vaultId, itemId);
+  console.log(item);
+  // [developer-docs.sdk.js.item-share-get-item]-end
+
+  // [developer-docs.sdk.js.item-share-get-account-policy]-start
+  let policy = await client.items.shares.getAccountPolicy(
+    item.vaultId,
+    item.id,
+  );
+  console.log(policy);
+  // [developer-docs.sdk.js.item-share-get-account-policy]-end
+
+  // [developer-docs.sdk.js.item-share-validate-recipients]-start
+  let valid_recipients = await client.items.shares.validateRecipients(policy, [
+    "helloworld@agilebits.com",
+  ]);
+
+  console.log(valid_recipients);
+  // [developer-docs.sdk.js.item-share-validate-recipients]-end
+
+  // [developer-docs.sdk.js.item-share-create-share]-start
+  let share_link = await client.items.shares.create(item, policy, {
+    expireAfter: sdk.ItemShareDuration.OneHour,
+    oneTimeOnly: false,
+    recipients: valid_recipients,
+  });
+
+  console.log(share_link);
+  // [developer-docs.sdk.js.item-share-create-share]-end
+}
+// NOTE: this is in a separate function to avoid creating a new item
+// NOTE: just for the sake of archiving it. This is because the SDK
+// NOTE: only works with active items, so archiving and then deleting
+// NOTE: is not yet possible.
+async function archiveItem(vaultId, itemId) {
+  // [developer-docs.sdk.js.archive-item]-start
+  // Archive an item from your vault.
+  await client.items.archive(vaultId, itemId);
+  // [developer-docs.sdk.js.archive-item]-end
+}

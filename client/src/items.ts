@@ -3,13 +3,15 @@
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import * as types from "./types.js";
 import { SdkIterable } from "./iterator.js";
+import { ItemsSharesApi, ItemsShares } from "./items_shares.js";
 
 /**
  * The Items API holds all operations the SDK client can perform on 1Password items.
  */
 export interface ItemsApi {
+  shares: ItemsSharesApi;
   /**
-   * Create a new item
+   * Create a new item.
    */
   create(params: types.ItemCreateParams): Promise<types.Item>;
 
@@ -29,6 +31,11 @@ export interface ItemsApi {
   delete(vaultId: string, itemId: string);
 
   /**
+   * Archive an item.
+   */
+  archive(vaultId: string, itemId: string);
+
+  /**
    * List all items
    */
   listAll(vaultId: string): Promise<SdkIterable<types.ItemOverview>>;
@@ -36,13 +43,15 @@ export interface ItemsApi {
 
 export class Items implements ItemsApi {
   #inner: InnerClient;
+  public shares: ItemsSharesApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
+    this.shares = new ItemsShares(inner);
   }
 
   /**
-   * Create a new item
+   * Create a new item.
    */
   public async create(params: types.ItemCreateParams): Promise<types.Item> {
     const invocationConfig: InvokeConfig = {
@@ -111,6 +120,25 @@ export class Items implements ItemsApi {
         clientId: this.#inner.id,
         parameters: {
           name: "ItemsDelete",
+          parameters: {
+            vault_id: vaultId,
+            item_id: itemId,
+          },
+        },
+      },
+    };
+    await this.#inner.core.invoke(invocationConfig);
+  }
+
+  /**
+   * Archive an item.
+   */
+  public async archive(vaultId: string, itemId: string) {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "ItemsArchive",
           parameters: {
             vault_id: vaultId,
             item_id: itemId,
