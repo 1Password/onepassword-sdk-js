@@ -185,9 +185,8 @@ try {
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-start
-// Delete / archive a item from your vault.
+// Delete an item from your vault.
 await client.items.delete(item.vaultId, item.id);
-//  or to archive: await client.items.archive(item.vaultId, item.id)
 // [developer-docs.sdk.js.delete-item]-end
 
 async function shareItem(client, vaultId, itemId) {
@@ -221,4 +220,14 @@ async function shareItem(client, vaultId, itemId) {
 
   console.log(share_link);
   // [developer-docs.sdk.js.item-share-create-share]-end
+}
+// NOTE: this is in a separate function to avoid creating a new item
+// NOTE: just for the sake of archiving it. This is because the SDK
+// NOTE: only works with active items, so archiving and then deleting
+// NOTE: is not yet possible.
+async function archiveItem(vaultId, itemId){
+  // [developer-docs.sdk.js.archive-item]-start
+  // Archive an item from your vault.
+  await client.items.archive(vaultId, itemId);
+  // [developer-docs.sdk.js.archive-item]-end
 }
