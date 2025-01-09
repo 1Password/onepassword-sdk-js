@@ -192,34 +192,33 @@ await client.items.delete(item.vaultId, item.id);
 
 async function shareItem(client, vaultId, itemId) {
   // [developer-docs.sdk.js.item-share-get-item]-start
-  let item = await client.items.get(vaultId, itemId)
-  console.log(item)
+  let item = await client.items.get(vaultId, itemId);
+  console.log(item);
   // [developer-docs.sdk.js.item-share-get-item]-end
 
   // [developer-docs.sdk.js.item-share-get-account-policy]-start
-  let policy = await client.items.shares.getAccountPolicy(item.vaultId, item.id)
-  console.log(policy)
+  let policy = await client.items.shares.getAccountPolicy(
+    item.vaultId,
+    item.id,
+  );
+  console.log(policy);
   // [developer-docs.sdk.js.item-share-get-account-policy]-end
 
   // [developer-docs.sdk.js.item-share-validate-recipients]-start
-  let valid_recipients = await client.items.shares.validateRecipients(
-      policy, ["helloworld@agilebits.com"]
-  )
+  let valid_recipients = await client.items.shares.validateRecipients(policy, [
+    "helloworld@agilebits.com",
+  ]);
 
-  console.log(valid_recipients)
+  console.log(valid_recipients);
   // [developer-docs.sdk.js.item-share-validate-recipients]-end
 
   // [developer-docs.sdk.js.item-share-create-share]-start
-  let share_link = await client.items.shares.create(
-      item,
-      policy,
-      {
-        expireAfter: sdk.ItemShareDuration.OneHour,
-        oneTimeOnly: false,
-        recipients:  valid_recipients,
-      },
-  )
+  let share_link = await client.items.shares.create(item, policy, {
+    expireAfter: sdk.ItemShareDuration.OneHour,
+    oneTimeOnly: false,
+    recipients: valid_recipients,
+  });
 
-  console.log(share_link)
+  console.log(share_link);
   // [developer-docs.sdk.js.item-share-create-share]-end
 }
