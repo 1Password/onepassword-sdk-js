@@ -1,0 +1,16 @@
+{
+	"name": "1password-sdk-examples-tests",
+	"description": "Examples converted to tests for the 1Password SDK",
+	"scripts": {
+		"test:esm-example": "node index.mjs",
+		"test:commonjs-example": "node index.cjs",
+		"prettier": "prettier --check index.*js",
+		"prettier-fix": "prettier --write index.*js"
+	},
+	"dependencies": {
+		"@1password/sdk": "0.1.2"
+	},
+	"devDependencies": {
+		"prettier": "3.1.1"
+	}
+}
