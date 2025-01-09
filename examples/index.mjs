@@ -225,7 +225,7 @@ async function shareItem(client, vaultId, itemId) {
 // NOTE: just for the sake of archiving it. This is because the SDK
 // NOTE: only works with active items, so archiving and then deleting
 // NOTE: is not yet possible.
-async function archiveItem(vaultId, itemId){
+async function archiveItem(vaultId, itemId) {
   // [developer-docs.sdk.js.archive-item]-start
   // Archive an item from your vault.
   await client.items.archive(vaultId, itemId);
