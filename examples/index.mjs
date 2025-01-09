@@ -20,7 +20,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
+const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -37,7 +37,7 @@ try {
 
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
+const secret = await client.secrets.resolve("op://tst-vault/.Login/username");
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
@@ -46,7 +46,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
   fields: [
     {
       id: "username",
@@ -183,8 +183,43 @@ try {
   console.error(error);
 }
 // [developer-docs.sdk.js.generate-random-password]-end
-
+shareItem(client, item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-start
-// Deletes an item
+// Delete / archive a item from your vault.
 await client.items.delete(item.vaultId, item.id);
+//  or to archive: await client.items.archive(item.vaultId, item.id)
 // [developer-docs.sdk.js.delete-item]-end
+
+async function shareItem(client, vaultId, itemId) {
+  // [developer-docs.sdk.js.item-share-get-item]-start
+  let item = await client.items.get(vaultId, itemId)
+  console.log(item)
+  // [developer-docs.sdk.js.item-share-get-item]-end
+
+  // [developer-docs.sdk.js.item-share-get-account-policy]-start
+  let policy = await client.items.shares.getAccountPolicy(item.vaultId, item.id)
+  console.log(policy)
+  // [developer-docs.sdk.js.item-share-get-account-policy]-end
+
+  // [developer-docs.sdk.js.item-share-validate-recipients]-start
+  let valid_recipients = await client.items.shares.validateRecipients(
+      policy, ["helloworld@agilebits.com"]
+  )
+
+  console.log(valid_recipients)
+  // [developer-docs.sdk.js.item-share-validate-recipients]-end
+
+  // [developer-docs.sdk.js.item-share-create-share]-start
+  let share_link = await client.items.shares.create(
+      item,
+      policy,
+      {
+        expireAfter: sdk.ItemShareDuration.OneHour,
+        oneTimeOnly: false,
+        recipients:  valid_recipients,
+      },
+  )
+
+  console.log(share_link)
+  // [developer-docs.sdk.js.item-share-create-share]-end
+}
