@@ -85,7 +85,7 @@ export class SharedCore implements Core {
     try {
       return invoke_sync(serializedConfig);
     } catch (e) {
-      throwError(e);
+      throwError(e as string);
     }
   }
 
@@ -94,7 +94,7 @@ export class SharedCore implements Core {
     try {
       return init_client(serializedConfig);
     } catch (e) {
-      throwError(e);
+      throwError(e as string);
     }
   }
 
@@ -103,7 +103,7 @@ export class SharedCore implements Core {
     try {
       return invoke(serializedConfig);
     } catch (e) {
-      throwError(e);
+      throwError(e as string);
     }
   }
 
