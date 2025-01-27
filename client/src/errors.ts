@@ -28,4 +28,4 @@ export const throwError = (errString: string) => {
     default:
       throw new Error(err.message);
   }
-}
+};
