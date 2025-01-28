@@ -4,6 +4,7 @@ import {
   release_client,
   invoke_sync,
 } from "@1password/sdk-core";
+import { throwError } from "./errors";
 
 /**
  *  Exposes the SDK core to the host JS SDK.
@@ -81,17 +82,29 @@ export interface Parameters {
 export class SharedCore implements Core {
   public invoke_sync(config: InvokeConfig): string {
     const serializedConfig = JSON.stringify(config);
-    return invoke_sync(serializedConfig);
+    try {
+      return invoke_sync(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
   }
 
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
-    return init_client(serializedConfig);
+    try {
+      return await init_client(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
-    return invoke(serializedConfig);
+    try {
+      return await invoke(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
   }
 
   public releaseClient(clientId: number): void {
