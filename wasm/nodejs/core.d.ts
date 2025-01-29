@@ -1,25 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* Initializes an SDK client with a given configuration.
-* @param {string} config
-* @returns {Promise<string>}
-*/
+ * Initializes an SDK client with a given configuration.
+ */
 export function init_client(config: string): Promise<string>;
 /**
-* Handles all asynchronous invocations to the SDK core received from the SDK.
-* @param {string} parameters
-* @returns {Promise<string>}
-*/
+ * Handles all asynchronous invocations to the SDK core received from the SDK.
+ */
 export function invoke(parameters: string): Promise<string>;
 /**
-* Handles all synchronous invocations to the SDK core received from the SDK.
-* @param {string} parameters
-* @returns {string}
-*/
+ * Handles all synchronous invocations to the SDK core received from the SDK.
+ */
 export function invoke_sync(parameters: string): string;
 /**
-* Drops a client, releasing the memory allocated for it.
-* @param {string} client_id
-*/
+ * Drops a client, releasing the memory allocated for it.
+ */
 export function release_client(client_id: string): void;
