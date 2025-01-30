@@ -88,8 +88,8 @@ fi
   if [ "$core_modified" = true ]; then
     # Wait for npm to be update to the latest version
     wait_for_npm_publish @1password/sdk-core "${version_sdk_core}"
-    # Update @1password/sdk-core dependancy to the latest
-    npm install @1password/sdk-core@latest -E
+    # Set the package version regardless if npm published or not
+    npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}"
   fi
 
   # Update sdk version number to the latest
@@ -109,8 +109,8 @@ fi
             
             # Wait for npm to be update to the latest version
             wait_for_npm_publish @1password/sdk "${version_sdk}"
-            # Update dependency in examples to run off the latest SDK
-            cd ../examples && npm install @1password/sdk@latest -E
+            # Set the package version regardless if npm published or not
+            cd ../examples && npm pkg set dependencies.@1password/sdk="${version_sdk}"
 
             # Check if the latest SDK client is pulled correctly
             cd ../ && npm install
