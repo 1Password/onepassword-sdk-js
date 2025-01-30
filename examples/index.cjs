@@ -10,7 +10,9 @@ async function fetchSecret(vaultId, itemId) {
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
-  return await client.secrets.resolve("op://"+vaultId+"/"+itemId+"/username");
+  return await client.secrets.resolve(
+    "op://" + vaultId + "/" + itemId + "/username",
+  );
 }
 
 async function manageItems() {

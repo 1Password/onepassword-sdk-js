@@ -84,7 +84,9 @@ let item = await client.items.create({
 
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://"+item.vaultId+"/"+item.id+"/username");
+const secret = await client.secrets.resolve(
+  "op://" + item.vaultId + "/" + item.id + "/username",
+);
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
