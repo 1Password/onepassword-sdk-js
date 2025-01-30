@@ -32,6 +32,18 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: npm test
+
+      - name: Run esm-example
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          OP_VAULT_ID: ${{ secrets.OP_SERVICE_ACCOUNT_VAULT_ID }}
+        run: npm run esm-example
+
+      - name: Run commonjs-example
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          OP_VAULT_ID: ${{ secrets.OP_SERVICE_ACCOUNT_VAULT_ID }}
+        run: npm run commonjs-example
   
   lint:
     name: Lint

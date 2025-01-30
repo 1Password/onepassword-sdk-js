@@ -2,7 +2,7 @@
 const sdk = require("@1password/sdk");
 // [developer-docs.sdk.js/common-js.sdk-import]-end
 
-async function fetchSecret() {
+async function fetchSecret(vaultId, itemId) {
   // Creates an authenticated client.
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
@@ -10,7 +10,7 @@ async function fetchSecret() {
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
-  return await client.secrets.resolve("op://vault/item/field");
+  return await client.secrets.resolve("op://"+vaultId+"/"+itemId+"/username");
 }
 
 async function manageItems() {
@@ -31,11 +31,13 @@ async function manageItems() {
     }
   }
 
+  vaultId = process.env.OP_VAULT_ID;
+
   // Create an item
   let item = await client.items.create({
     title: "My Item",
     category: sdk.ItemCategory.Login,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: vaultId,
     fields: [
       {
         id: "username",
@@ -73,6 +75,8 @@ async function manageItems() {
       },
     ],
   });
+
+  fetchSecret(item.vaultId, item.id).then(console.log);
 
   // Get a one-time password code.
   let element = item.fields.find((element) => {
@@ -158,4 +162,3 @@ function generatePassword() {
 
 manageItems();
 generatePassword();
-fetchSecret().then(console.log);

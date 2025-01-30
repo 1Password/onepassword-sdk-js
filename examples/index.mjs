@@ -19,8 +19,10 @@ for await (const vault of vaults) {
 }
 // [developer-docs.sdk.js.list-vaults]-end
 
+const vaultId = process.env.OP_VAULT_ID;
+
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
+const items = await client.items.listAll(vaultId);
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -35,18 +37,12 @@ try {
 }
 // [developer-docs.sdk.js.validate-secret-reference]-end
 
-// [developer-docs.sdk.js.resolve-secret]-start
-// Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
-console.log(secret);
-// [developer-docs.sdk.js.resolve-secret]-end
-
 // [developer-docs.sdk.js.create-item]-start
 // Creates an item
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: process.env.OP_VAULT_ID,
   fields: [
     {
       id: "username",
@@ -85,6 +81,12 @@ let item = await client.items.create({
   ],
 });
 // [developer-docs.sdk.js.create-item]-end
+
+// [developer-docs.sdk.js.resolve-secret]-start
+// Fetches a secret.
+const secret = await client.secrets.resolve("op://"+item.vaultId+"/"+item.id+"/username");
+console.log(secret);
+// [developer-docs.sdk.js.resolve-secret]-end
 
 // [developer-docs.sdk.js.resolve-totp-code]-start
 // Fetches a TOTP code.
