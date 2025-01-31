@@ -36,8 +36,8 @@ jobs:
 
       - name: Run esm-example
         env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          OP_VAULT_ID: ${{ secrets.OP_SERVICE_ACCOUNT_VAULT_ID }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.EXAMPLE_TESTS_OP_SERVICE_ACCOUNT_TOKEN }}
+          OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
         run: npm run esm-example
 
       - name: Run commonjs-example
