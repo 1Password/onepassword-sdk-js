@@ -9,7 +9,7 @@ import { ItemsSharesApi, ItemsShares } from "./items_shares.js";
  * The Items API holds all operations the SDK client can perform on 1Password items.
  */
 export interface ItemsApi {
-  public shares: ItemsSharesApi;
+  shares: ItemsSharesApi;
   /**
    * Create a new item.
    */
@@ -43,7 +43,7 @@ export interface ItemsApi {
 
 export class Items implements ItemsApi {
   #inner: InnerClient;
-  shares: ItemsSharesApi;
+  public shares: ItemsSharesApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
