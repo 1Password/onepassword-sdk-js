@@ -270,11 +270,11 @@ module.exports.release_client = function(client_id) {
 };
 
 function __wbg_adapter_30(arg0, arg1, arg2) {
-    wasm.closure1817_externref_shim(arg0, arg1, arg2);
+    wasm.closure1820_externref_shim(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_145(arg0, arg1, arg2, arg3) {
-    wasm.closure1899_externref_shim(arg0, arg1, arg2, arg3);
+    wasm.closure1902_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_RequestCredentials = ["omit", "same-origin", "include"];
@@ -319,13 +319,13 @@ module.exports.__wbg_done_769e5ede4b31c67b = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_fetch_509096533071c657 = function(arg0, arg1) {
-    const ret = arg0.fetch(arg1);
+module.exports.__wbg_fetch_4465c2b10f21a927 = function(arg0) {
+    const ret = fetch(arg0);
     return ret;
 };
 
-module.exports.__wbg_fetch_f1856afdb49415d1 = function(arg0) {
-    const ret = fetch(arg0);
+module.exports.__wbg_fetch_509096533071c657 = function(arg0, arg1) {
+    const ret = arg0.fetch(arg1);
     return ret;
 };
 
@@ -684,8 +684,8 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper6392 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 1818, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper6409 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 1821, __wbg_adapter_30);
     return ret;
 };
 
