@@ -10,7 +10,6 @@ export const DEFAULT_INTEGRATION_VERSION = "Unknown";
 export { Secrets } from "./secrets.js";
 
 export * from "./client.js";
-export * from "./errors.js";
 export * from "./types.js";
 
 /**

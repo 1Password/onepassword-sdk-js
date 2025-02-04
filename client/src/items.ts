@@ -43,7 +43,7 @@ export interface ItemsApi {
 
 export class Items implements ItemsApi {
   #inner: InnerClient;
-  public shares: ItemsSharesApi;
+  shares: ItemsSharesApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
