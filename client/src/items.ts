@@ -9,7 +9,7 @@ import { ItemsSharesApi, ItemsShares } from "./items_shares.js";
  * The Items API holds all operations the SDK client can perform on 1Password items.
  */
 export interface ItemsApi {
-  shares: ItemsSharesApi;
+  public shares: ItemsSharesApi;
   /**
    * Create a new item.
    */
