@@ -2,7 +2,11 @@
 
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import { SdkIterable } from "./iterator.js";
-import { GeneratePasswordResponse, PasswordRecipe } from "./types.js";
+import {
+  GeneratePasswordResponse,
+  PasswordRecipe,
+  ResolveAllResponse,
+} from "./types.js";
 
 /**
  * The Secrets API includes all operations the SDK client can perform on secrets.
@@ -13,6 +17,11 @@ export interface SecretsApi {
    * Resolve returns the secret the provided secret reference points to.
    */
   resolve(secretReference: string): Promise<string>;
+
+  /**
+   * Resolve takes in a list of secret references and returns the secrets they point to or errors if any.
+   */
+  resolveAll(secretReferences: string[]): Promise<ResolveAllResponse>;
 }
 
 export class Secrets implements SecretsApi {
@@ -40,6 +49,28 @@ export class Secrets implements SecretsApi {
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
     ) as Promise<string>;
+  }
+
+  /**
+   * Resolve takes in a list of secret references and returns the secrets they point to or errors if any.
+   */
+  public async resolveAll(
+    secretReferences: string[],
+  ): Promise<ResolveAllResponse> {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "SecretsResolveAll",
+          parameters: {
+            secret_references: secretReferences,
+          },
+        },
+      },
+    };
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+    ) as Promise<ResolveAllResponse>;
   }
 
   /**
