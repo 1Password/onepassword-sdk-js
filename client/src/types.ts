@@ -48,13 +48,16 @@ export enum ItemFieldType {
   Totp = "Totp",
   Email = "Email",
   Reference = "Reference",
+  SshKey = "SshKey",
   Unsupported = "Unsupported",
 }
 
 /** Field type-specific attributes. */
 export type ItemFieldDetails =
   /** The computed OTP code and other details */
-  { type: "Otp"; content: OtpFieldDetails };
+  | { type: "Otp"; content: OtpFieldDetails }
+  /** Computed SSH Key attributes */
+  | { type: "SshKey"; content?: SshKeyAttributes };
 
 /** Represents a field within an item. */
 export interface ItemField {
@@ -248,6 +251,15 @@ export interface OtpFieldDetails {
   code?: string;
   /** The error message, if the OTP code could not be computed */
   errorMessage?: string;
+}
+
+export interface SshKeyAttributes {
+  /** The public part of the SSH Key */
+  publicKey: string;
+  /** The fingerprint of the SSH Key */
+  fingerprint: string;
+  /** The key type ("Ed25519" or "RSA, {length}-bit") */
+  keyType: string;
 }
 
 /** Represents a decrypted 1Password vault. */
