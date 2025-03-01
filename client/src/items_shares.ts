@@ -7,6 +7,7 @@ import {
   ItemShareAccountPolicy,
   ItemShareParams,
   ValidRecipient,
+  ReviverFunc,
 } from "./types.js";
 
 export interface ItemsSharesApi {
@@ -64,6 +65,7 @@ export class ItemsShares implements ItemsSharesApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<ItemShareAccountPolicy>;
   }
 
@@ -88,6 +90,7 @@ export class ItemsShares implements ItemsSharesApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<ValidRecipient[]>;
   }
 
@@ -114,6 +117,7 @@ export class ItemsShares implements ItemsSharesApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<string>;
   }
 }

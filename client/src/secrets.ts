@@ -2,7 +2,11 @@
 
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import { SdkIterable } from "./iterator.js";
-import { GeneratePasswordResponse, PasswordRecipe } from "./types.js";
+import {
+  GeneratePasswordResponse,
+  PasswordRecipe,
+  ReviverFunc,
+} from "./types.js";
 
 /**
  * The Secrets API includes all operations the SDK client can perform on secrets.
@@ -39,6 +43,7 @@ export class Secrets implements SecretsApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<string>;
   }
 
@@ -76,6 +81,7 @@ export class Secrets implements SecretsApi {
     };
     return JSON.parse(
       sharedCore.invoke_sync(invocationConfig),
+      ReviverFunc,
     ) as GeneratePasswordResponse;
   }
 }

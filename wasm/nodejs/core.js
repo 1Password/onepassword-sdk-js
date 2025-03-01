@@ -270,11 +270,11 @@ module.exports.release_client = function(client_id) {
 };
 
 function __wbg_adapter_30(arg0, arg1, arg2) {
-    wasm.closure1820_externref_shim(arg0, arg1, arg2);
+    wasm.closure2080_externref_shim(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_145(arg0, arg1, arg2, arg3) {
-    wasm.closure1902_externref_shim(arg0, arg1, arg2, arg3);
+    wasm.closure2164_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_RequestCredentials = ["omit", "same-origin", "include"];
@@ -684,8 +684,8 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper6409 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 1821, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper7652 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2081, __wbg_adapter_30);
     return ret;
 };
 
