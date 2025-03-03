@@ -2,14 +2,16 @@
 
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import { SdkIterable } from "./iterator.js";
-import { Item, ItemCreateParams, ItemOverview } from "./types.js";
+import { Item, ItemCreateParams, ItemOverview, ReviverFunc } from "./types.js";
 import { ItemsSharesApi, ItemsShares } from "./items_shares.js";
+import { ItemsFilesApi, ItemsFiles } from "./items_files.js";
 
 /**
  * The Items API holds all operations the SDK client can perform on 1Password items.
  */
 export interface ItemsApi {
   shares: ItemsSharesApi;
+  files: ItemsFilesApi;
   /**
    * Create a new item.
    */
@@ -44,10 +46,12 @@ export interface ItemsApi {
 export class Items implements ItemsApi {
   #inner: InnerClient;
   public shares: ItemsSharesApi;
+  public files: ItemsFilesApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
     this.shares = new ItemsShares(inner);
+    this.files = new ItemsFiles(inner);
   }
 
   /**
@@ -67,6 +71,7 @@ export class Items implements ItemsApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<Item>;
   }
 
@@ -88,6 +93,7 @@ export class Items implements ItemsApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<Item>;
   }
 
@@ -108,6 +114,7 @@ export class Items implements ItemsApi {
     };
     return JSON.parse(
       await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
     ) as Promise<Item>;
   }
 
@@ -167,6 +174,7 @@ export class Items implements ItemsApi {
     return new SdkIterable<ItemOverview>(
       JSON.parse(
         await this.#inner.core.invoke(invocationConfig),
+        ReviverFunc,
       ) as ItemOverview[],
     );
   }

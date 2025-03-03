@@ -2,7 +2,7 @@
 
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import { SdkIterable } from "./iterator.js";
-import { VaultOverview } from "./types.js";
+import { VaultOverview, ReviverFunc } from "./types.js";
 
 /**
  * The Vaults API holds all the operations the SDK client can perform on 1Password vaults.
@@ -37,6 +37,7 @@ export class Vaults implements VaultsApi {
     return new SdkIterable<VaultOverview>(
       JSON.parse(
         await this.#inner.core.invoke(invocationConfig),
+        ReviverFunc,
       ) as VaultOverview[],
     );
   }
