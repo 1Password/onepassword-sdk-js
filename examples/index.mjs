@@ -360,14 +360,14 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   });
   // [developer-docs.sdk.js.attach-file-field-item]-end
 
-  // [developer-docs.sdk.js.read-document-item]-start
+  // [developer-docs.sdk.js.delete-file-field-item]-start
   // Read the content of the Document Item
   let deletedItem = await client.items.files.delete(
     attachedItem,
     "custom section",
     "new_file_field",
   );
-  // [developer-docs.sdk.js.read-document-item]-end
+  // [developer-docs.sdk.js.delete-file-field-item]-end
 
   console.log(deletedItem.files.length);
 }
