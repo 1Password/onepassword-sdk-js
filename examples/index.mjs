@@ -238,11 +238,11 @@ async function archiveItem(vaultId, itemId) {
 }
 
 async function createSshKeyItem(client) {
-  const privateKey = crypto.generateKeyPairSync('rsa', {
+  const privateKey = crypto.generateKeyPairSync("rsa", {
     modulusLength: 4096, // 4096-bit key
     privateKeyEncoding: {
-      type: 'pkcs8', // PKCS#8 Private Key format
-      format: 'pem',
+      type: "pkcs8", // PKCS#8 Private Key format
+      format: "pem",
     },
   });
   // [developer-docs.sdk.js.create-sshkey-item]-start
@@ -258,7 +258,7 @@ async function createSshKeyItem(client) {
         fieldType: sdk.ItemFieldType.SshKey,
         value: privateKey.privateKey,
         sectionId: "custom section",
-      }
+      },
     ],
     sections: [
       {
@@ -284,26 +284,36 @@ async function createAndReplaceDocumentItem(client) {
     category: sdk.ItemCategory.Document,
     vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     tags: ["test tag 1", "test tag 2"],
-    document: {name: "file.txt", content: new TextEncoder().encode(fs.readFileSync("file.txt"))},
+    document: {
+      name: "file.txt",
+      content: new TextEncoder().encode(fs.readFileSync("file.txt")),
+    },
   });
   // [developer-docs.sdk.js.create-document-item]-end
 
   // [developer-docs.sdk.js.replace-document-item]-start
   // Replace the document in the Document Item
-  let replacedDocumentItem = await client.items.files.replaceDocument(item, {name: "file2.txt", content: new TextEncoder().encode(fs.readFileSync("file2.txt"))});
+  let replacedDocumentItem = await client.items.files.replaceDocument(item, {
+    name: "file2.txt",
+    content: new TextEncoder().encode(fs.readFileSync("file2.txt")),
+  });
   // [developer-docs.sdk.js.replace-document-item]-end
 
   // [developer-docs.sdk.js.read-document-item]-start
   // Read the content of the Document Item
-  let content = await client.items.files.read(replacedDocumentItem.vaultId, replacedDocumentItem.id, replacedDocumentItem.document);
+  let content = await client.items.files.read(
+    replacedDocumentItem.vaultId,
+    replacedDocumentItem.id,
+    replacedDocumentItem.document,
+  );
   // [developer-docs.sdk.js.read-document-item]-end
 
   console.log(new TextDecoder("utf-8").decode(content));
 }
 
 async function createAndAttachAndDeleteFileFieldItem(client) {
-	// [developer-docs.sdk.js.create-item-with-file-field]-start
-	// Create the file field item
+  // [developer-docs.sdk.js.create-item-with-file-field]-start
+  // Create the file field item
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
@@ -329,18 +339,34 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
         title: "my section",
       },
     ],
-    files: [{name: "file.txt", content: new TextEncoder().encode(fs.readFileSync("file.txt")), sectionId: "custom section", fieldId: "file_field"}],
+    files: [
+      {
+        name: "file.txt",
+        content: new TextEncoder().encode(fs.readFileSync("file.txt")),
+        sectionId: "custom section",
+        fieldId: "file_field",
+      },
+    ],
   });
-	// [developer-docs.sdk.js.create-item-with-file-field]-end
+  // [developer-docs.sdk.js.create-item-with-file-field]-end
 
-	// [developer-docs.sdk.js.attach-file-field-item]-start
+  // [developer-docs.sdk.js.attach-file-field-item]-start
   // Replace the document in the Document Item
-  let attachedItem = await client.items.files.attach(item, {name: "file2.txt", content: new TextEncoder().encode(fs.readFileSync("file.txt")), sectionId: "custom section", fieldId: "new_file_field"});
-	// [developer-docs.sdk.js.attach-file-field-item]-end
+  let attachedItem = await client.items.files.attach(item, {
+    name: "file2.txt",
+    content: new TextEncoder().encode(fs.readFileSync("file.txt")),
+    sectionId: "custom section",
+    fieldId: "new_file_field",
+  });
+  // [developer-docs.sdk.js.attach-file-field-item]-end
 
   // [developer-docs.sdk.js.read-document-item]-start
   // Read the content of the Document Item
-  let deletedItem = await client.items.files.delete(attachedItem, "custom section", "new_file_field");
+  let deletedItem = await client.items.files.delete(
+    attachedItem,
+    "custom section",
+    "new_file_field",
+  );
   // [developer-docs.sdk.js.read-document-item]-end
 
   console.log(deletedItem.files);
