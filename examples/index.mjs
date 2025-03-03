@@ -286,7 +286,7 @@ async function createAndReplaceDocumentItem(client) {
     tags: ["test tag 1", "test tag 2"],
     document: {
       name: "file.txt",
-      content: new TextEncoder().encode(fs.readFileSync("file.txt")),
+      content: new Uint8Array(fs.readFileSync("file.txt")),
     },
   });
   // [developer-docs.sdk.js.create-document-item]-end
@@ -295,7 +295,7 @@ async function createAndReplaceDocumentItem(client) {
   // Replace the document in the Document Item
   let replacedDocumentItem = await client.items.files.replaceDocument(item, {
     name: "file2.txt",
-    content: new TextEncoder().encode(fs.readFileSync("file2.txt")),
+    content: new Uint8Array(fs.readFileSync("file2.txt")),
   });
   // [developer-docs.sdk.js.replace-document-item]-end
 
@@ -342,7 +342,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
     files: [
       {
         name: "file.txt",
-        content: new TextEncoder().encode(fs.readFileSync("file.txt")),
+        content: new Uint8Array(fs.readFileSync("file.txt")),
         sectionId: "custom section",
         fieldId: "file_field",
       },
@@ -354,7 +354,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // Replace the document in the Document Item
   let attachedItem = await client.items.files.attach(item, {
     name: "file2.txt",
-    content: new TextEncoder().encode(fs.readFileSync("file.txt")),
+    content: new Uint8Array(fs.readFileSync("file.txt")),
     sectionId: "custom section",
     fieldId: "new_file_field",
   });
