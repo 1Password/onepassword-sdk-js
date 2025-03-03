@@ -34,7 +34,7 @@ This folder contains a code snippet demonstrating how to use the 1Password Pytho
 
 ## Prerequisites
 
-1. Clone the repository and follow the steps to [get started](https://github.com/1Password/onepassword-sdk-python/blob/main/README.md).
+1. Clone the repository and follow the steps to [get started](https://github.com/1Password/onepassword-sdk-js/blob/main/README.md).
 2. Ensure that you have a valid service account token by exporting it as an environment variable:
     ```bash
     export OP_SERVICE_ACCOUNT_TOKEN="<your token>"
