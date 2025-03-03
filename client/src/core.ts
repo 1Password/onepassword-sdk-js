@@ -1,9 +1,11 @@
 import {
   init_client,
   invoke,
-  release_client,
   invoke_sync,
+  release_client,
 } from "@1password/sdk-core";
+
+import { ReplacerFunc } from "./types";
 import { throwError } from "./errors";
 
 /**
@@ -80,15 +82,6 @@ export interface Parameters {
  *  An implementation of the `Core` interface that shares resources across all clients.
  */
 export class SharedCore implements Core {
-  public invoke_sync(config: InvokeConfig): string {
-    const serializedConfig = JSON.stringify(config);
-    try {
-      return invoke_sync(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
-  }
-
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     try {
@@ -99,7 +92,7 @@ export class SharedCore implements Core {
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {
-    const serializedConfig = JSON.stringify(config);
+    const serializedConfig = JSON.stringify(config, ReplacerFunc);
     try {
       return await invoke(serializedConfig);
     } catch (e) {
@@ -107,6 +100,15 @@ export class SharedCore implements Core {
     }
   }
 
+  public invoke_sync(config: InvokeConfig): string {
+    const serializedConfig = JSON.stringify(config, ReplacerFunc);
+    try {
+      return invoke_sync(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
+  }
+  
   public releaseClient(clientId: number): void {
     const serializedId = JSON.stringify(clientId);
     release_client(serializedId);
