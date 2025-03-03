@@ -22,7 +22,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
+const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -39,7 +39,7 @@ try {
 
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://tst-vault/.Login/username");
+const secret = await client.secrets.resolve("op://vault/item/field");
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
@@ -48,7 +48,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+  vaultId: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
@@ -250,7 +250,7 @@ async function createSshKeyItem(client) {
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
     category: sdk.ItemCategory.SshKey,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: "7turaasywpymt3jecxoxk5roli",
     fields: [
       {
         id: "private_key",
@@ -282,7 +282,7 @@ async function createAndReplaceDocumentItem(client) {
   let item = await client.items.create({
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: "7turaasywpymt3jecxoxk5roli",
     tags: ["test tag 1", "test tag 2"],
     document: {
       name: "file.txt",
@@ -317,7 +317,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: "7turaasywpymt3jecxoxk5roli",
     tags: ["test tag 1", "test tag 2"],
     fields: [
       {
@@ -369,5 +369,5 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   );
   // [developer-docs.sdk.js.read-document-item]-end
 
-  console.log(deletedItem.files);
+  console.log(deletedItem.files.length);
 }
