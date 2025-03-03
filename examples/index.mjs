@@ -351,7 +351,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // [developer-docs.sdk.js.create-item-with-file-field]-end
 
   // [developer-docs.sdk.js.attach-file-field-item]-start
-  // Replace the document in the Document Item
+  // Attach a file field to the item
   let attachedItem = await client.items.files.attach(item, {
     name: "file2.txt",
     content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -361,7 +361,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // [developer-docs.sdk.js.attach-file-field-item]-end
 
   // [developer-docs.sdk.js.delete-file-field-item]-start
-  // Read the content of the Document Item
+  // Delete a file field from an item
   let deletedItem = await client.items.files.delete(
     attachedItem,
     "custom section",
