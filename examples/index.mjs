@@ -1,3 +1,5 @@
+import crypto from "crypto";
+import * as fs from "fs";
 // [developer-docs.sdk.js/es-modules.sdk-import]-start
 import sdk from "@1password/sdk";
 // [developer-docs.sdk.js/es-modules.sdk-import]-end
@@ -20,7 +22,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
+const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -37,7 +39,7 @@ try {
 
 // [developer-docs.sdk.js.resolve-secret]-start
 // Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
+const secret = await client.secrets.resolve("op://tst-vault/.Login/username");
 console.log(secret);
 // [developer-docs.sdk.js.resolve-secret]-end
 
@@ -46,7 +48,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
   fields: [
     {
       id: "username",
@@ -184,6 +186,9 @@ try {
 }
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, item.vaultId, item.id);
+await createSshKeyItem(client);
+await createAndReplaceDocumentItem(client);
+await createAndAttachAndDeleteFileFieldItem(client);
 // [developer-docs.sdk.js.delete-item]-start
 // Delete an item from your vault.
 await client.items.delete(item.vaultId, item.id);
@@ -230,4 +235,113 @@ async function archiveItem(vaultId, itemId) {
   // Archive an item from your vault.
   await client.items.archive(vaultId, itemId);
   // [developer-docs.sdk.js.archive-item]-end
+}
+
+async function createSshKeyItem(client) {
+  const privateKey = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 4096, // 4096-bit key
+    privateKeyEncoding: {
+      type: 'pkcs8', // PKCS#8 Private Key format
+      format: 'pem',
+    },
+  });
+  // [developer-docs.sdk.js.create-sshkey-item]-start
+  // Create a SSH Key Item
+  let item = await client.items.create({
+    title: "SSH Key Item Created With JS SDK",
+    category: sdk.ItemCategory.SshKey,
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    fields: [
+      {
+        id: "private_key",
+        title: "private key",
+        fieldType: sdk.ItemFieldType.SshKey,
+        value: privateKey.privateKey,
+        sectionId: "custom section",
+      }
+    ],
+    sections: [
+      {
+        id: "custom section",
+        title: "my section",
+      },
+    ],
+    tags: ["test tag 1", "test tag 2"],
+  });
+  // [developer-docs.sdk.js.create-sshkey-item]-end
+
+  console.log("Private Key is : ", item.fields[0].value);
+  console.log("Public Key is: ", item.fields[0].details.content.publicKey);
+  console.log("Fingerprint is: ", item.fields[0].details.content.fingerprint);
+  console.log("Key Type is: ", item.fields[0].details.content.keyType);
+}
+
+async function createAndReplaceDocumentItem(client) {
+  // [developer-docs.sdk.js.create-document-item]-start
+  // Create a Document Item
+  let item = await client.items.create({
+    title: "Document Item Created With JS SDK",
+    category: sdk.ItemCategory.Document,
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    tags: ["test tag 1", "test tag 2"],
+    document: {name: "file.txt", content: new TextEncoder().encode(fs.readFileSync("file.txt"))},
+  });
+  // [developer-docs.sdk.js.create-document-item]-end
+
+  // [developer-docs.sdk.js.replace-document-item]-start
+  // Replace the document in the Document Item
+  let replacedDocumentItem = await client.items.files.replaceDocument(item, {name: "file2.txt", content: new TextEncoder().encode(fs.readFileSync("file2.txt"))});
+  // [developer-docs.sdk.js.replace-document-item]-end
+
+  // [developer-docs.sdk.js.read-document-item]-start
+  // Read the content of the Document Item
+  let content = await client.items.files.read(replacedDocumentItem.vaultId, replacedDocumentItem.id, replacedDocumentItem.document);
+  // [developer-docs.sdk.js.read-document-item]-end
+
+  console.log(new TextDecoder("utf-8").decode(content));
+}
+
+async function createAndAttachAndDeleteFileFieldItem(client) {
+	// [developer-docs.sdk.js.create-item-with-file-field]-start
+	// Create the file field item
+  let item = await client.items.create({
+    title: "Login with File Field Item Created With JS SDK",
+    category: sdk.ItemCategory.Login,
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    tags: ["test tag 1", "test tag 2"],
+    fields: [
+      {
+        id: "username",
+        title: "username",
+        fieldType: sdk.ItemFieldType.Text,
+        value: "my username",
+      },
+      {
+        id: "password",
+        title: "password",
+        fieldType: sdk.ItemFieldType.Concealed,
+        value: "my secret value",
+      },
+    ],
+    sections: [
+      {
+        id: "custom section",
+        title: "my section",
+      },
+    ],
+    files: [{name: "file.txt", content: new TextEncoder().encode(fs.readFileSync("file.txt")), sectionId: "custom section", fieldId: "file_field"}],
+  });
+	// [developer-docs.sdk.js.create-item-with-file-field]-end
+
+	// [developer-docs.sdk.js.attach-file-field-item]-start
+  // Replace the document in the Document Item
+  let attachedItem = await client.items.files.attach(item, {name: "file2.txt", content: new TextEncoder().encode(fs.readFileSync("file.txt")), sectionId: "custom section", fieldId: "new_file_field"});
+	// [developer-docs.sdk.js.attach-file-field-item]-end
+
+  // [developer-docs.sdk.js.read-document-item]-start
+  // Read the content of the Document Item
+  let deletedItem = await client.items.files.delete(attachedItem, "custom section", "new_file_field");
+  // [developer-docs.sdk.js.read-document-item]-end
+
+  console.log(deletedItem.files);
 }
