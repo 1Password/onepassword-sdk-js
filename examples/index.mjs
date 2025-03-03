@@ -1,7 +1,9 @@
-import crypto from "crypto";
 import * as fs from "fs";
+
+import crypto from "crypto";
 // [developer-docs.sdk.js/es-modules.sdk-import]-start
 import sdk from "@1password/sdk";
+
 // [developer-docs.sdk.js/es-modules.sdk-import]-end
 
 // [developer-docs.sdk.js.client-initialization]-start
@@ -266,14 +268,12 @@ async function createSshKeyItem(client) {
         title: "my section",
       },
     ],
-    tags: ["test tag 1", "test tag 2"],
   });
+  console.log(item.fields[0].value);
+  console.log(item.fields[0].details.content.publicKey);
+  console.log(item.fields[0].details.content.fingerprint);
+  console.log(item.fields[0].details.content.keyType);
   // [developer-docs.sdk.js.create-sshkey-item]-end
-
-  console.log("Private Key is : ", item.fields[0].value);
-  console.log("Public Key is: ", item.fields[0].details.content.publicKey);
-  console.log("Fingerprint is: ", item.fields[0].details.content.fingerprint);
-  console.log("Key Type is: ", item.fields[0].details.content.keyType);
 }
 
 async function createAndReplaceDocumentItem(client) {
