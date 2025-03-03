@@ -8,10 +8,10 @@ import {
 import { ReplacerFunc } from "./types";
 import { throwError } from "./errors";
 
-// In empirical tests, we determined that maximum message size that can cross the FFI boundary 
+// In empirical tests, we determined that maximum message size that can cross the FFI boundary
 // is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
 // We set the limit to 50MB to be safe, to be reconsidered upon further testing.
-const messageLimit = 50 * 1024 * 1024; 
+const messageLimit = 50 * 1024 * 1024;
 
 /**
  *  Exposes the SDK core to the host JS SDK.
@@ -101,7 +101,9 @@ export class SharedCore implements Core {
     // Encoding to bytes as JS uses UTF-16 under the hood, but the messages
     // that are sent across the FFI boundary are encoded in UTF-8.
     if (new TextEncoder().encode(serializedConfig).length > messageLimit) {
-      throwError(`message size exceeds the limit maximum of ${messageLimit} bytes`);
+      throwError(
+        `message size exceeds the limit maximum of ${messageLimit} bytes`,
+      );
     }
     try {
       return await invoke(serializedConfig);
@@ -115,7 +117,9 @@ export class SharedCore implements Core {
     // Encoding to bytes as JS uses UTF-16 under the hood, but the messages
     // that are sent across the FFI boundary are encoded in UTF-8.
     if (new TextEncoder().encode(serializedConfig).length > messageLimit) {
-      throwError(`message size exceeds the limit maximum of ${messageLimit} bytes`);
+      throwError(
+        `message size exceeds the limit maximum of ${messageLimit} bytes`,
+      );
     }
     try {
       return invoke_sync(serializedConfig);
@@ -123,7 +127,7 @@ export class SharedCore implements Core {
       throwError(e as string);
     }
   }
-  
+
   public releaseClient(clientId: number): void {
     const serializedId = JSON.stringify(clientId);
     release_client(serializedId);
