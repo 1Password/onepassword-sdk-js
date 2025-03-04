@@ -1,27 +1,5 @@
 # Examples
-
-This folder contains code snippets showing how to import and use the
-1Password JS SDK, using either ES Modules or CommonJS modules.
-
-### How to run
-1. Clone this repo
-2. Make sure to export a valid service account token. For example:
-	```bash
-	export OP_SERVICE_ACCOUNT_TOKEN="<your token>"
-	```
-3. Make sure to export a valid vault uuid. For example:
-    ```bash
-    export OP_VAULT_ID="<your vault uuid>"
-    ```
-4. Run the code in your preferred module format.
-    ```bash
-    npm run esm-example
-    ```
-    ```bash
-    npm run commonjs-example
-    ```
-# Examples
-This folder contains a code snippet demonstrating how to use the 1Password Python SDK for performing various operations on 1Password vaults and items. Specifically, the example showcases how to:
+This folder contains a code snippet demonstrating how to use the 1Password Go SDK for performing various operations on 1Password vaults and items. Specifically, the example showcases how to:
 
 - Authenticate with the 1Password API using a service account token.
 - List available vaults and items within those vaults.
@@ -31,6 +9,9 @@ This folder contains a code snippet demonstrating how to use the 1Password Pytho
 - Generate different types of passwords (PIN, memorable, and random).
 - Share an item with valid recipients and create a shareable link.
 - Archive or delete items from the vault.
+- Create and manage SSH key items.
+- Create and manage document items, including replacing and reading documents.
+- Create and manage file field items by attaching and deleting files.
 
 ## Prerequisites
 
@@ -63,5 +44,9 @@ When running the example, the terminal will display:
 - Details of newly created and updated items.
 - Generated passwords (PIN, memorable, random).
 - A shareable link for shared items.
+- SSH key attributes like public key and fingerprint.
+- Document content after replacing the file.
+- A list of file field items and file deletions.
 
-These outputs show the results of vault and item operations, password generation, and sharing.
+These outputs show the results of vault and item operations, password generation, item sharing, and management of SSH and document items.
+
