@@ -274,6 +274,8 @@ async function createSshKeyItem(client) {
   console.log(item.fields[0].details.content.fingerprint);
   console.log(item.fields[0].details.content.keyType);
   // [developer-docs.sdk.js.create-sshkey-item]-end
+  await client.items.delete(item.vaultId, item.id);
+
 }
 
 async function createAndReplaceDocumentItem(client) {
@@ -283,7 +285,6 @@ async function createAndReplaceDocumentItem(client) {
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
     vaultId: "7turaasywpymt3jecxoxk5roli",
-    tags: ["test tag 1", "test tag 2"],
     document: {
       name: "file.txt",
       content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -309,6 +310,8 @@ async function createAndReplaceDocumentItem(client) {
   // [developer-docs.sdk.js.read-document-item]-end
 
   console.log(new TextDecoder("utf-8").decode(content));
+
+  await client.items.delete(replacedDocumentItem.vaultId, replacedDocumentItem.id);
 }
 
 async function createAndAttachAndDeleteFileFieldItem(client) {
@@ -318,7 +321,6 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
     vaultId: "7turaasywpymt3jecxoxk5roli",
-    tags: ["test tag 1", "test tag 2"],
     fields: [
       {
         id: "username",
@@ -370,4 +372,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // [developer-docs.sdk.js.delete-file-field-item]-end
 
   console.log(deletedItem.files.length);
+
+  await client.items.delete(deletedItem.vaultId, deletedItem.id);
+
 }

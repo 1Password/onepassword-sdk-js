@@ -102,7 +102,7 @@ export class SharedCore implements Core {
     // that are sent across the FFI boundary are encoded in UTF-8.
     if (new TextEncoder().encode(serializedConfig).length > messageLimit) {
       throwError(
-        `message size exceeds the limit maximum of ${messageLimit} bytes`,
+        `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help."`,
       );
     }
     try {
@@ -118,7 +118,7 @@ export class SharedCore implements Core {
     // that are sent across the FFI boundary are encoded in UTF-8.
     if (new TextEncoder().encode(serializedConfig).length > messageLimit) {
       throwError(
-        `message size exceeds the limit maximum of ${messageLimit} bytes`,
+        `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help.`,
       );
     }
     try {
