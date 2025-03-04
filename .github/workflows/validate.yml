@@ -35,12 +35,14 @@ jobs:
         run: npm test
 
       - name: Run esm-example
+        if: matrix.os == 'ubuntu-latest'
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.EXAMPLE_TESTS_OP_SERVICE_ACCOUNT_TOKEN }}
           OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
         run: npm run esm-example
 
       - name: Run commonjs-example
+        if: matrix.os == 'ubuntu-latest'
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.EXAMPLE_TESTS_OP_SERVICE_ACCOUNT_TOKEN }}
           OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
