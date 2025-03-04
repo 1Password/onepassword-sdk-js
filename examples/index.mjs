@@ -368,8 +368,8 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // Delete a file field from an item
   let deletedItem = await client.items.files.delete(
     attachedItem,
-    "custom section",
-    "new_file_field",
+    attachedItem.files[1].sectionId,
+    attachedItem.files[1].fieldId,
   );
   // [developer-docs.sdk.js.delete-file-field-item]-end
 
