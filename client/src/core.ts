@@ -1,10 +1,17 @@
 import {
   init_client,
   invoke,
-  release_client,
   invoke_sync,
+  release_client,
 } from "@1password/sdk-core";
+
+import { ReplacerFunc } from "./types";
 import { throwError } from "./errors";
+
+// In empirical tests, we determined that maximum message size that can cross the FFI boundary
+// is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
+// We set the limit to 50MB to be safe, to be reconsidered upon further testing.
+const messageLimit = 50 * 1024 * 1024;
 
 /**
  *  Exposes the SDK core to the host JS SDK.
@@ -80,15 +87,6 @@ export interface Parameters {
  *  An implementation of the `Core` interface that shares resources across all clients.
  */
 export class SharedCore implements Core {
-  public invoke_sync(config: InvokeConfig): string {
-    const serializedConfig = JSON.stringify(config);
-    try {
-      return invoke_sync(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
-  }
-
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     try {
@@ -99,9 +97,32 @@ export class SharedCore implements Core {
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {
-    const serializedConfig = JSON.stringify(config);
+    const serializedConfig = JSON.stringify(config, ReplacerFunc);
+    // Encoding to bytes as JS uses UTF-16 under the hood, but the messages
+    // that are sent across the FFI boundary are encoded in UTF-8.
+    if (new TextEncoder().encode(serializedConfig).length > messageLimit) {
+      throwError(
+        `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help."`,
+      );
+    }
     try {
       return await invoke(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
+  }
+
+  public invoke_sync(config: InvokeConfig): string {
+    const serializedConfig = JSON.stringify(config, ReplacerFunc);
+    // Encoding to bytes as JS uses UTF-16 under the hood, but the messages
+    // that are sent across the FFI boundary are encoded in UTF-8.
+    if (new TextEncoder().encode(serializedConfig).length > messageLimit) {
+      throwError(
+        `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help.`,
+      );
+    }
+    try {
+      return invoke_sync(serializedConfig);
     } catch (e) {
       throwError(e as string);
     }
