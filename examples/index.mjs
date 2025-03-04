@@ -358,7 +358,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // Attach a file field to the item
   let attachedItem = await client.items.files.attach(item, {
     name: "file2.txt",
-    content: new Uint8Array(fs.readFileSync("file.txt")),
+    content: new Uint8Array(fs.readFileSync("file2.txt")),
     sectionId: "custom section",
     fieldId: "new_file_field",
   });
