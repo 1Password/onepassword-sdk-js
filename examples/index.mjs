@@ -275,7 +275,6 @@ async function createSshKeyItem(client) {
   console.log(item.fields[0].details.content.keyType);
   // [developer-docs.sdk.js.create-sshkey-item]-end
   await client.items.delete(item.vaultId, item.id);
-
 }
 
 async function createAndReplaceDocumentItem(client) {
@@ -311,7 +310,10 @@ async function createAndReplaceDocumentItem(client) {
 
   console.log(new TextDecoder("utf-8").decode(content));
 
-  await client.items.delete(replacedDocumentItem.vaultId, replacedDocumentItem.id);
+  await client.items.delete(
+    replacedDocumentItem.vaultId,
+    replacedDocumentItem.id,
+  );
 }
 
 async function createAndAttachAndDeleteFileFieldItem(client) {
@@ -374,5 +376,4 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   console.log(deletedItem.files.length);
 
   await client.items.delete(deletedItem.vaultId, deletedItem.id);
-
 }
