@@ -354,6 +354,17 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   });
   // [developer-docs.sdk.js.create-item-with-file-field]-end
 
+    // [developer-docs.sdk.js.read-file-field]-start
+  // Read the content of the Document Item
+  let content = await client.items.files.read(
+    item.vaultId,
+    item.id,
+    item.files[0],
+  );
+  // [developer-docs.sdk.js.read-file-field]-end
+
+  console.log(new TextDecoder("utf-8").decode(content));
+
   // [developer-docs.sdk.js.attach-file-field-item]-start
   // Attach a file field to the item
   let attachedItem = await client.items.files.attach(item, {
