@@ -355,7 +355,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   // [developer-docs.sdk.js.create-item-with-file-field]-end
 
   // [developer-docs.sdk.js.read-file-field]-start
-  // Read the content of the Document Item
+  // Read the content of the file field on the Item
   let content = await client.items.files.read(
     item.vaultId,
     item.id,
