@@ -359,7 +359,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   let content = await client.items.files.read(
     item.vaultId,
     item.id,
-    item.files[0],
+    item.files[0].attributes,
   );
   // [developer-docs.sdk.js.read-file-field]-end
 
