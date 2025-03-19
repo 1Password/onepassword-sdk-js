@@ -192,9 +192,9 @@ try {
 }
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, item.vaultId, item.id);
-await createSshKeyItem(client);
-await createAndReplaceDocumentItem(client);
-await createAndAttachAndDeleteFileFieldItem(client);
+await createSshKeyItem(client, item.vaultId);
+await createAndReplaceDocumentItem(client, item.vaultId);
+await createAndAttachAndDeleteFileFieldItem(client, item.vaultId);
 // [developer-docs.sdk.js.delete-item]-start
 // Delete an item from your vault.
 await client.items.delete(item.vaultId, item.id);
@@ -243,7 +243,7 @@ async function archiveItem(vaultId, itemId) {
   // [developer-docs.sdk.js.archive-item]-end
 }
 
-async function createSshKeyItem(client) {
+async function createSshKeyItem(client, vaultId) {
   const privateKey = crypto.generateKeyPairSync("rsa", {
     modulusLength: 4096, // 4096-bit key
     privateKeyEncoding: {
@@ -256,7 +256,7 @@ async function createSshKeyItem(client) {
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
     category: sdk.ItemCategory.SshKey,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: vaultId,
     fields: [
       {
         id: "private_key",
@@ -281,13 +281,13 @@ async function createSshKeyItem(client) {
   await client.items.delete(item.vaultId, item.id);
 }
 
-async function createAndReplaceDocumentItem(client) {
+async function createAndReplaceDocumentItem(client, vaultId) {
   // [developer-docs.sdk.js.create-document-item]-start
   // Create a Document Item
   let item = await client.items.create({
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: vaultId,
     document: {
       name: "file.txt",
       content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -320,13 +320,13 @@ async function createAndReplaceDocumentItem(client) {
   );
 }
 
-async function createAndAttachAndDeleteFileFieldItem(client) {
+async function createAndAttachAndDeleteFileFieldItem(client, vaultId) {
   // [developer-docs.sdk.js.create-item-with-file-field]-start
   // Create the file field item
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: vaultId,
     fields: [
       {
         id: "username",
