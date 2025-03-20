@@ -24,7 +24,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
+const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -50,7 +50,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+  vaultId: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
@@ -188,7 +188,7 @@ try {
 }
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, item.vaultId, item.id);
-await resolveAllSecrets(client, item.vaultId, item.id, "username","password")
+await resolveAllSecrets(client, item.vaultId, item.id, "username", "password");
 await createSshKeyItem(client);
 await createAndReplaceDocumentItem(client);
 await createAndAttachAndDeleteFileFieldItem(client);
@@ -390,14 +390,13 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   await client.items.delete(deletedItem.vaultId, deletedItem.id);
 }
 
-<<<<<<< Updated upstream
 function generateSpecialItemFields() {
   // Generate an Ed25519 private key and serialize it into a PEM encoded string.
   // This will be assigned to the item field
-  const { privateKey } = crypto.generateKeyPairSync('ed25519', {
-      privateKeyEncoding: {
-      type: 'pkcs8',
-      format: 'pem',
+  const { privateKey } = crypto.generateKeyPairSync("ed25519", {
+    privateKeyEncoding: {
+      type: "pkcs8",
+      format: "pem",
     },
   });
 
@@ -426,7 +425,7 @@ function generateSpecialItemFields() {
       title: "Date",
       sectionId: "custom section",
       fieldType: sdk.ItemFieldType.Date,
-      value:"1998-03-15",
+      value: "1998-03-15",
     },
     // Month Year
     {
@@ -434,7 +433,7 @@ function generateSpecialItemFields() {
       title: "Month Year",
       sectionId: "custom section",
       fieldType: sdk.ItemFieldType.MonthYear,
-      value:"03/1998",
+      value: "03/1998",
     },
     // Reference
     {
@@ -442,7 +441,7 @@ function generateSpecialItemFields() {
       title: "Reference",
       fieldType: sdk.ItemFieldType.Reference,
       value: "f43hnkatjllm5fsfsmgaqdhv7a",
-      sectionId: "custom section"
+      sectionId: "custom section",
     },
     // TOTP from URL
     {
@@ -459,8 +458,7 @@ function generateSpecialItemFields() {
       title: "One-Time Password Secret",
       sectionId: "custom section",
       fieldType: sdk.ItemFieldType.Totp,
-      value:
-        "jncrjgbdjnrncbjsr",
+      value: "jncrjgbdjnrncbjsr",
     },
     // SSH key
     // id and title must be "private_key" and "private key", respectively
@@ -473,8 +471,14 @@ function generateSpecialItemFields() {
     },
   ];
 }
-=======
-async function resolveAllSecrets(client, vault_id, item_id, field_id, field_id2) {
+
+async function resolveAllSecrets(
+  client,
+  vault_id,
+  item_id,
+  field_id,
+  field_id2,
+) {
   // [developer-docs.sdk.js.resolve-bulk-secret]-start
   try {
     // Fetch all secrets
@@ -496,4 +500,3 @@ async function resolveAllSecrets(client, vault_id, item_id, field_id, field_id2)
   }
   // [developer-docs.sdk.js.resolve-bulk-secret]-end
 }
->>>>>>> Stashed changes
