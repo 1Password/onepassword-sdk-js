@@ -241,6 +241,7 @@ async function archiveItem(vaultId, itemId) {
 }
 
 async function createSshKeyItem(client) {
+  // [developer-docs.sdk.js.create-sshkey-item]-start
   const privateKey = crypto.generateKeyPairSync("rsa", {
     modulusLength: 4096, // 4096-bit key
     privateKeyEncoding: {
@@ -248,7 +249,6 @@ async function createSshKeyItem(client) {
       format: "pem",
     },
   });
-  // [developer-docs.sdk.js.create-sshkey-item]-start
   // Create a SSH Key Item
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
@@ -391,17 +391,8 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
 }
 
 function generateSpecialItemFields() {
-  // Generate an Ed25519 private key and serialize it into a PEM encoded string.
-  // This will be assigned to the item field
-  const { privateKey } = crypto.generateKeyPairSync("ed25519", {
-    privateKeyEncoding: {
-      type: "pkcs8",
-      format: "pem",
-    },
-  });
-
   fields: [
-    // Address
+    // [developer-docs.sdk.js.address-field-type]-start
     {
       id: "address",
       title: "Address",
@@ -419,7 +410,8 @@ function generateSpecialItemFields() {
       },
       sectionId: "custom section",
     },
-    // Date
+    // [developer-docs.sdk.js.address-field-type]-end
+    // [developer-docs.sdk.js.date-field-type]-start
     {
       id: "date",
       title: "Date",
@@ -427,7 +419,8 @@ function generateSpecialItemFields() {
       fieldType: sdk.ItemFieldType.Date,
       value: "1998-03-15",
     },
-    // Month Year
+    // [developer-docs.sdk.js.date-field-type]-end
+    // [developer-docs.sdk.js.month-year-field-type]-start
     {
       id: "month_year",
       title: "Month Year",
@@ -435,7 +428,8 @@ function generateSpecialItemFields() {
       fieldType: sdk.ItemFieldType.MonthYear,
       value: "03/1998",
     },
-    // Reference
+    // [developer-docs.sdk.js.month-year-field-type]-end
+    // [developer-docs.sdk.js.references-field-type]-start
     {
       id: "reference",
       title: "Reference",
@@ -443,7 +437,8 @@ function generateSpecialItemFields() {
       value: "f43hnkatjllm5fsfsmgaqdhv7a",
       sectionId: "custom section",
     },
-    // TOTP from URL
+    // [developer-docs.sdk.js.references-field-type]-end
+    // [developer-docs.sdk.js.totp-field-type]-start
     {
       id: "onetimepassword",
       title: "One-Time Password URL",
@@ -452,23 +447,7 @@ function generateSpecialItemFields() {
       value:
         "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
     },
-    // TOTP from Secret
-    {
-      id: "onetimepassword",
-      title: "One-Time Password Secret",
-      sectionId: "custom section",
-      fieldType: sdk.ItemFieldType.Totp,
-      value: "jncrjgbdjnrncbjsr",
-    },
-    // SSH key
-    // id and title must be "private_key" and "private key", respectively
-    {
-      id: "private_key",
-      title: "private key",
-      fieldType: sdk.ItemFieldType.SshKey,
-      value: privateKey,
-      sectionId: "custom section",
-    },
+    // [developer-docs.sdk.js.totp-field-type]-end
   ];
 }
 

@@ -510,7 +510,7 @@ export const ReviverFunc = (key: string, value: unknown): unknown => {
   if (
     typeof value === "string" &&
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(value) &&
-    (key == "createdAt" || key == "updatedAt")
+    (key === "createdAt" || key === "updatedAt")
   ) {
     return new Date(value);
   }
