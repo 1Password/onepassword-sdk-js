@@ -24,7 +24,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
+const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -50,7 +50,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+  vaultId: "7turaasywpymt3jecxoxk5roli",
   fields: [
     {
       id: "username",
@@ -253,7 +253,7 @@ async function createSshKeyItem(client) {
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
     category: sdk.ItemCategory.SshKey,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: "7turaasywpymt3jecxoxk5roli",
     fields: [
       {
         id: "private_key",
@@ -284,7 +284,7 @@ async function createAndReplaceDocumentItem(client) {
   let item = await client.items.create({
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: "7turaasywpymt3jecxoxk5roli",
     document: {
       name: "file.txt",
       content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -323,7 +323,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: "7turaasywpymt3jecxoxk5roli",
     fields: [
       {
         id: "username",
@@ -456,11 +456,11 @@ async function resolveAllSecrets(client) {
   try {
     // Fetch all secrets
     const secrets = await client.secrets.resolveAll([
-      `op://7turaasywpymt3jecxoxk5roli/f43hnkatjllm5fsfsmgaqdhv7a/username`,
-      `op://7turaasywpymt3jecxoxk5roli/f43hnkatjllm5fsfsmgaqdhv7a/password`,
+      `op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username`,
+      `op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password`,
     ]);
 
-    for (const [key, response] of Object.entries(secrets.individualResponses)) {
+    for (const [_, response] of Object.entries(secrets.individualResponses)) {
       if (response.error) {
         console.error(`Error resolving secret:`, response.error);
         continue;
