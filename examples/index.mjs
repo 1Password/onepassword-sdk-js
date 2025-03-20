@@ -451,9 +451,7 @@ function generateSpecialItemFields() {
   ];
 }
 
-async function resolveAllSecrets(
-  client
-) {
+async function resolveAllSecrets(client) {
   // [developer-docs.sdk.js.resolve-bulk-secret]-start
   try {
     // Fetch all secrets
