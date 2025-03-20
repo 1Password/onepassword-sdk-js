@@ -188,6 +188,7 @@ try {
 }
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, item.vaultId, item.id);
+await resolveAllSecrets(client, item.vaultId, item.id, "username", "password");
 await createSshKeyItem(client);
 await createAndReplaceDocumentItem(client);
 await createAndAttachAndDeleteFileFieldItem(client);
@@ -240,6 +241,7 @@ async function archiveItem(vaultId, itemId) {
 }
 
 async function createSshKeyItem(client) {
+  // [developer-docs.sdk.js.create-sshkey-item]-start
   const privateKey = crypto.generateKeyPairSync("rsa", {
     modulusLength: 4096, // 4096-bit key
     privateKeyEncoding: {
@@ -247,7 +249,6 @@ async function createSshKeyItem(client) {
       format: "pem",
     },
   });
-  // [developer-docs.sdk.js.create-sshkey-item]-start
   // Create a SSH Key Item
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
@@ -387,4 +388,88 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   console.log(deletedItem.files.length);
 
   await client.items.delete(deletedItem.vaultId, deletedItem.id);
+}
+
+function generateSpecialItemFields() {
+  fields: [
+    // [developer-docs.sdk.js.address-field-type]-start
+    {
+      id: "address",
+      title: "Address",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Address,
+      value: "",
+      details: {
+        type: "Address",
+        content: {
+          street: "1234 Elm St",
+          city: "Springfield",
+          country: "USA",
+          zip: "12345",
+          state: "IL",
+        },
+      },
+    },
+    // [developer-docs.sdk.js.address-field-type]-end
+    // [developer-docs.sdk.js.date-field-type]-start
+    {
+      id: "date",
+      title: "Date",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Date,
+      value: "1998-03-15",
+    },
+    // [developer-docs.sdk.js.date-field-type]-end
+    // [developer-docs.sdk.js.month-year-field-type]-start
+    {
+      id: "month_year",
+      title: "Month Year",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.MonthYear,
+      value: "03/1998",
+    },
+    // [developer-docs.sdk.js.month-year-field-type]-end
+    // [developer-docs.sdk.js.reference-field-type]-start
+    {
+      id: "reference",
+      title: "Reference",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Reference,
+      value: "f43hnkatjllm5fsfsmgaqdhv7a",
+    },
+    // [developer-docs.sdk.js.reference-field-type]-end
+    // [developer-docs.sdk.js.totp-field-type]-start
+    {
+      id: "onetimepassword",
+      title: "One-Time Password URL",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Totp,
+      value:
+        "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
+    },
+    // [developer-docs.sdk.js.totp-field-type]-end
+  ];
+}
+
+async function resolveAllSecrets(client) {
+  // [developer-docs.sdk.js.resolve-bulk-secret]-start
+  try {
+    // Fetch all secrets
+    const secrets = await client.secrets.resolveAll([
+      `op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username`,
+      `op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password`,
+    ]);
+
+    for (const [_, response] of Object.entries(secrets.individualResponses)) {
+      if (response.error) {
+        console.error(`Error resolving secret:`, response.error);
+        continue;
+      }
+
+      console.log(response.content.secret);
+    }
+  } catch (error) {
+    console.error("An unexpected error occurred:", error);
+  }
+  // [developer-docs.sdk.js.resolve-bulk-secret]-end
 }
