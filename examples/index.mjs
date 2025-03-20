@@ -388,3 +388,86 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
 
   await client.items.delete(deletedItem.vaultId, deletedItem.id);
 }
+
+function generateSpecialItemFields() {
+  // Generate an Ed25519 private key and serialize it into a PEM encoded string.
+  // This will be assigned to the item field
+  const { privateKey } = crypto.generateKeyPairSync('ed25519', {
+      privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem',
+    },
+  });
+
+  fields: [
+    // Address
+    {
+      id: "address",
+      title: "Address",
+      fieldType: sdk.ItemFieldType.Address,
+      value: "",
+      details: {
+        type: "Address",
+        content: {
+          street: "1234 Elm St",
+          city: "Springfield",
+          country: "USA",
+          zip: "12345",
+          state: "IL",
+        },
+      },
+      sectionId: "custom section",
+    },
+    // Date
+    {
+      id: "date",
+      title: "Date",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Date,
+      value:"1998-03-15",
+    },
+    // Month Year
+    {
+      id: "month_year",
+      title: "Month Year",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.MonthYear,
+      value:"03/1998",
+    },
+    // Reference
+    {
+      id: "reference",
+      title: "Reference",
+      fieldType: sdk.ItemFieldType.Reference,
+      value: "f43hnkatjllm5fsfsmgaqdhv7a",
+      sectionId: "custom section"
+    },
+    // TOTP from URL
+    {
+      id: "onetimepassword",
+      title: "One-Time Password URL",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Totp,
+      value:
+        "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
+    },
+    // TOTP from Secret
+    {
+      id: "onetimepassword",
+      title: "One-Time Password Secret",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Totp,
+      value:
+        "jncrjgbdjnrncbjsr",
+    },
+    // SSH key
+    // id and title must be "private_key" and "private key", respectively
+    {
+      id: "private_key",
+      title: "private key",
+      fieldType: sdk.ItemFieldType.SshKey,
+      value: privateKey,
+      sectionId: "custom section",
+    },
+  ];
+}
