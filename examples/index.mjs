@@ -429,7 +429,7 @@ function generateSpecialItemFields() {
       value: "03/1998",
     },
     // [developer-docs.sdk.js.month-year-field-type]-end
-    // [developer-docs.sdk.js.references-field-type]-start
+    // [developer-docs.sdk.js.reference-field-type]-start
     {
       id: "reference",
       title: "Reference",
@@ -437,7 +437,7 @@ function generateSpecialItemFields() {
       fieldType: sdk.ItemFieldType.Reference,
       value: "f43hnkatjllm5fsfsmgaqdhv7a",
     },
-    // [developer-docs.sdk.js.references-field-type]-end
+    // [developer-docs.sdk.js.reference-field-type]-end
     // [developer-docs.sdk.js.totp-field-type]-start
     {
       id: "onetimepassword",
