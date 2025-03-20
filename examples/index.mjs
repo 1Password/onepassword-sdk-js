@@ -24,7 +24,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
+const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -50,7 +50,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
   fields: [
     {
       id: "username",
@@ -253,7 +253,7 @@ async function createSshKeyItem(client) {
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
     category: sdk.ItemCategory.SshKey,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     fields: [
       {
         id: "private_key",
@@ -284,7 +284,7 @@ async function createAndReplaceDocumentItem(client) {
   let item = await client.items.create({
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     document: {
       name: "file.txt",
       content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -323,7 +323,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     fields: [
       {
         id: "username",
@@ -396,6 +396,7 @@ function generateSpecialItemFields() {
     {
       id: "address",
       title: "Address",
+      sectionId: "custom section",
       fieldType: sdk.ItemFieldType.Address,
       value: "",
       details: {
@@ -408,7 +409,6 @@ function generateSpecialItemFields() {
           state: "IL",
         },
       },
-      sectionId: "custom section",
     },
     // [developer-docs.sdk.js.address-field-type]-end
     // [developer-docs.sdk.js.date-field-type]-start
@@ -433,9 +433,9 @@ function generateSpecialItemFields() {
     {
       id: "reference",
       title: "Reference",
+      sectionId: "custom section",
       fieldType: sdk.ItemFieldType.Reference,
       value: "f43hnkatjllm5fsfsmgaqdhv7a",
-      sectionId: "custom section",
     },
     // [developer-docs.sdk.js.references-field-type]-end
     // [developer-docs.sdk.js.totp-field-type]-start
@@ -452,23 +452,19 @@ function generateSpecialItemFields() {
 }
 
 async function resolveAllSecrets(
-  client,
-  vault_id,
-  item_id,
-  field_id,
-  field_id2,
+  client
 ) {
   // [developer-docs.sdk.js.resolve-bulk-secret]-start
   try {
     // Fetch all secrets
     const secrets = await client.secrets.resolveAll([
-      `op://${vault_id}/${item_id}/${field_id}`,
-      `op://${vault_id}/${item_id}/${field_id2}`,
+      `op://7turaasywpymt3jecxoxk5roli/f43hnkatjllm5fsfsmgaqdhv7a/username`,
+      `op://7turaasywpymt3jecxoxk5roli/f43hnkatjllm5fsfsmgaqdhv7a/password`,
     ]);
 
     for (const [key, response] of Object.entries(secrets.individualResponses)) {
       if (response.error) {
-        console.error(`Error resolving secret for ${key}:`, response.error);
+        console.error(`Error resolving secret:`, response.error);
         continue;
       }
 
