@@ -24,7 +24,7 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
+const items = await client.items.listAll("bhld6zk6hkuntyqlsjy3bdawey");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -50,7 +50,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
   fields: [
     {
       id: "username",
@@ -188,6 +188,7 @@ try {
 }
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, item.vaultId, item.id);
+await resolveAllSecrets(client, item.vaultId, item.id, "username","password")
 await createSshKeyItem(client);
 await createAndReplaceDocumentItem(client);
 await createAndAttachAndDeleteFileFieldItem(client);
@@ -389,6 +390,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   await client.items.delete(deletedItem.vaultId, deletedItem.id);
 }
 
+<<<<<<< Updated upstream
 function generateSpecialItemFields() {
   // Generate an Ed25519 private key and serialize it into a PEM encoded string.
   // This will be assigned to the item field
@@ -471,3 +473,27 @@ function generateSpecialItemFields() {
     },
   ];
 }
+=======
+async function resolveAllSecrets(client, vault_id, item_id, field_id, field_id2) {
+  // [developer-docs.sdk.js.resolve-bulk-secret]-start
+  try {
+    // Fetch all secrets
+    const secrets = await client.secrets.resolveAll([
+      `op://${vault_id}/${item_id}/${field_id}`,
+      `op://${vault_id}/${item_id}/${field_id2}`,
+    ]);
+
+    for (const [key, response] of Object.entries(secrets.individualResponses)) {
+      if (response.error) {
+        console.error(`Error resolving secret for ${key}:`, response.error);
+        continue;
+      }
+
+      console.log(response.content.secret);
+    }
+  } catch (error) {
+    console.error("An unexpected error occurred:", error);
+  }
+  // [developer-docs.sdk.js.resolve-bulk-secret]-end
+}
+>>>>>>> Stashed changes
