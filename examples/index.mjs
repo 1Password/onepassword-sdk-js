@@ -93,7 +93,7 @@ let item = await client.items.create({
 // [developer-docs.sdk.js.resolve-totp-code]-start
 // Fetches a TOTP code.
 const code = await client.secrets.resolve(
-  `op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp`,
+  "op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp",
 );
 console.log(code);
 // [developer-docs.sdk.js.resolve-totp-code]-end
@@ -456,13 +456,13 @@ async function resolveAllSecrets(client) {
   try {
     // Fetch all secrets
     const secrets = await client.secrets.resolveAll([
-      `op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username`,
-      `op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password`,
+      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username",
+      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password",
     ]);
 
     for (const [_, response] of Object.entries(secrets.individualResponses)) {
       if (response.error) {
-        console.error(`Error resolving secret:`, response.error);
+        console.error("Error resolving secret:", response.error);
         continue;
       }
 
