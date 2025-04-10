@@ -169,6 +169,14 @@ export interface ItemFile {
   fieldId: string;
 }
 
+/** Represents the state of an item in the SDK. */
+export enum ItemState {
+  /** The item is active */
+  Active = "active",
+  /** The item is archived meaning it's hidden from regular view and stored in the archive. */
+  Archived = "archived",
+}
+
 /** Represents a 1Password item. */
 export interface Item {
   /** The item's ID */
@@ -199,6 +207,8 @@ export interface Item {
   createdAt: Date;
   /** The time the item was updated at */
   updatedAt: Date;
+  /** Indicates the state of the item */
+  state: ItemState;
 }
 
 export interface ItemCreateParams {
@@ -242,6 +252,8 @@ export interface ItemOverview {
   createdAt: Date;
   /** The time the item was updated at */
   updatedAt: Date;
+  /** Indicates the state of the item */
+  state: ItemState;
 }
 
 /** The valid duration options for sharing an item */
@@ -418,6 +430,14 @@ export interface VaultOverview {
   title: string;
 }
 
+export type ItemListFilter = {
+  type: "ByState";
+  content: {
+    active: boolean;
+    archived: boolean;
+  };
+};
+
 export type PasswordRecipe =
   | {
       type: "Memorable";
@@ -510,7 +530,7 @@ export const ReviverFunc = (key: string, value: unknown): unknown => {
   if (
     typeof value === "string" &&
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(value) &&
-    (key === "createdAt" || key === "updatedAt")
+    (key == "createdAt" || key == "updatedAt")
   ) {
     return new Date(value);
   }
