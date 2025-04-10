@@ -17,14 +17,14 @@ const client = await sdk.createClient({
 // [developer-docs.sdk.js.client-initialization]-end
 
 // [developer-docs.sdk.js.list-vaults]-start
-const vaults = await client.vaults.listAll();
+const vaults = await client.vaults.list();
 for await (const vault of vaults) {
   console.log(vault.id + " " + vault.title);
 }
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll("7turaasywpymt3jecxoxk5roli");
+const items = await client.items.list("bhld6zk6hkuntyqlsjy3bdawey");
 for await (const item of items) {
   console.log(item.id + " " + item.title);
 }
@@ -50,7 +50,7 @@ console.log(secret);
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "7turaasywpymt3jecxoxk5roli",
+  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
   fields: [
     {
       id: "username",
@@ -187,11 +187,12 @@ try {
   console.error(error);
 }
 // [developer-docs.sdk.js.generate-random-password]-end
-shareItem(client, item.vaultId, item.id);
-await resolveAllSecrets(client, item.vaultId, item.id, "username", "password");
+shareItem(client, updatedItem.vaultId, updatedItem.id);
+await resolveAllSecrets(client, updatedItem.vaultId, updatedItem.id, "username", "password");
 await createSshKeyItem(client);
 await createAndReplaceDocumentItem(client);
 await createAndAttachAndDeleteFileFieldItem(client);
+await archiveItem(client, updatedItem.vaultId, updatedItem.id);
 // [developer-docs.sdk.js.delete-item]-start
 // Delete an item from your vault.
 await client.items.delete(item.vaultId, item.id);
@@ -229,10 +230,7 @@ async function shareItem(client, vaultId, itemId) {
   console.log(share_link);
   // [developer-docs.sdk.js.item-share-create-share]-end
 }
-// NOTE: this is in a separate function to avoid creating a new item
-// NOTE: just for the sake of archiving it. This is because the SDK
-// NOTE: only works with active items, so archiving and then deleting
-// NOTE: is not yet possible.
+
 async function archiveItem(vaultId, itemId) {
   // [developer-docs.sdk.js.archive-item]-start
   // Archive an item from your vault.
@@ -253,7 +251,7 @@ async function createSshKeyItem(client) {
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
     category: sdk.ItemCategory.SshKey,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     fields: [
       {
         id: "private_key",
@@ -284,7 +282,7 @@ async function createAndReplaceDocumentItem(client) {
   let item = await client.items.create({
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     document: {
       name: "file.txt",
       content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -323,7 +321,7 @@ async function createAndAttachAndDeleteFileFieldItem(client) {
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
-    vaultId: "7turaasywpymt3jecxoxk5roli",
+    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
     fields: [
       {
         id: "username",
