@@ -188,7 +188,13 @@ try {
 }
 // [developer-docs.sdk.js.generate-random-password]-end
 shareItem(client, updatedItem.vaultId, updatedItem.id);
-await resolveAllSecrets(client, updatedItem.vaultId, updatedItem.id, "username", "password");
+await resolveAllSecrets(
+  client,
+  updatedItem.vaultId,
+  updatedItem.id,
+  "username",
+  "password",
+);
 await createSshKeyItem(client);
 await createAndReplaceDocumentItem(client);
 await createAndAttachAndDeleteFileFieldItem(client);
