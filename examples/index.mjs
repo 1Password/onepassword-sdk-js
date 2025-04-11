@@ -26,20 +26,17 @@ for await (const vault of vaults) {
 const vaultId = process.env.OP_VAULT_ID;
 
 // [developer-docs.sdk.js.list-items]-start
-const overviews = await client.items.listAll(vaultId);
+const overviews = await client.items.list(vaultId);
 for await (const overview of overviews) {
   console.log(overview.id + " " + overview.title);
 }
 // [developer-docs.sdk.js.list-items]-end
 //
 // [developer-docs.sdk.js.list-archived-items]-start
-const archivedOverviews = await client.items.list(
-  "bhld6zk6hkuntyqlsjy3bdawey",
-  {
-    type: "ByState",
-    content: { active: false, archived: true },
-  },
-);
+const archivedOverviews = await client.items.list(vaultId, {
+  type: "ByState",
+  content: { active: false, archived: true },
+});
 for await (const overview of archivedOverviews) {
   console.log(overview.id + " " + overview.title);
 }
