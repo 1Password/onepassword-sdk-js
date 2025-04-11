@@ -14,6 +14,7 @@ jobs:
         # actively maintained versions at the time of writing (Oct 4th, 2024) 
         # https://nodejs.org/en/about/previous-releases
         node-version: ['18.x', '20.x', '22.x', 'latest']
+      max-parallel: 1
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
