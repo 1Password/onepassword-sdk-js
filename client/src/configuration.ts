@@ -26,7 +26,7 @@ export const clientAuthConfig = (
   // TODO: Add logic for computing the correct sanitized version value for each platform
   const defaultOsVersion = "0.0.0";
   return {
-    serviceAccountToken: userConfig.auth,
+    serviceAccountToken: userConfig.auth ?? "",
     programmingLanguage: LANGUAGE,
     sdkVersion: VERSION,
     integrationName: userConfig.integrationName,
