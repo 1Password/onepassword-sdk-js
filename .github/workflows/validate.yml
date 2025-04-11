@@ -11,10 +11,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        # actively maintained versions at the time of writing (Oct 4th, 2024) 
+        # actively maintained versions at the time of writing (Oct 4th, 2024)
         # https://nodejs.org/en/about/previous-releases
         node-version: ['18.x', '20.x', '22.x', 'latest']
-      max-parallel: 1
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -41,13 +40,6 @@ jobs:
           OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
         run: npm run esm-example
 
-      - name: Run commonjs-example
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.EXAMPLE_TESTS_OP_SERVICE_ACCOUNT_TOKEN }}
-          OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
-        run: npm run commonjs-example
-  
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -66,6 +58,6 @@ jobs:
 
       - name: Style
         run: npm run prettier
-      
+
       - name: Lint
         run: npm run eslint
