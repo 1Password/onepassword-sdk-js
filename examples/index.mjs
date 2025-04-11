@@ -251,7 +251,7 @@ async function shareItem(client, vaultId, itemId) {
   // [developer-docs.sdk.js.item-share-create-share]-end
 }
 
-async function archiveItem(vaultId, itemId) {
+async function archiveItem(client, vaultId, itemId) {
   // [developer-docs.sdk.js.archive-item]-start
   // Archive an item from your vault.
   await client.items.archive(vaultId, itemId);
