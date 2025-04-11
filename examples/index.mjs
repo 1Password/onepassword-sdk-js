@@ -24,11 +24,24 @@ for await (const vault of vaults) {
 // [developer-docs.sdk.js.list-vaults]-end
 
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.list("bhld6zk6hkuntyqlsjy3bdawey");
-for await (const item of items) {
-  console.log(item.id + " " + item.title);
+const overviews = await client.items.list("bhld6zk6hkuntyqlsjy3bdawey");
+for await (const overview of overviews) {
+  console.log(overview.id + " " + overview.title);
 }
 // [developer-docs.sdk.js.list-items]-end
+//
+// [developer-docs.sdk.js.list-archived-items]-start
+const archivedOverviews = await client.items.list(
+  "bhld6zk6hkuntyqlsjy3bdawey",
+  {
+    type: "ByState",
+    content: { active: false, archived: true },
+  },
+);
+for await (const overview of archivedOverviews) {
+  console.log(overview.id + " " + overview.title);
+}
+// [developer-docs.sdk.js.list-archived-items]-end
 
 // [developer-docs.sdk.js.validate-secret-reference]-start
 // Validate a secret reference
