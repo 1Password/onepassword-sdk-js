@@ -23,8 +23,10 @@ for await (const vault of vaults) {
 }
 // [developer-docs.sdk.js.list-vaults]-end
 
+const vaultId = process.env.OP_VAULT_ID;
+
 // [developer-docs.sdk.js.list-items]-start
-const overviews = await client.items.list("bhld6zk6hkuntyqlsjy3bdawey");
+const overviews = await client.items.listAll(vaultId);
 for await (const overview of overviews) {
   console.log(overview.id + " " + overview.title);
 }
@@ -52,18 +54,12 @@ try {
 }
 // [developer-docs.sdk.js.validate-secret-reference]-end
 
-// [developer-docs.sdk.js.resolve-secret]-start
-// Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
-console.log(secret);
-// [developer-docs.sdk.js.resolve-secret]-end
-
 // [developer-docs.sdk.js.create-item]-start
 // Creates an item
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+  vaultId: process.env.OP_VAULT_ID,
   fields: [
     {
       id: "username",
@@ -102,6 +98,14 @@ let item = await client.items.create({
   ],
 });
 // [developer-docs.sdk.js.create-item]-end
+
+// [developer-docs.sdk.js.resolve-secret]-start
+// Fetches a secret.
+const secret = await client.secrets.resolve(
+  "op://" + item.vaultId + "/" + item.id + "/username",
+);
+console.log(secret);
+// [developer-docs.sdk.js.resolve-secret]-end
 
 // [developer-docs.sdk.js.resolve-totp-code]-start
 // Fetches a TOTP code.
@@ -208,9 +212,9 @@ await resolveAllSecrets(
   "username",
   "password",
 );
-await createSshKeyItem(client);
-await createAndReplaceDocumentItem(client);
-await createAndAttachAndDeleteFileFieldItem(client);
+await createSshKeyItem(client, item.vaultId);
+await createAndReplaceDocumentItem(client, item.vaultId);
+await createAndAttachAndDeleteFileFieldItem(client, item.vaultId);
 await archiveItem(client, updatedItem.vaultId, updatedItem.id);
 // [developer-docs.sdk.js.delete-item]-start
 // Delete an item from your vault.
@@ -270,7 +274,7 @@ async function createSshKeyItem(client) {
   let item = await client.items.create({
     title: "SSH Key Item Created With JS SDK",
     category: sdk.ItemCategory.SshKey,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: vaultId,
     fields: [
       {
         id: "private_key",
@@ -295,13 +299,13 @@ async function createSshKeyItem(client) {
   await client.items.delete(item.vaultId, item.id);
 }
 
-async function createAndReplaceDocumentItem(client) {
+async function createAndReplaceDocumentItem(client, vaultId) {
   // [developer-docs.sdk.js.create-document-item]-start
   // Create a Document Item
   let item = await client.items.create({
     title: "Document Item Created With JS SDK",
     category: sdk.ItemCategory.Document,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: vaultId,
     document: {
       name: "file.txt",
       content: new Uint8Array(fs.readFileSync("file.txt")),
@@ -334,13 +338,13 @@ async function createAndReplaceDocumentItem(client) {
   );
 }
 
-async function createAndAttachAndDeleteFileFieldItem(client) {
+async function createAndAttachAndDeleteFileFieldItem(client, vaultId) {
   // [developer-docs.sdk.js.create-item-with-file-field]-start
   // Create the file field item
   let item = await client.items.create({
     title: "Login with File Field Item Created With JS SDK",
     category: sdk.ItemCategory.Login,
-    vaultId: "bhld6zk6hkuntyqlsjy3bdawey",
+    vaultId: vaultId,
     fields: [
       {
         id: "username",
