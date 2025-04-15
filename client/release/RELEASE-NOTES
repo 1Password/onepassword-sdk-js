@@ -12,46 +12,35 @@
 - **Deleting Archived Items:** The SDK now supports deleting items from the archive.
 
 ### ⚠️ BREAKING CHANGES ⚠️
-
 This release contains a breaking change for the JS SDK.
 
-* `items.listAll()` has changed to `items.list()` and the return type has also changed from SdkIterable<ItemOverview> to ItemOverview[]. To migrate to the latest SDK version:
+**Vault listing**
 
-Wherever you were using:
+* The function name has changed from `listAll` to `list`. To use this in your code, replace:
 ```js
-const overviews = await client.items.listAll(vault.id);
-for await (const overview of overviews) {
-  console.log(overview.id + " " + overview.title);
-}
+const vaults = await client.vaults.listAll();
+```
+with
+```js
+const vaults = await client.vaults.list();
 ```
 
-You must now use:
+* The return type of the vault listing function has changed from `SdkIterable<VaultOverview` to `VaultOverview[]`. No changes are needed here.
+
+**Item listing**
+
+* The function name has changed from `listAll` to `list`. To use this in your code, replace:
+```js
+const overviews = await client.items.listAll(vault.id);
+```
+with:
 ```js
 const overviews = await client.items.list(vault.id, {
         type: "ByState",
         content: { active: true, archived: true },
       })
-for await (const overview of overviews) {
-  console.log(overview.id + " " + overview.title);
-}
-```
-* `vaults.listAll()` has changed to `vaults.list()` and the return type has also changed from SdkIterable<VaultOverview> to VaultOverview[]. To migrate to the latest SDK version:
-
-Wherever you were using:
-```js
-const vaults = await client.vaults.listAll();
-for await (const vault of vaults) {
-  console.log(vault.id + " " + vault.title);
-}
 ```
 
-You must now use:
-```js
-const vaults = await client.vaults.list();
-for await (const vault of vaults) {
-  console.log(vault.id + " " + vault.title);
-}
-```
-*  All functions that return an Iterator will now return the appropriate list type.
+* The return type of the item listing function has changed from `SdkIterable<ItemOverview>` to `ItemOverview[]`. No changes are needed here.
 
 This does not affect any code that's already deployed, and will not take effect in your codebase until updating to v0.3.0+ of the 1Password JS SDK.
