@@ -12,7 +12,7 @@
 - **Deleting Archived Items:** The SDK now supports deleting items from the archive.
 
 ### ⚠️ BREAKING CHANGES ⚠️
-This release contains a breaking change for the JS SDK.
+This release contains breaking changes for two functions in the JS SDK.
 
 **Vault listing**
 
