@@ -1,4 +1,4 @@
-# 1Password JS SDK v0.3.0
+# 1Password JavaScript SDK v0.3.0
 
 ## NEW
 
@@ -10,6 +10,10 @@
 ## FIXED
 
 - **Deleting Archived Items:** The SDK now supports deleting items from the archive.
+
+## IMPROVED
+
+* The return type of the listing functions has changed from `SdkIterable<T>` to `T[]`. No changes are needed here.
 
 ### ⚠️ BREAKING CHANGES ⚠️
 This release contains breaking changes for two functions in the JS SDK.
@@ -25,8 +29,6 @@ with:
 const vaults = await client.vaults.list();
 ```
 
-* The return type of the vault listing function has changed from `SdkIterable<VaultOverview` to `VaultOverview[]`. No changes are needed here.
-
 **Item listing**
 
 * The function name has changed from `listAll` to `list`. To use this in your code, replace:
@@ -40,7 +42,5 @@ const overviews = await client.items.list(vault.id, {
         content: { active: true, archived: true },
       })
 ```
-
-* The return type of the item listing function has changed from `SdkIterable<ItemOverview>` to `ItemOverview[]`. No changes are needed here.
 
 This does not affect any code that's already deployed, and will not take effect in your codebase until you choose to update to version 0.3.0 or later of the 1Password JS SDK.
