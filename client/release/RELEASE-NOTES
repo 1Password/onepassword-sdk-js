@@ -13,7 +13,7 @@
 
 ## IMPROVED
 
-* The return type of the listing functions has changed from `SdkIterable<T>` to `T[]`. No changes are needed here.
+* The return type of the listing functions has changed from `SdkIterable<T>` to `T[]`.
 
 ### ⚠️ BREAKING CHANGES ⚠️
 This release contains breaking changes for two functions in the JS SDK.
