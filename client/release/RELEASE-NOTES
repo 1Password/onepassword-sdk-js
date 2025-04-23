@@ -1,20 +1,68 @@
-# 1Password JavaScript SDK v0.2.1
+# 1Password JavaScript SDK v0.3.0
 
 ## NEW
 
-- **`CreatedAt` and `UpdatedAt` item metadata:** Items and item overviews now expose attributes with their creation and last edit times.
-- **Resolving secrets in bulk**: With the `client.secrets.resolveAll` function, the SDK is now able to resolve multiple secrets at once, improving the performance of the operation.
-
-## IMPROVED
-
-- **Support for new field types:** Items with `Address` and `Date` fields can now be created, retrieved, and edited using the 1Password SDK.
-- **Item sharing for attachments and documents**: Items with files attached now can also be shared using the `client.items.shares` functions.
-- **Adding custom fields in sections automatically**: The SDK now automatically adds custom fields without a section to an empty section within the item, creating it if necessary.
-- **`Tags` in item overviews**: The return type of `items.listAll` now also contains the item tags.
-- **Broader item editing capabilities**: You are now able to use the `items.put` function on more items, including those with fields that are not directly editable through the SDK (such as legacy fields, passkeys etc.)
+- **Support for item states**: You can now fetch an item's state using the SDK. `ItemOverview` exposes one of two states: `Active` or `Archived`.
+    - `Active`: An item located inside a vault. (Default)
+    - `Archived`: An item that has been moved to the Archive. 1Password doesn't include archived items in search results or suggest them when you fill in apps and browsers. You can keep archived items as long as you'd like.
+- **Filtering listed items by state**: You can now filter the results of the item list function by item state.
 
 ## FIXED
 
-- **Improvements to resolving secret references:**
-    - Archived items are no longer used for secret references.
-    - When multiple sections match a section query in resolving secret references, the SDK look through the fields in all sections, instead of erroring.
+- **Deleting Archived Items:** The SDK now supports deleting items from the archive.
+
+### ⚠️ BREAKING CHANGES ⚠️
+This release contains breaking changes for two functions in the JS SDK.
+
+**Vault listing**
+
+* The function name has changed from `listAll` to `list`. To use this in your code, replace:
+```js
+const vaults = await client.vaults.listAll();
+```
+with:
+```js
+const vaults = await client.vaults.list();
+```
+
+* The return type of the vault listing functions has changed from `SdkIterable<VaultOverview>` to `VaultOverview[]`. To use this in your code, replace:
+```js
+for await (const vault of vaults) {
+  console.log(vault.id + " " + vault.title);
+}
+```
+with:
+```js
+for (const vault of vaults) {
+  console.log(vault.id + " " + vault.title);
+}
+```
+
+**Item listing**
+
+* The function name has changed from `listAll` to `list`. To use this in your code, replace:
+```js
+const overviews = await client.items.listAll(vault.id);
+```
+with:
+```js
+const overviews = await client.items.list(vault.id, {
+        type: "ByState",
+        content: { active: true, archived: true },
+      })
+```
+
+* The return type of the item listing functions has changed from `SdkIterable<ItemOverview>` to `ItemOverview[]`. To use this in your code, replace:
+```js
+for await (const overview of overviews) {
+  console.log(overview.id + " " + overview.title);
+}
+```
+with:
+```js
+for (const overview of overviews) {
+  console.log(overview.id + " " + overview.title);
+}
+```
+
+This does not affect any code that's already deployed, and will not take effect in your codebase until you choose to update to version 0.3.0 or later of the 1Password JS SDK.

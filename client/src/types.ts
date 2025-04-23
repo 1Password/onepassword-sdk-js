@@ -169,7 +169,7 @@ export interface ItemFile {
   fieldId: string;
 }
 
-/** Represents a 1Password item. */
+/** Represents an active 1Password item. */
 export interface Item {
   /** The item's ID */
   id: string;
@@ -224,6 +224,14 @@ export interface ItemCreateParams {
   document?: DocumentCreateParams;
 }
 
+/** Represents the state of an item in the SDK. */
+export enum ItemState {
+  /** The item is active */
+  Active = "active",
+  /** The item is archived meaning it's hidden from regular view and stored in the archive. */
+  Archived = "archived",
+}
+
 /** Represents a decrypted 1Password item overview. */
 export interface ItemOverview {
   /** The item's ID */
@@ -242,6 +250,8 @@ export interface ItemOverview {
   createdAt: Date;
   /** The time the item was updated at */
   updatedAt: Date;
+  /** Indicates the state of the item */
+  state: ItemState;
 }
 
 /** The valid duration options for sharing an item */
@@ -417,6 +427,14 @@ export interface VaultOverview {
   /** The vault's title */
   title: string;
 }
+
+export type ItemListFilter = {
+  type: "ByState";
+  content: {
+    active: boolean;
+    archived: boolean;
+  };
+};
 
 export type PasswordRecipe =
   | {

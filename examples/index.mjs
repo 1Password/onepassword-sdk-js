@@ -17,20 +17,34 @@ const client = await sdk.createClient({
 // [developer-docs.sdk.js.client-initialization]-end
 
 // [developer-docs.sdk.js.list-vaults]-start
-const vaults = await client.vaults.listAll();
-for await (const vault of vaults) {
+const vaults = await client.vaults.list();
+for (const vault of vaults) {
   console.log(vault.id + " " + vault.title);
 }
 // [developer-docs.sdk.js.list-vaults]-end
 
 const vaultId = process.env.OP_VAULT_ID;
 
+if (!vaultId) {
+  throw new Error("Missing required environment variable: OP_VAULT_ID");
+}
+
 // [developer-docs.sdk.js.list-items]-start
-const items = await client.items.listAll(vaultId);
-for await (const item of items) {
-  console.log(item.id + " " + item.title);
+const overviews = await client.items.list(vaultId);
+for (const overview of overviews) {
+  console.log(overview.id + " " + overview.title);
 }
 // [developer-docs.sdk.js.list-items]-end
+
+// [developer-docs.sdk.js.use-item-filters]-start
+const archivedOverviews = await client.items.list(vaultId, {
+  type: "ByState",
+  content: { active: false, archived: true },
+});
+for (const overview of archivedOverviews) {
+  console.log(overview.id + " " + overview.title);
+}
+// [developer-docs.sdk.js.use-item-filters]-end
 
 // [developer-docs.sdk.js.validate-secret-reference]-start
 // Validate a secret reference
@@ -46,7 +60,7 @@ try {
 let item = await client.items.create({
   title: "My Item",
   category: sdk.ItemCategory.Login,
-  vaultId: process.env.OP_VAULT_ID,
+  vaultId: vaultId,
   fields: [
     {
       id: "username",
@@ -191,11 +205,18 @@ try {
   console.error(error);
 }
 // [developer-docs.sdk.js.generate-random-password]-end
-shareItem(client, item.vaultId, item.id);
-await resolveAllSecrets(client, item.vaultId, item.id, "username", "password");
+shareItem(client, updatedItem.vaultId, updatedItem.id);
+await resolveAllSecrets(
+  client,
+  updatedItem.vaultId,
+  updatedItem.id,
+  "username",
+  "password",
+);
 await createSshKeyItem(client, item.vaultId);
 await createAndReplaceDocumentItem(client, item.vaultId);
 await createAndAttachAndDeleteFileFieldItem(client, item.vaultId);
+await archiveItem(client, updatedItem.vaultId, updatedItem.id);
 // [developer-docs.sdk.js.delete-item]-start
 // Delete an item from your vault.
 await client.items.delete(item.vaultId, item.id);
@@ -233,11 +254,8 @@ async function shareItem(client, vaultId, itemId) {
   console.log(share_link);
   // [developer-docs.sdk.js.item-share-create-share]-end
 }
-// NOTE: this is in a separate function to avoid creating a new item
-// NOTE: just for the sake of archiving it. This is because the SDK
-// NOTE: only works with active items, so archiving and then deleting
-// NOTE: is not yet possible.
-async function archiveItem(vaultId, itemId) {
+
+async function archiveItem(client, vaultId, itemId) {
   // [developer-docs.sdk.js.archive-item]-start
   // Archive an item from your vault.
   await client.items.archive(vaultId, itemId);
