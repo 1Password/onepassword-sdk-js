@@ -41,7 +41,7 @@ const archivedOverviews = await client.items.list(vaultId, {
   type: "ByState",
   content: { active: false, archived: true },
 });
-for await (const overview of archivedOverviews) {
+for (const overview of archivedOverviews) {
   console.log(overview.id + " " + overview.title);
 }
 // [developer-docs.sdk.js.use-item-filters]-end
