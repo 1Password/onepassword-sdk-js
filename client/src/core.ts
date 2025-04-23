@@ -89,7 +89,6 @@ export interface Parameters {
 export class SharedCore implements Core {
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
-    console.log(serializedConfig)
     try {
       return await init_client(serializedConfig);
     } catch (e) {
