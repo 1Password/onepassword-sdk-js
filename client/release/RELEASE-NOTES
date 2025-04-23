@@ -2,10 +2,10 @@
 
 ## NEW
 
-- **Support for item states**: You can now fetch an item's state using the SDK.`ItemOverview` exposes one of two states: `Active` or `Archived`.
+- **Support for item states**: You can now fetch an item's state using the SDK. `ItemOverview` exposes one of two states: `Active` or `Archived`.
     - `Active`: An item located inside a vault. (Default)
     - `Archived`: An item that has been moved to the Archive. 1Password doesn't include archived items in search results or suggest them when you fill in apps and browsers. You can keep archived items as long as you'd like.
-- **Filtering the return of item listing by state**: You can now filter the listed items by item state.
+- **Filtering listed items by state**: You can now filter the results of the item list function by item state.
 
 ## FIXED
 
@@ -20,7 +20,7 @@ This release contains breaking changes for two functions in the JS SDK.
 ```js
 const vaults = await client.vaults.listAll();
 ```
-with
+with:
 ```js
 const vaults = await client.vaults.list();
 ```
@@ -43,4 +43,4 @@ const overviews = await client.items.list(vault.id, {
 
 * The return type of the item listing function has changed from `SdkIterable<ItemOverview>` to `ItemOverview[]`. No changes are needed here.
 
-This does not affect any code that's already deployed, and will not take effect in your codebase until updating to v0.3.0+ of the 1Password JS SDK.
+This does not affect any code that's already deployed, and will not take effect in your codebase until you choose to update to version 0.3.0 or later of the 1Password JS SDK.
