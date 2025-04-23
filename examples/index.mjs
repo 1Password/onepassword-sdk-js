@@ -18,16 +18,20 @@ const client = await sdk.createClient({
 
 // [developer-docs.sdk.js.list-vaults]-start
 const vaults = await client.vaults.list();
-for await (const vault of vaults) {
+for (const vault of vaults) {
   console.log(vault.id + " " + vault.title);
 }
 // [developer-docs.sdk.js.list-vaults]-end
 
 const vaultId = process.env.OP_VAULT_ID;
 
+if (!vaultId) {
+  throw new Error("Missing required environment variable: OP_VAULT_ID");
+}
+
 // [developer-docs.sdk.js.list-items]-start
 const overviews = await client.items.list(vaultId);
-for await (const overview of overviews) {
+for (const overview of overviews) {
   console.log(overview.id + " " + overview.title);
 }
 // [developer-docs.sdk.js.list-items]-end
