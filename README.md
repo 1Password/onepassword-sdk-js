@@ -75,6 +75,12 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 
 1Password SDKs are in active development. We're keen to hear what you'd like to see next. Let us know by [upvoting](https://github.com/1Password/onepassword-sdk-js/issues) or [filing](https://github.com/1Password/onepassword-sdk-js/issues/new/choose) an issue.
 
+### Environments
+
+- [x] Node.js 18 and above
+- [ ] Browsers
+- [ ] Webpack
+
 ### Item management
 
 Operations:
