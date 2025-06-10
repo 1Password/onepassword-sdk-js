@@ -426,6 +426,10 @@ export interface VaultOverview {
   id: string;
   /** The vault's title */
   title: string;
+  /** The time the vault was created at */
+  createdAt: Date;
+  /** The time the vault was updated at */
+  updatedAt: Date;
 }
 
 export type ItemListFilter = {
