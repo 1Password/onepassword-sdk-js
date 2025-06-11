@@ -19,7 +19,7 @@ const client = await sdk.createClient({
 // [developer-docs.sdk.js.list-vaults]-start
 const vaults = await client.vaults.list();
 for (const vault of vaults) {
-  console.log(vault.id + " " + vault.title);
+  console.log(vault);
 }
 // [developer-docs.sdk.js.list-vaults]-end
 
