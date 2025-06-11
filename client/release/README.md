@@ -18,7 +18,7 @@ Step 3. Ensure that the correct files have been updated - i.e. version/build fil
 
 Step 4. Ensure your GITHUB_TOKEN environment variable is set as this will allow you to create the tags/release and push it.
 
-Step 5. If everything looks good and if SDK Core has been updated, at the root of the repo, run:
+Step 5. If everything looks good and if SDK Core has been updated, at the root of the repo, run (for beta releases):
 ```
 npm run release
 ```
@@ -27,7 +27,7 @@ if not then run:
 npm run release-no-core
 ```
 
-Note: If performing a stable release, the commands should be:
+Note: If performing a stable release, the commands should be (for production releases):
 ```
 npm run release-stable
 ```
