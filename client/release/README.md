@@ -16,7 +16,7 @@ Follow the scripts instructions and the release has now been prepped.
 
 Step 3. Ensure that the correct files have been updated - i.e. version/build files, release-notes have been updated. Suggest doing a `git diff` to see the changes.
 
-Step 4. Ensure your GITHUB_TOKEN environment variable is set as this will allow you to create the tags/release and push it.
+Step 4. Ensure your `GITHUB_TOKEN` and `NPM_TOKEN` environment variables are set as this will allow you to create the tags/release and push it.
 
 Step 5. If everything looks good and if SDK Core has been updated, at the root of the repo, run (for beta releases):
 ```
