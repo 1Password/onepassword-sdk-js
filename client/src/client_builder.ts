@@ -1,6 +1,7 @@
-import { Core, InnerClient } from "./core.js";
+import { Core, InnerClient, SharedCore } from "./core.js";
 import { ClientConfiguration, clientAuthConfig } from "./configuration.js";
 import { Client } from "./client.js";
+import { SharedLibCore } from "./shared_lib_core.js";
 
 const finalizationRegistry = new FinalizationRegistry(
   (heldClient: InnerClient) => {
@@ -14,9 +15,12 @@ const finalizationRegistry = new FinalizationRegistry(
  */
 export const createClientWithCore = async (
   config: ClientConfiguration,
-  core: Core,
+  core: SharedCore,
 ): Promise<Client> => {
   const authConfig = clientAuthConfig(config);
+  if (authConfig.accountName) {
+    core.setInner(new SharedLibCore());
+  }
   const clientId = await core.initClient(authConfig);
   const inner: InnerClient = {
     id: parseInt(clientId, 10),
