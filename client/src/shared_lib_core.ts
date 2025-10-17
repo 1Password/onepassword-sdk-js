@@ -1,145 +1,174 @@
 import * as fs from "fs";
 import * as os from "os";
-import * as ffi from "ffi-napi";
-import * as ref from "ref-napi";
+import * as path from "path";
 
-import { invoke_sync } from "@1password/sdk-core";
-import { Core, InvokeConfig } from "./core";
-
-// C/ref types
-const uint8 = ref.types.uint8;
-const size_t = ref.types.size_t;
-const int32 = ref.types.int32;
-const voidType = ref.types.void;
-const uint8Ptr = ref.refType(uint8);
-const uint8PtrPtr = ref.refType(uint8Ptr);
+import { Core } from "./core";
 
 /**
  * Find the 1Password shared lib path by asking an the wasm core synchronously.
  */
 export function find1PasswordLibPath(): string {
-  const hostOS = os.platform(); // 'darwin'|'linux'|'win32'
-  const invocationConfig: InvokeConfig = {
-    invocation: {
-      parameters: {
-        name: "GetDesktopAppIpcClientLocations",
-        parameters: {
-          host_os: hostOS,
-        },
-      },
-    },
-  };
-  try {
-    const serializedConfig = JSON.stringify(invocationConfig);
-    const locationsRaw = invoke_sync(serializedConfig);
-    const locations = JSON.parse(locationsRaw) as string[];
-    for (const p of locations) {
-      if (fs.existsSync(p)) return p;
-    }
-  } catch (err) {
-    throw new Error("1Password desktop application not found");
+  const platform: NodeJS.Platform = os.platform();
+  const appRoot: string = path.dirname(process.execPath);
+  let searchPaths: string[] = [];
+
+  // Define lists of possible locations for each platform.
+  switch (platform) {
+    case "darwin": // macOS
+      searchPaths = [
+        "/Applications/1Password.app/Contents/Frameworks/op-sdk-js-index.node",
+        path.join(
+          os.homedir(),
+          "/Applications/1Password.app/Contents/Frameworks/op-sdk-js-index.node",
+        ),
+      ];
+      break;
+
+    case "win32": // Windows
+      searchPaths = [
+        "C:/Program Files/1Password/op-sdk-js-index.node",
+        "C:/Program Files (x86)/1Password/op-sdk-js-index.node",
+        path.join(
+          os.homedir(),
+          "/AppData/Local/1Password/op-sdk-js-index.node",
+        ),
+      ];
+      break;
+
+    case "linux": // Linux
+      searchPaths = [
+        "/usr/bin/1password/op-sdk-js-index.node",
+        "/opt/1password/op-sdk-js-index.node",
+        "/snap/bin/1password/op-sdk-js-index.node",
+      ];
+      break;
+
+    default:
+      throw new Error(`Unsupported platform: ${platform}`);
   }
+
+  // Iterate through the possible paths and return the first one that exists.
+  for (const addonPath of searchPaths) {
+    if (fs.existsSync(addonPath)) {
+      return addonPath;
+    }
+  }
+
+  // If the loop completes without finding the file, throw an error.
+  throw new Error("1Password desktop application not found");
+}
+
+interface DesktopIPCClient {
+  sendMessage(msg: Buffer): Buffer;
+}
+
+type SharedLibRequest = {
+  kind: string;
+  account_name: string;
+  payload: string;
+};
+
+interface SharedLibResponse {
+  success: boolean;
+  payload: any; // Can be a string on success or an array of numbers on error
 }
 
 /**
  * SharedLibCore: wrapper around the dynamically loaded shared library
  */
 export class SharedLibCore implements Core {
-  private lib: any; // ffi.Library instance
-  private sendMessage: any;
-  private freeResponse: any;
+  private lib: DesktopIPCClient | null = null;
+  private acccountName: string;
 
-  constructor() {
-    const libPath = find1PasswordLibPath();
+  constructor(accountName: string) {
+    try {
+      const libPath = find1PasswordLibPath();
+      const loadedModule = require(libPath);
 
-    // Load the library. 'ffi.Library' will wrap symbol lookups.
-    this.lib = ffi.Library(libPath, {
-      // int32_t op_sdk_ipc_send_message(const uint8_t* msg_ptr, size_t msg_len,
-      //     uint8_t** out_buf, size_t* out_len, size_t* out_cap);
-      op_sdk_ipc_send_message: [
-        int32,
-        [
-          uint8Ptr,
-          size_t,
-          uint8PtrPtr,
-          ref.refType(size_t),
-          ref.refType(size_t),
-        ],
-      ],
+      // We still need to validate that the module loaded correctly
+      if (typeof loadedModule.sendMessage === "function") {
+        this.lib = loadedModule as DesktopIPCClient;
+      } else {
+        console.error(
+          "Failed to initialize native library: sendMessage function not found on module.",
+        );
+        this.lib = null;
+      }
+    } catch (e) {
+      console.error(
+        "A critical error occurred while loading the native addon:",
+        e,
+      );
+      this.lib = null;
+    }
 
-      // void op_sdk_ipc_free_response(uint8_t* buf, size_t len, size_t cap)
-      op_sdk_ipc_free_response: [voidType, [uint8Ptr, size_t, size_t]],
-    });
-
-    this.sendMessage = this.lib.op_sdk_ipc_send_message;
-    this.freeResponse = this.lib.op_sdk_ipc_free_response;
+    this.acccountName = accountName;
   }
 
   /**
    * callSharedLibrary - send string to native function, receive string back.
    */
-  callSharedLibrary(input: string): string {
+  callSharedLibrary(input: string, operation_type: string): string {
+    if (!this.lib) {
+      throw new Error("Native library is not available.");
+    }
+
     if (!input || input.length === 0) {
       throw new Error("internal: empty input");
     }
 
-    const outBufPtr = ref.alloc(uint8Ptr); // pointer to uint8*
-    const outLenPtr = ref.alloc(size_t);
-    const outCapPtr = ref.alloc(size_t);
+    const inputEncoded = Buffer.from(input, "utf8").toString("base64");
 
-    const inputBuf = Buffer.from(input, "utf8");
+    const req = {
+      account_name: this.acccountName,
+      kind: operation_type,
+      payload: inputEncoded,
+    } satisfies SharedLibRequest;
 
-    const retCode: number = this.sendMessage(
-      inputBuf,
-      inputBuf.length,
-      outBufPtr,
-      outLenPtr,
-      outCapPtr,
-    );
+    const inputBuf = Buffer.from(JSON.stringify(req), "utf8");
+    try {
+      const respBuffer = this.lib.sendMessage(inputBuf);
 
-    if (retCode !== 0) {
-      throw new Error(`failed to send message to OPH. Return code: ${retCode}`);
-    }
-
-    // TS typing quirk: deref() is typed poorly in @types/ref-napi; coerce to unknown -> Buffer
-    // at runtime this is a pointer-like object that ref.reinterpret accepts.
-    const outBufPtrValue = outBufPtr.deref() as unknown as Buffer;
-    const outLen = outLenPtr.deref() as number;
-    const outCap = outCapPtr.deref() as number;
-
-    if (!outBufPtrValue || outLen === 0) {
-      if (outBufPtrValue) {
-        // reinterpret the pointer (0 length) into a Buffer to satisfy ffi/ref signature
-        const emptyBuf = ref.reinterpret(outBufPtrValue, 0, 0);
-        this.freeResponse(emptyBuf, outLen, outCap);
+      if (!(respBuffer instanceof Buffer)) {
+        throw new Error("Native function returned an unexpected type.");
       }
-      return "";
+
+      const respString = respBuffer.toString("utf8");
+      const response: SharedLibResponse = JSON.parse(respString);
+
+      if (response.success) {
+        const decodedPayload = Buffer.from(response.payload, "base64").toString(
+          "utf8",
+        );
+        // On success, the payload is the actual result string
+        return decodedPayload;
+      } else {
+        // On failure, convert the error payload to a readable string and throw
+        const errorMessage = Array.isArray(response.payload)
+          ? String.fromCharCode(...response.payload)
+          : JSON.stringify(response.payload);
+
+        throw new Error(`Native library returned an error: ${errorMessage}`);
+      }
+    } catch (e) {
+      // Catch errors from the native call or from JSON parsing
+      console.error("An error occurred during the native library call:", e);
+      throw e;
     }
-
-    // reinterpret the pointer into a Buffer view of length outLen
-    const outBuf = ref.reinterpret(outBufPtrValue, outLen, 0);
-
-    // Copy into JS-owned memory
-    const data = Buffer.from(outBuf);
-
-    // Free Rust buffer (must pass a Buffer/pointer, not a raw number)
-    this.freeResponse(outBuf, outLen, outCap);
-
-    return data.toString("utf8");
   }
 
   // Core interface implementation
   public async initClient(config: string): Promise<string> {
-    return this.callSharedLibrary(config);
+    return this.callSharedLibrary(config, "init_client");
   }
 
   public async invoke(invokeConfigBytes: string): Promise<string> {
-    return this.callSharedLibrary(invokeConfigBytes);
+    return this.callSharedLibrary(invokeConfigBytes, "invoke");
   }
 
   public releaseClient(clientId: string): void {
     try {
-      this.callSharedLibrary(clientId);
+      this.callSharedLibrary(clientId, "release_client");
     } catch (err) {
       console.warn("failed to release client:", err);
     }
