@@ -111,9 +111,9 @@ export class WasmCore implements Core {
  *  An implementation of the `Core` interface that shares resources across all clients.
  */
 export class SharedCore {
-  inner: Core;
+  private inner: Core;
 
-  constructor() {
+  public constructor() {
     this.inner = new WasmCore();
   }
 
@@ -123,7 +123,11 @@ export class SharedCore {
 
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
-    return this.inner.initClient(serializedConfig);
+    try {
+      return await this.inner.initClient(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {
@@ -135,7 +139,11 @@ export class SharedCore {
         `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help."`,
       );
     }
-    return this.inner.invoke(serializedConfig);
+    try {
+      return await this.inner.invoke(serializedConfig);
+    } catch (e) {
+      throwError(e as string);
+    }
   }
 
   public invoke_sync(config: InvokeConfig): string {

@@ -4,6 +4,17 @@ import * as path from "path";
 
 import { Core } from "./core";
 
+// TODO: Improve code and fix linters
+/* eslint-disable 
+  prefer-arrow/prefer-arrow-functions, 
+  @typescript-eslint/no-explicit-any, 
+  @typescript-eslint/no-unsafe-assignment, 
+  @typescript-eslint/no-var-requires, 
+  @typescript-eslint/no-unsafe-member-access, 
+  @typescript-eslint/no-unsafe-argument, 
+  @typescript-eslint/require-await
+*/
+
 /**
  * Find the 1Password shared lib path by asking an the wasm core synchronously.
  */
@@ -80,7 +91,7 @@ export class SharedLibCore implements Core {
   private lib: DesktopIPCClient | null = null;
   private acccountName: string;
 
-  constructor(accountName: string) {
+  public constructor(accountName: string) {
     try {
       const libPath = find1PasswordLibPath();
       const loadedModule = require(libPath);
@@ -108,7 +119,7 @@ export class SharedLibCore implements Core {
   /**
    * callSharedLibrary - send string to native function, receive string back.
    */
-  callSharedLibrary(input: string, operation_type: string): string {
+  private callSharedLibrary(input: string, operation_type: string): string {
     if (!this.lib) {
       throw new Error("Native library is not available.");
     }
@@ -134,7 +145,7 @@ export class SharedLibCore implements Core {
       }
 
       const respString = respBuffer.toString("utf8");
-      const response: SharedLibResponse = JSON.parse(respString);
+      const response = JSON.parse(respString) as SharedLibResponse;
 
       if (response.success) {
         const decodedPayload = Buffer.from(response.payload, "base64").toString(

@@ -20,9 +20,9 @@ type Auth = string | DesktopAuth;
  * Setting that specifies that a client should use the desktop app to authenticate.
  */
 export class DesktopAuth {
-  accountName: string;
+  public accountName: string;
 
-  constructor(accountName: string) {
+  public constructor(accountName: string) {
     this.accountName = accountName;
   }
 }
@@ -36,8 +36,8 @@ export const clientAuthConfig = (
   // TODO: Add logic for computing the correct sanitized version value for each platform
   const defaultOsVersion = "0.0.0";
 
-  let serviceAccountToken: string | undefined = undefined;
-  let accountName: string | undefined = undefined;
+  let serviceAccountToken: string | undefined;
+  let accountName: string | undefined;
 
   if (typeof userConfig.auth === "string") {
     serviceAccountToken = userConfig.auth;
