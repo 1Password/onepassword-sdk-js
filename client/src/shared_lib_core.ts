@@ -70,7 +70,7 @@ export function find1PasswordLibPath(): string {
 }
 
 interface DesktopIPCClient {
-  sendMessage(msg: Buffer): Buffer;
+  sendMessage(msg: Buffer): Uint8Array;
 }
 
 type SharedLibRequest = {
@@ -138,13 +138,13 @@ export class SharedLibCore implements Core {
 
     const inputBuf = Buffer.from(JSON.stringify(req), "utf8");
     try {
-      const respBuffer = this.lib.sendMessage(inputBuf);
+      const nativeResponse = this.lib.sendMessage(inputBuf);
 
-      if (!(respBuffer instanceof Buffer)) {
-        throw new Error("Native function returned an unexpected type.");
+      if (!(nativeResponse instanceof Uint8Array)) {
+        throw new Error(`Native function returned an unexpected type. Expected Uint8Array, got ${typeof nativeResponse}`);
       }
 
-      const respString = respBuffer.toString("utf8");
+      const respString = new TextDecoder().decode(nativeResponse);
       const response = JSON.parse(respString) as SharedLibResponse;
 
       if (response.success) {
