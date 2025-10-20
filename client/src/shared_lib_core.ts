@@ -4,21 +4,10 @@ import * as path from "path";
 
 import { Core } from "./core";
 
-// TODO: Improve code and fix linters
-/* eslint-disable 
-  prefer-arrow/prefer-arrow-functions, 
-  @typescript-eslint/no-explicit-any, 
-  @typescript-eslint/no-unsafe-assignment, 
-  @typescript-eslint/no-var-requires, 
-  @typescript-eslint/no-unsafe-member-access, 
-  @typescript-eslint/no-unsafe-argument, 
-  @typescript-eslint/require-await
-*/
-
 /**
  * Find the 1Password shared lib path by asking an the wasm core synchronously.
  */
-export function find1PasswordLibPath(): string {
+const find1PasswordLibPath = (): string => {
   const platform: NodeJS.Platform = os.platform();
   const appRoot: string = path.dirname(process.execPath);
   let searchPaths: string[] = [];
@@ -67,7 +56,7 @@ export function find1PasswordLibPath(): string {
 
   // If the loop completes without finding the file, throw an error.
   throw new Error("1Password desktop application not found");
-}
+};
 
 interface DesktopIPCClient {
   sendMessage(msg: Buffer): Uint8Array;
@@ -81,7 +70,7 @@ type SharedLibRequest = {
 
 interface SharedLibResponse {
   success: boolean;
-  payload: any; // Can be a string on success or an array of numbers on error
+  payload: number[];
 }
 
 /**
@@ -94,16 +83,23 @@ export class SharedLibCore implements Core {
   public constructor(accountName: string) {
     try {
       const libPath = find1PasswordLibPath();
-      const loadedModule = require(libPath);
+      // Using require for a dynamic .node file is necessary. We assert the type after validation.
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const loadedModule: unknown = require(libPath);
 
-      // We still need to validate that the module loaded correctly
-      if (typeof loadedModule.sendMessage === "function") {
+      // Safely check the structure of the loaded module before casting.
+      if (
+        typeof loadedModule === "object" &&
+        loadedModule !== null &&
+        "sendMessage" in loadedModule &&
+        typeof (loadedModule as { sendMessage: unknown }).sendMessage ===
+          "function"
+      ) {
         this.lib = loadedModule as DesktopIPCClient;
       } else {
-        console.error(
+        throw new Error(
           "Failed to initialize native library: sendMessage function not found on module.",
         );
-        this.lib = null;
       }
     } catch (e) {
       console.error(
@@ -130,27 +126,28 @@ export class SharedLibCore implements Core {
 
     const inputEncoded = Buffer.from(input, "utf8").toString("base64");
 
-    const req = {
+    const req: SharedLibRequest = {
       account_name: this.acccountName,
       kind: operation_type,
       payload: inputEncoded,
-    } satisfies SharedLibRequest;
+    };
 
     const inputBuf = Buffer.from(JSON.stringify(req), "utf8");
+
     try {
       const nativeResponse = this.lib.sendMessage(inputBuf);
 
       if (!(nativeResponse instanceof Uint8Array)) {
-        throw new Error(`Native function returned an unexpected type. Expected Uint8Array, got ${typeof nativeResponse}`);
+        throw new Error(
+          `Native function returned an unexpected type. Expected Uint8Array, got ${typeof nativeResponse}`,
+        );
       }
 
       const respString = new TextDecoder().decode(nativeResponse);
       const response = JSON.parse(respString) as SharedLibResponse;
 
       if (response.success) {
-        const decodedPayload = Buffer.from(response.payload, "base64").toString(
-          "utf8",
-        );
+        const decodedPayload = Buffer.from(response.payload).toString("utf8");
         // On success, the payload is the actual result string
         return decodedPayload;
       } else {
@@ -169,10 +166,15 @@ export class SharedLibCore implements Core {
   }
 
   // Core interface implementation
+
+  // TODO: Improve code and re-enable lint rule here
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async initClient(config: string): Promise<string> {
     return this.callSharedLibrary(config, "init_client");
   }
 
+  // TODO: Improve code and re-enable lint rule here
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async invoke(invokeConfigBytes: string): Promise<string> {
     return this.callSharedLibrary(invokeConfigBytes, "invoke");
   }
