@@ -16,30 +16,30 @@ const find1PasswordLibPath = (): string => {
   switch (platform) {
     case "darwin": // macOS
       searchPaths = [
-        "/Applications/1Password.app/Contents/Frameworks/op-sdk-js-index.node",
+        "/Applications/1Password.app/Contents/Frameworks/libop_sdk_ipc_client.dylib",
         path.join(
           os.homedir(),
-          "/Applications/1Password.app/Contents/Frameworks/op-sdk-js-index.node",
+          "/Applications/1Password.app/Contents/Frameworks/libop_sdk_ipc_client.dylib",
         ),
       ];
       break;
 
     case "win32": // Windows
       searchPaths = [
-        "C:/Program Files/1Password/op-sdk-js-index.node",
-        "C:/Program Files (x86)/1Password/op-sdk-js-index.node",
+        "C:/Program Files/1Password/op_sdk_ipc_client.dll",
+        "C:/Program Files (x86)/1Password/op_sdk_ipc_client.dll",
         path.join(
           os.homedir(),
-          "/AppData/Local/1Password/op-sdk-js-index.node",
+          "/AppData/Local/1Password/op_sdk_ipc_client.dll",
         ),
       ];
       break;
 
     case "linux": // Linux
       searchPaths = [
-        "/usr/bin/1password/op-sdk-js-index.node",
-        "/opt/1password/op-sdk-js-index.node",
-        "/snap/bin/1password/op-sdk-js-index.node",
+        "/usr/bin/1password/libop_sdk_ipc_client.so",
+        "/opt/1password/libop_sdk_ipc_client.so",
+        "/snap/bin/1password/libop_sdk_ipc_client.so",
       ];
       break;
 
@@ -59,7 +59,7 @@ const find1PasswordLibPath = (): string => {
 };
 
 interface DesktopIPCClient {
-  sendMessage(msg: Buffer): Uint8Array;
+  sendMessage(msg: Buffer): Promise<Uint8Array>;
 }
 
 type SharedLibRequest = {
@@ -83,19 +83,20 @@ export class SharedLibCore implements Core {
   public constructor(accountName: string) {
     try {
       const libPath = find1PasswordLibPath();
-      // Using require for a dynamic .node file is necessary. We assert the type after validation.
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const loadedModule: unknown = require(libPath);
+      const moduleStub = { exports: {} };
+      process.dlopen(moduleStub, libPath);
 
       // Safely check the structure of the loaded module before casting.
       if (
-        typeof loadedModule === "object" &&
-        loadedModule !== null &&
-        "sendMessage" in loadedModule &&
-        typeof (loadedModule as { sendMessage: unknown }).sendMessage ===
+        typeof moduleStub === "object" &&
+        moduleStub !== null &&
+        typeof moduleStub.exports === "object" &&
+        moduleStub.exports !== null &&
+        "sendMessage" in moduleStub.exports &&
+        typeof (moduleStub.exports as { sendMessage: unknown }).sendMessage ===
           "function"
       ) {
-        this.lib = loadedModule as DesktopIPCClient;
+        this.lib = moduleStub.exports as DesktopIPCClient;
       } else {
         throw new Error(
           "Failed to initialize native library: sendMessage function not found on module.",
@@ -115,7 +116,10 @@ export class SharedLibCore implements Core {
   /**
    * callSharedLibrary - send string to native function, receive string back.
    */
-  private callSharedLibrary(input: string, operation_type: string): string {
+  private async callSharedLibrary(
+    input: string,
+    operation_type: string,
+  ): Promise<string> {
     if (!this.lib) {
       throw new Error("Native library is not available.");
     }
@@ -135,7 +139,7 @@ export class SharedLibCore implements Core {
     const inputBuf = Buffer.from(JSON.stringify(req), "utf8");
 
     try {
-      const nativeResponse = this.lib.sendMessage(inputBuf);
+      const nativeResponse = await this.lib.sendMessage(inputBuf);
 
       if (!(nativeResponse instanceof Uint8Array)) {
         throw new Error(
@@ -167,23 +171,17 @@ export class SharedLibCore implements Core {
 
   // Core interface implementation
 
-  // TODO: Improve code and re-enable lint rule here
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async initClient(config: string): Promise<string> {
     return this.callSharedLibrary(config, "init_client");
   }
 
-  // TODO: Improve code and re-enable lint rule here
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async invoke(invokeConfigBytes: string): Promise<string> {
     return this.callSharedLibrary(invokeConfigBytes, "invoke");
   }
 
   public releaseClient(clientId: string): void {
-    try {
-      this.callSharedLibrary(clientId, "release_client");
-    } catch (err) {
+    this.callSharedLibrary(clientId, "release_client").catch((err) => {
       console.warn("failed to release client:", err);
-    }
+    });
   }
 }
