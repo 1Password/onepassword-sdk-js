@@ -6,6 +6,9 @@ import {
   ItemCreateParams,
   ItemListFilter,
   ItemOverview,
+  ItemsDeleteAllResponse,
+  ItemsGetAllResponse,
+  ItemsUpdateAllResponse,
   ReviverFunc,
 } from "./types.js";
 import { ItemsSharesApi, ItemsShares } from "./items_shares.js";
@@ -23,9 +26,22 @@ export interface ItemsApi {
   create(params: ItemCreateParams): Promise<Item>;
 
   /**
+   * Create items in batch, within a single vault.
+   */
+  createAll(
+    vaultId: string,
+    params: ItemCreateParams[],
+  ): Promise<ItemsUpdateAllResponse>;
+
+  /**
    * Get an item by vault and item ID
    */
   get(vaultId: string, itemId: string): Promise<Item>;
+
+  /**
+   * Get items by vault and their item IDs.
+   */
+  getAll(vaultId: string, itemIds: string[]): Promise<ItemsGetAllResponse>;
 
   /**
    * Update an existing item.
@@ -36,6 +52,14 @@ export interface ItemsApi {
    * Delete an item.
    */
   delete(vaultId: string, itemId: string);
+
+  /**
+   * Create items in batch, within a single vault.
+   */
+  deleteAll(
+    vaultId: string,
+    itemIds: string[],
+  ): Promise<ItemsDeleteAllResponse>;
 
   /**
    * Archive an item.
@@ -81,6 +105,31 @@ export class Items implements ItemsApi {
   }
 
   /**
+   * Create items in batch, within a single vault.
+   */
+  public async createAll(
+    vaultId: string,
+    params: ItemCreateParams[],
+  ): Promise<ItemsUpdateAllResponse> {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "ItemsCreateAll",
+          parameters: {
+            vault_id: vaultId,
+            params,
+          },
+        },
+      },
+    };
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
+    ) as ItemsUpdateAllResponse;
+  }
+
+  /**
    * Get an item by vault and item ID
    */
   public async get(vaultId: string, itemId: string): Promise<Item> {
@@ -100,6 +149,31 @@ export class Items implements ItemsApi {
       await this.#inner.core.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
+  }
+
+  /**
+   * Get items by vault and their item IDs.
+   */
+  public async getAll(
+    vaultId: string,
+    itemIds: string[],
+  ): Promise<ItemsGetAllResponse> {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "ItemsGetAll",
+          parameters: {
+            vault_id: vaultId,
+            item_ids: itemIds,
+          },
+        },
+      },
+    };
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
+    ) as ItemsGetAllResponse;
   }
 
   /**
@@ -140,6 +214,31 @@ export class Items implements ItemsApi {
       },
     };
     await this.#inner.core.invoke(invocationConfig);
+  }
+
+  /**
+   * Create items in batch, within a single vault.
+   */
+  public async deleteAll(
+    vaultId: string,
+    itemIds: string[],
+  ): Promise<ItemsDeleteAllResponse> {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "ItemsDeleteAll",
+          parameters: {
+            vault_id: vaultId,
+            item_ids: itemIds,
+          },
+        },
+      },
+    };
+    return JSON.parse(
+      await this.#inner.core.invoke(invocationConfig),
+      ReviverFunc,
+    ) as ItemsDeleteAllResponse;
   }
 
   /**
