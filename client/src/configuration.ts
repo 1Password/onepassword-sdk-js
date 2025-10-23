@@ -45,7 +45,7 @@ export const clientAuthConfig = (
     accountName = userConfig.auth.accountName;
   }
   return {
-    serviceAccountToken,
+    serviceAccountToken: serviceAccountToken ?? "",
     accountName,
     programmingLanguage: LANGUAGE,
     sdkVersion: VERSION,
