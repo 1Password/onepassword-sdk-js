@@ -38,7 +38,7 @@ const find1PasswordLibPath = (): string => {
     case "linux": // Linux
       searchPaths = [
         "/usr/bin/1password/libop_sdk_ipc_client.so",
-        "/opt/1password/libop_sdk_ipc_client.so",
+        "/opt/1Password/libop_sdk_ipc_client.so",
         "/snap/bin/1password/libop_sdk_ipc_client.so",
       ];
       break;
