@@ -18,7 +18,7 @@ export interface VaultsApi {
   /**
    * List information about vaults that's configurable based on some input parameters.
    */
-  list(params: VaultListParams): Promise<VaultOverview[]>;
+  list(params?: VaultListParams): Promise<VaultOverview[]>;
 
   getOverview(vaultUuid: string): Promise<VaultOverview>;
 
