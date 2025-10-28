@@ -4,18 +4,15 @@ import { InnerClient } from "./core.js";
 import { SecretsApi, Secrets } from "./secrets.js";
 import { ItemsApi, Items } from "./items.js";
 import { VaultsApi, Vaults } from "./vaults.js";
-import { GroupsApi, Groups } from "./groups.js";
 
 export class Client {
   public secrets: SecretsApi;
   public items: ItemsApi;
   public vaults: VaultsApi;
-  public groups: GroupsApi;
 
   public constructor(innerClient: InnerClient) {
     this.secrets = new Secrets(innerClient);
     this.items = new Items(innerClient);
     this.vaults = new Vaults(innerClient);
-    this.groups = new Groups(innerClient);
   }
 }

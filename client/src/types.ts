@@ -54,81 +54,6 @@ export interface GeneratePasswordResponse {
   password: string;
 }
 
-export enum GroupType {
-  /**
-   * The owners group, which gives the following permissions:
-   * - Do everything the Admin group can do
-   * - See every vault other than the personal vaults
-   * - Change people's names
-   * - See billing
-   * - Change billing
-   * - Make other people owners
-   * - Delete a person
-   */
-  Owners = "owners",
-  /**
-   * The administrators group, which gives the following permissions:
-   * - Perform recovery
-   * - Create new vaults
-   * - Invite new members
-   * - See vault metadata, including the vault name and who has access.
-   * - Make other people admins
-   */
-  Administrators = "administrators",
-  /**
-   * The recovery group. It contains recovery keysets, and is added to every vault to allow for recovery.
-   *
-   * No one is added to this.
-   */
-  Recovery = "recovery",
-  /**
-   * The external account managers group or EAM is a mandatory group for managed accounts that has
-   * same permissions as the owners.
-   */
-  ExternalAccountManagers = "externalAccountManagers",
-  /** Members of a team that a user is on. */
-  TeamMembers = "teamMembers",
-  /** A custom, user defined group. */
-  UserDefined = "userDefined",
-  /** Support for new or renamed group types */
-  Unsupported = "unsupported",
-}
-
-export enum GroupState {
-  /** This group is active */
-  Active = "active",
-  /** This group has been deleted */
-  Deleted = "deleted",
-  /** This group is in an unknown state */
-  Unsupported = "unsupported",
-}
-
-export enum VaultAccessorType {
-  User = "user",
-  Group = "group",
-}
-
-/** Represents the vault access information. */
-export interface VaultAccess {
-  /** The vault's UUID. */
-  vaultUuid: string;
-  /** The vault's accessor type. */
-  accessorType: VaultAccessorType;
-  /** The vault's accessor UUID. */
-  accessorUuid: string;
-  /** The permissions granted to this vault */
-  permissions: number;
-}
-
-export interface Group {
-  id: string;
-  title: string;
-  description: string;
-  groupType: GroupType;
-  state: GroupState;
-  vaultAccess?: VaultAccess[];
-}
-
 /**
  * Represents a group's access to a 1Password vault.
  * This is used for granting permissions
@@ -138,10 +63,6 @@ export interface GroupAccess {
   group_id: string;
   /** The group's set of permissions for the vault */
   permissions: number;
-}
-
-export interface GroupGetParams {
-  vaultPermissions?: boolean;
 }
 
 /** Represents a group's access to a 1Password vault. */
@@ -564,6 +485,23 @@ export enum VaultType {
   Unsupported = "unsupported",
 }
 
+export enum VaultAccessorType {
+  User = "user",
+  Group = "group",
+}
+
+/** Represents the vault access information. */
+export interface VaultAccess {
+  /** The vault's UUID. */
+  vaultUuid: string;
+  /** The vault's accessor type. */
+  accessorType: VaultAccessorType;
+  /** The vault's accessor UUID. */
+  accessorUuid: string;
+  /** The permissions granted to this vault */
+  permissions: number;
+}
+
 /** Represents regular vault information together with the vault's access information. */
 export interface Vault {
   /** The vault's ID. */
@@ -706,20 +644,6 @@ export enum WordListType {
   ThreeLetters = "threeLetters",
 }
 
-export const ARCHIVE_ITEMS: number = 256;
-export const CREATE_ITEMS: number = 128;
-export const DELETE_ITEMS: number = 512;
-export const EXPORT_ITEMS: number = 4194304;
-export const IMPORT_ITEMS: number = 2097152;
-export const MANAGE_VAULT: number = 2;
-export const NO_ACCESS: number = 0;
-export const PRINT_ITEMS: number = 8388608;
-export const READ_ITEMS: number = 32;
-export const RECOVER_VAULT: number = 1;
-export const REVEAL_ITEM_PASSWORD: number = 16;
-export const SEND_ITEMS: number = 1048576;
-export const UPDATE_ITEMS: number = 64;
-export const UPDATE_ITEM_HISTORY: number = 1024;
 /**
  * Custom JSON reviver and replacer functions for dynamic data transformation
  * ReviverFunc is used during JSON parsing to detect and transform specific data structures
