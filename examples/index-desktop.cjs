@@ -12,7 +12,7 @@ async function main() {
   // [developer-docs.sdk.js/common-js.client-initialization]-start
   // Connects to the 1Password desktop app.  
   const client = await sdk.createClient({
-    auth: new sdk.DesktopAuth("YourAccountNameAsItAppearsInTheApp"),
+    auth: new sdk.DesktopAuth("Happy Company"),
     // Set the following to your own integration name and version.
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
@@ -131,6 +131,18 @@ async function main() {
     }
   }
   // [developer-docs.sdk.js/common-js.batch-delete-items]-end
+
+  const groupId = process.env.OP_GROUP_ID;
+
+  if (!groupId) {
+    throw new Error("Missing required environment variable: OP_GROUP_ID")
+  }
+
+  // [developer-docs.sdk.js/common-js.get-group]-start
+  // Get a group
+  const group = await client.groups.get(groupId, {vaultPermissions: false})
+  console.log(JSON.stringify(group))
+  // [developer-docs.sdk.js/common-js.get-group]-end
 }
 
 main();
