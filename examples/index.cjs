@@ -23,11 +23,11 @@ async function manageItems() {
     integrationVersion: "v1.0.0",
   });
 
-  const vaults = await client.vaults.listAll();
+  const vaults = await client.vaults.list();
 
   for await (const vault of vaults) {
     console.log(vault.id + " " + vault.title);
-    const items = await client.items.listAll(vault.id);
+    const items = await client.items.list(vault.id);
     for await (const item of items) {
       console.log(item.id + " " + item.title);
     }
