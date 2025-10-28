@@ -54,7 +54,7 @@ export interface ItemsApi {
   delete(vaultId: string, itemId: string);
 
   /**
-   * Create items in batch, within a single vault.
+   * Delete items in batch, within a single vault.
    */
   deleteAll(
     vaultId: string,
@@ -217,7 +217,7 @@ export class Items implements ItemsApi {
   }
 
   /**
-   * Create items in batch, within a single vault.
+   * Delete items in batch, within a single vault.
    */
   public async deleteAll(
     vaultId: string,
