@@ -24,11 +24,16 @@ export interface VaultsApi {
 
   get(vaultUuid: string, vaultParams: VaultGetParams): Promise<Vault>;
 
-  grantGroupPermissions(vaultId: string, groupPermissionsList: GroupAccess[]);
+  grantGroupPermissions(
+    vaultId: string,
+    groupPermissionsList: GroupAccess[],
+  ): Promise<void>;
 
-  updateGroupPermissions(groupPermissionsList: GroupVaultAccess[]);
+  updateGroupPermissions(
+    groupPermissionsList: GroupVaultAccess[],
+  ): Promise<void>;
 
-  revokeGroupPermissions(vaultId: string, groupId: string);
+  revokeGroupPermissions(vaultId: string, groupId: string): Promise<void>;
 }
 
 export class Vaults implements VaultsApi {
@@ -102,7 +107,7 @@ export class Vaults implements VaultsApi {
   public async grantGroupPermissions(
     vaultId: string,
     groupPermissionsList: GroupAccess[],
-  ) {
+  ): Promise<void> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
@@ -120,7 +125,7 @@ export class Vaults implements VaultsApi {
 
   public async updateGroupPermissions(
     groupPermissionsList: GroupVaultAccess[],
-  ) {
+  ): Promise<void> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
@@ -135,7 +140,10 @@ export class Vaults implements VaultsApi {
     await this.#inner.core.invoke(invocationConfig);
   }
 
-  public async revokeGroupPermissions(vaultId: string, groupId: string) {
+  public async revokeGroupPermissions(
+    vaultId: string,
+    groupId: string,
+  ): Promise<void> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
