@@ -54,25 +54,83 @@ export interface GeneratePasswordResponse {
   password: string;
 }
 
-/**
- * Represents a group's access to a 1Password vault.
- * This is used for granting permissions
- */
-export interface GroupAccess {
-  /** The group's ID */
-  group_id: string;
-  /** The group's set of permissions for the vault */
+export enum GroupType {
+  /**
+   * The owners group, which gives the following permissions:
+   * - Do everything the Admin group can do
+   * - See every vault other than the personal vaults
+   * - Change people's names
+   * - See billing
+   * - Change billing
+   * - Make other people owners
+   * - Delete a person
+   */
+  Owners = "owners",
+  /**
+   * The administrators group, which gives the following permissions:
+   * - Perform recovery
+   * - Create new vaults
+   * - Invite new members
+   * - See vault metadata, including the vault name and who has access.
+   * - Make other people admins
+   */
+  Administrators = "administrators",
+  /**
+   * The recovery group. It contains recovery keysets, and is added to every vault to allow for recovery.
+   *
+   * No one is added to this.
+   */
+  Recovery = "recovery",
+  /**
+   * The external account managers group or EAM is a mandatory group for managed accounts that has
+   * same permissions as the owners.
+   */
+  ExternalAccountManagers = "externalAccountManagers",
+  /** Members of a team that a user is on. */
+  TeamMembers = "teamMembers",
+  /** A custom, user defined group. */
+  UserDefined = "userDefined",
+  /** Support for new or renamed group types */
+  Unsupported = "unsupported",
+}
+
+export enum GroupState {
+  /** This group is active */
+  Active = "active",
+  /** This group has been deleted */
+  Deleted = "deleted",
+  /** This group is in an unknown state */
+  Unsupported = "unsupported",
+}
+
+export enum VaultAccessorType {
+  User = "user",
+  Group = "group",
+}
+
+/** Represents the vault access information. */
+export interface VaultAccess {
+  /** The vault's UUID. */
+  vaultUuid: string;
+  /** The vault's accessor type. */
+  accessorType: VaultAccessorType;
+  /** The vault's accessor UUID. */
+  accessorUuid: string;
+  /** The permissions granted to this vault */
   permissions: number;
 }
 
-/** Represents a group's access to a 1Password vault. */
-export interface GroupVaultAccess {
-  /** The vault's ID */
-  vault_id: string;
-  /** The group's ID */
-  group_id: string;
-  /** The group's set of permissions for the vault */
-  permissions: number;
+export interface Group {
+  id: string;
+  title: string;
+  description: string;
+  groupType: GroupType;
+  state: GroupState;
+  vaultAccess?: VaultAccess[];
+}
+
+export interface GroupGetParams {
+  vaultPermissions?: boolean;
 }
 
 export enum ItemCategory {
@@ -483,23 +541,6 @@ export enum VaultType {
   Transfer = "transfer",
   UserCreated = "userCreated",
   Unsupported = "unsupported",
-}
-
-export enum VaultAccessorType {
-  User = "user",
-  Group = "group",
-}
-
-/** Represents the vault access information. */
-export interface VaultAccess {
-  /** The vault's UUID. */
-  vaultUuid: string;
-  /** The vault's accessor type. */
-  accessorType: VaultAccessorType;
-  /** The vault's accessor UUID. */
-  accessorUuid: string;
-  /** The permissions granted to this vault */
-  permissions: number;
 }
 
 /** Represents regular vault information together with the vault's access information. */

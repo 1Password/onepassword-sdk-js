@@ -274,11 +274,11 @@ function __wbg_adapter_30(arg0, arg1) {
 }
 
 function __wbg_adapter_33(arg0, arg1, arg2) {
-    wasm.closure2320_externref_shim(arg0, arg1, arg2);
+    wasm.closure2333_externref_shim(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_156(arg0, arg1, arg2, arg3) {
-    wasm.closure2469_externref_shim(arg0, arg1, arg2, arg3);
+    wasm.closure2482_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_RequestCache = ["default", "no-store", "reload", "no-cache", "force-cache", "only-if-cached"];
@@ -708,13 +708,13 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper8384 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 2303, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper8484 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2316, __wbg_adapter_30);
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper8424 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 2321, __wbg_adapter_33);
+module.exports.__wbindgen_closure_wrapper8524 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2334, __wbg_adapter_33);
     return ret;
 };
 
