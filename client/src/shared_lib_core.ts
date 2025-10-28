@@ -24,21 +24,10 @@ const find1PasswordLibPath = (): string => {
       ];
       break;
 
-    case "win32": // Windows
-      searchPaths = [
-        "C:/Program Files/1Password/op_sdk_ipc_client.dll",
-        "C:/Program Files (x86)/1Password/op_sdk_ipc_client.dll",
-        path.join(
-          os.homedir(),
-          "/AppData/Local/1Password/op_sdk_ipc_client.dll",
-        ),
-      ];
-      break;
-
     case "linux": // Linux
       searchPaths = [
         "/usr/bin/1password/libop_sdk_ipc_client.so",
-        "/opt/1password/libop_sdk_ipc_client.so",
+        "/opt/1Password/libop_sdk_ipc_client.so",
         "/snap/bin/1password/libop_sdk_ipc_client.so",
       ];
       break;
