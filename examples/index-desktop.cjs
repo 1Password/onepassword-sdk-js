@@ -9,7 +9,7 @@ async function main() {
     throw new Error("Missing required environment variable: OP_VAULT_ID")
   }
 
-  // [developer-docs.sdk.js.client-initialization]-start
+  // [developer-docs.sdk.js/common-js.client-initialization]-start
   // Connects to the 1Password desktop app.  
   const client = await sdk.createClient({
     auth: new sdk.DesktopAuth("YourAccountNameAsItAppearsInTheApp"),
@@ -17,30 +17,35 @@ async function main() {
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
-  // [developer-docs.sdk.js.client-initialization]-end
+  // [developer-docs.sdk.js/common-js.client-initialization]-end
 
-  // [developer-docs.sdk.python.list-vaults]-start
+  // [developer-docs.sdk.js/common-js.list-vaults]-start
   const vaults = await client.vaults.list({ decryptDetails: true });
   for await (const vault of vaults) {
     console.log(JSON.stringify(vault, null, 2));
   }
-  // [developer-docs.sdk.python.list-vaults]-end
+  // [developer-docs.sdk.js/common-js.list-vaults]-end
 
-  // [developer-docs.sdk.python.list-items]-start
+  // [developer-docs.sdk.js/common-js.list-items]-start
   const items = await client.items.list(vaultId);
   for await (const item of items) {
     console.log(item.id + " " + item.title);
   }
-  // [developer-docs.sdk.python.list-items]-end
+  // [developer-docs.sdk.js/common-js.list-items]-end
 
-  // Vault get overview
+  // [developer-docs.sdk.js/common-js.get-vault-overview]-start
+	// Get vault overview
   const vaultOverview = await client.vaults.getOverview(vaultId);
   console.log(JSON.stringify(vaultOverview));
+	// [developer-docs.sdk.js/common-js.get-vault-overview]-end
 
-  // Vault get
+  // [developer-docs.sdk.js/common-js.get-vault-details]-start
+	// Get vault details
   const vault = await client.vaults.get(vaultOverview.id, {accessors: false});
   console.log(JSON.stringify(vault));
+  // [developer-docs.sdk.js/common-js.get-vault-details]-end
 
+  // [developer-docs.sdk.js/common-js.batch-create-items]-start
   itemsToCreate = [];
   for (let i = 1; i <= 3; i++) {
     itemsToCreate.push({
@@ -86,7 +91,7 @@ async function main() {
     })
   }
 
-  // Batch item create
+	// Create all items in the same vault in a single batch
   const batchCreateResponse = await client.items.createAll(vault.id, itemsToCreate)
 
   let itemIDs = [];
@@ -99,8 +104,10 @@ async function main() {
       console.log(`[Batch create] Something went wrong: ${res.error}`);
     }
   }
+  // [developer-docs.sdk.js/common-js.batch-create-items]-end
 
-  // Batch item get
+  // [developer-docs.sdk.js/common-js.batch-get-items]-start
+	// Get multiple items form the same vault in a single batch
   const batchGetResponse = await client.items.getAll(vault.id, itemIDs);
   for (const res of batchGetResponse.individualResponses) {
     if (res.content) {
@@ -110,8 +117,10 @@ async function main() {
       console.log(`[Batch get] Something went wrong: ${res.error}`);
     }
   }
+  // [developer-docs.sdk.js/common-js.batch-get-items]-end
 
-  // Batch item delete
+  // [developer-docs.sdk.js/common-js.batch-delete-items]-start
+	// Delete multiple items from the same vault in a single batch
   const batchDeleteResponse = await client.items.deleteAll(vault.id, itemIDs);
   for (const [id, res] of Object.entries(batchDeleteResponse.individualResponses)) {
     if (res.error) {
@@ -121,6 +130,7 @@ async function main() {
       console.log(`Deleted item ${id}`);
     }
   }
+  // [developer-docs.sdk.js/common-js.batch-delete-items]-end
 }
 
 main();
