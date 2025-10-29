@@ -2,4 +2,7 @@
 
 ## NEW
 
-- `VaultOverview` now includes `createdAt` and `updatedAt` fields that show when the vault was created and last updated.
+- The SDK can now connect to the Desktop App.
+- Vault `get`, `get_overview` as well as new options for vault `list` are now available.
+- Item batch operations are now available.
+- The Groups API has been introduced.
