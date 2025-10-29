@@ -20,26 +20,21 @@ export interface Core {
   /**
    *  Allocates a new authenticated client and returns its id.
    */
-  initClient(config: ClientAuthConfig): Promise<string>;
+  initClient(config: string): Promise<string>;
   /**
    *  Calls async business logic from a given client and returns the result.
    */
-  invoke(config: InvokeConfig): Promise<string>;
-  /**
-   *  Calls sync business logic from a given client and returns the result.
-   */
-  invoke_sync(config: InvokeConfig): string;
+  invoke(config: string): Promise<string>;
   /**
    *  Deallocates memory held by the given client in the SDK core when it goes out of scope.
    */
-  releaseClient(clientId: number): void;
+  releaseClient(clientId: string): void;
 }
 
 /**
  *  Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
  */
 export interface ClientAuthConfig {
-  serviceAccountToken: string;
   programmingLanguage: string;
   sdkVersion: string;
   integrationName: string;
@@ -49,6 +44,9 @@ export interface ClientAuthConfig {
   os: string;
   osVersion: string;
   architecture: string;
+
+  serviceAccountToken?: string; // only used when service account token auth is selected
+  accountName?: string; // only used when desktop auth is selected
 }
 
 /**
@@ -83,14 +81,50 @@ export interface Parameters {
   parameters: { [key: string]: unknown };
 }
 
+export class WasmCore implements Core {
+  public async initClient(config: string): Promise<string> {
+    try {
+      return await init_client(config);
+    } catch (e) {
+      throwError(e as string);
+    }
+  }
+
+  public async invoke(config: string): Promise<string> {
+    try {
+      return await invoke(config);
+    } catch (e) {
+      throwError(e as string);
+    }
+  }
+
+  public releaseClient(clientId: string): void {
+    try {
+      release_client(clientId);
+    } catch (e) {
+      console.warn("failed to release client:", e);
+    }
+  }
+}
+
 /**
  *  An implementation of the `Core` interface that shares resources across all clients.
  */
-export class SharedCore implements Core {
+export class SharedCore {
+  private inner: Core;
+
+  public constructor() {
+    this.inner = new WasmCore();
+  }
+
+  public setInner(core: Core) {
+    this.inner = core;
+  }
+
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     try {
-      return await init_client(serializedConfig);
+      return await this.inner.initClient(serializedConfig);
     } catch (e) {
       throwError(e as string);
     }
@@ -106,7 +140,7 @@ export class SharedCore implements Core {
       );
     }
     try {
-      return await invoke(serializedConfig);
+      return await this.inner.invoke(serializedConfig);
     } catch (e) {
       throwError(e as string);
     }
@@ -130,7 +164,7 @@ export class SharedCore implements Core {
 
   public releaseClient(clientId: number): void {
     const serializedId = JSON.stringify(clientId);
-    release_client(serializedId);
+    this.inner.releaseClient(serializedId);
   }
 }
 
@@ -139,5 +173,5 @@ export class SharedCore implements Core {
  */
 export interface InnerClient {
   id: number;
-  core: Core;
+  core: SharedCore;
 }

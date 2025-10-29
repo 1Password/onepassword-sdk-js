@@ -14,6 +14,7 @@ export { Secrets } from "./secrets.js";
 export * from "./client.js";
 export * from "./errors.js";
 export * from "./types.js";
+export { DesktopAuth } from "./configuration.js";
 
 /**
  * Creates a default 1Password SDK client.

@@ -14,8 +14,18 @@ export interface ClientConfiguration {
 }
 
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.
-type Auth = string;
+type Auth = string | DesktopAuth;
 
+/**
+ * Setting that specifies that a client should use the desktop app to authenticate.
+ */
+export class DesktopAuth {
+  public accountName: string;
+
+  public constructor(accountName: string) {
+    this.accountName = accountName;
+  }
+}
 /**
  * Creates a default client configuration.
  * @returns The client configuration to instantiate the client with.
@@ -25,8 +35,18 @@ export const clientAuthConfig = (
 ): ClientAuthConfig => {
   // TODO: Add logic for computing the correct sanitized version value for each platform
   const defaultOsVersion = "0.0.0";
+
+  let serviceAccountToken: string | undefined;
+  let accountName: string | undefined;
+
+  if (typeof userConfig.auth === "string") {
+    serviceAccountToken = userConfig.auth;
+  } else if (userConfig.auth instanceof DesktopAuth) {
+    accountName = userConfig.auth.accountName;
+  }
   return {
-    serviceAccountToken: userConfig.auth ?? "",
+    serviceAccountToken: serviceAccountToken ?? "",
+    accountName,
     programmingLanguage: LANGUAGE,
     sdkVersion: VERSION,
     integrationName: userConfig.integrationName,

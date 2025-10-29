@@ -4,6 +4,7 @@
   "scripts": {
     "esm-example": "node index.mjs",
     "commonjs-example": "node index.cjs",
+    "commonjs-example-desktop": "node index-desktop.cjs",
     "prettier": "prettier --check index.*js",
     "prettier-fix": "prettier --write index.*js"
   },

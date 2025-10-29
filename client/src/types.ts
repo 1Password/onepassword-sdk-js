@@ -54,6 +54,85 @@ export interface GeneratePasswordResponse {
   password: string;
 }
 
+export enum GroupType {
+  /**
+   * The owners group, which gives the following permissions:
+   * - Do everything the Admin group can do
+   * - See every vault other than the personal vaults
+   * - Change people's names
+   * - See billing
+   * - Change billing
+   * - Make other people owners
+   * - Delete a person
+   */
+  Owners = "owners",
+  /**
+   * The administrators group, which gives the following permissions:
+   * - Perform recovery
+   * - Create new vaults
+   * - Invite new members
+   * - See vault metadata, including the vault name and who has access.
+   * - Make other people admins
+   */
+  Administrators = "administrators",
+  /**
+   * The recovery group. It contains recovery keysets, and is added to every vault to allow for recovery.
+   *
+   * No one is added to this.
+   */
+  Recovery = "recovery",
+  /**
+   * The external account managers group or EAM is a mandatory group for managed accounts that has
+   * same permissions as the owners.
+   */
+  ExternalAccountManagers = "externalAccountManagers",
+  /** Members of a team that a user is on. */
+  TeamMembers = "teamMembers",
+  /** A custom, user defined group. */
+  UserDefined = "userDefined",
+  /** Support for new or renamed group types */
+  Unsupported = "unsupported",
+}
+
+export enum GroupState {
+  /** This group is active */
+  Active = "active",
+  /** This group has been deleted */
+  Deleted = "deleted",
+  /** This group is in an unknown state */
+  Unsupported = "unsupported",
+}
+
+export enum VaultAccessorType {
+  User = "user",
+  Group = "group",
+}
+
+/** Represents the vault access information. */
+export interface VaultAccess {
+  /** The vault's UUID. */
+  vaultUuid: string;
+  /** The vault's accessor type. */
+  accessorType: VaultAccessorType;
+  /** The vault's accessor UUID. */
+  accessorUuid: string;
+  /** The permissions granted to this vault */
+  permissions: number;
+}
+
+export interface Group {
+  id: string;
+  title: string;
+  description: string;
+  groupType: GroupType;
+  state: GroupState;
+  vaultAccess?: VaultAccess[];
+}
+
+export interface GroupGetParams {
+  vaultPermissions?: boolean;
+}
+
 export enum ItemCategory {
   Login = "Login",
   SecureNote = "SecureNote",
@@ -351,17 +430,52 @@ export interface ItemShareParams {
   oneTimeOnly: boolean;
 }
 
+export interface Response<T, E> {
+  content?: T;
+  error?: E;
+}
+
+export type ItemUpdateFailureReason =
+  /** Item update operation failed due to bad user input. */
+  | { type: "itemValidationError"; message: ErrorMessage }
+  /** Item update operation is forbidden, permission issue. Make sure you have the correct permissions to update items in this vault. */
+  | { type: "itemStatusPermissionError"; message?: undefined }
+  /** Item update operation failed due to incorrect version. */
+  | { type: "itemStatusIncorrectItemVersion"; message?: undefined }
+  /** Item update operation failed because a file reference didn't match a known file. */
+  | { type: "itemStatusFileNotFound"; message?: undefined }
+  /** Item update request is too big to be sent to the server. */
+  | { type: "itemStatusTooBig"; message?: undefined }
+  /** The item was not found */
+  | { type: "itemNotFound"; message?: undefined }
+  /** Item update operation experienced an internal error. */
+  | { type: "internal"; message: ErrorMessage };
+
+export interface ItemsDeleteAllResponse {
+  individualResponses: Record<
+    string,
+    Response<undefined, ItemUpdateFailureReason>
+  >;
+}
+
+export type ItemsGetAllError =
+  | { type: "itemNotFound"; message?: undefined }
+  | { type: "internal"; message: ErrorMessage };
+
+export interface ItemsGetAllResponse {
+  individualResponses: Response<Item, ItemsGetAllError>[];
+}
+
+export interface ItemsUpdateAllResponse {
+  individualResponses: Response<Item, ItemUpdateFailureReason>[];
+}
+
 /** Additional attributes for OTP fields. */
 export interface OtpFieldDetails {
   /** The OTP code, if successfully computed */
   code?: string;
   /** The error message, if the OTP code could not be computed */
   errorMessage?: string;
-}
-
-export interface Response<T, E> {
-  content?: T;
-  error?: E;
 }
 
 export interface ResolvedReference {
@@ -420,12 +534,61 @@ export interface SshKeyAttributes {
   keyType: string;
 }
 
-/** Represents a decrypted 1Password vault. */
-export interface VaultOverview {
-  /** The vault's ID */
+/** Represents the vault type. */
+export enum VaultType {
+  Personal = "personal",
+  Everyone = "everyone",
+  Transfer = "transfer",
+  UserCreated = "userCreated",
+  Unsupported = "unsupported",
+}
+
+/** Represents regular vault information together with the vault's access information. */
+export interface Vault {
+  /** The vault's ID. */
   id: string;
-  /** The vault's title */
+  /** The vault's title. */
   title: string;
+  /** The description of the vault. */
+  description: string;
+  /** The type of the vault. */
+  vaultType: VaultType;
+  /** The number of active items within the vault. */
+  activeItemCount: number;
+  /** The content version number of the vault. It gets incremented whenever the state of the vault's contents changes (e.g. items from within the vault get created or updated). */
+  contentVersion: number;
+  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its title or icon. */
+  attributeVersion: number;
+  /** The access information associated with the vault. */
+  access?: VaultAccess[];
+}
+
+/** Represents the possible query parameters used for retrieving extra information about a vault. */
+export interface VaultGetParams {
+  /** The vault's accessor params. */
+  accessors?: boolean;
+}
+
+export interface VaultListParams {
+  decryptDetails?: boolean;
+}
+
+/** Holds information about a 1Password Vault. */
+export interface VaultOverview {
+  /** The vault's ID. */
+  id: string;
+  /** The vault's title. */
+  title: string;
+  /** The description of this vault. */
+  description: string;
+  /** The type of the vault. */
+  vaultType: VaultType;
+  /** The number of active items within the vault. */
+  activeItemCount: number;
+  /** The content version number of the vault. It gets incremented whenever the state of the vault's contents changes (e.g. items from within the vault get created or updated). */
+  contentVersion: number;
+  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its title or icon. */
+  attributeVersion: number;
   /** The time the vault was created at */
   createdAt: Date;
   /** The time the vault was updated at */
