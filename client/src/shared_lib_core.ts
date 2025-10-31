@@ -32,6 +32,21 @@ const find1PasswordLibPath = (): string => {
       ];
       break;
 
+    case "win32": // Windows
+      searchPaths = [
+        path.join(
+          os.homedir(),
+          "/AppData/Local/1Password/op_sdk_ipc_client.dll",
+        ),
+        "C:/Program Files/1Password/app/8/op_sdk_ipc_client.dll",
+        "C:/Program Files (x86)/1Password/app/8/op_sdk_ipc_client.dll",
+        path.join(
+          os.homedir(),
+          "/AppData/Local/1Password/app/8/op_sdk_ipc_client.dll",
+        ),
+      ];
+      break;
+
     default:
       throw new Error(`Unsupported platform: ${platform}`);
   }
