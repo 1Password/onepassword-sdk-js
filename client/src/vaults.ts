@@ -2,6 +2,8 @@
 
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import {
+  GroupAccess,
+  GroupVaultAccess,
   Vault,
   VaultGetParams,
   VaultListParams,
@@ -21,6 +23,12 @@ export interface VaultsApi {
   getOverview(vaultUuid: string): Promise<VaultOverview>;
 
   get(vaultUuid: string, vaultParams: VaultGetParams): Promise<Vault>;
+
+  grantGroupPermissions(vaultId: string, groupPermissionsList: GroupAccess[]);
+
+  updateGroupPermissions(groupPermissionsList: GroupVaultAccess[]);
+
+  revokeGroupPermissions(vaultId: string, groupId: string);
 }
 
 export class Vaults implements VaultsApi {
@@ -89,5 +97,57 @@ export class Vaults implements VaultsApi {
       await this.#inner.core.invoke(invocationConfig),
       ReviverFunc,
     ) as Vault;
+  }
+
+  public async grantGroupPermissions(
+    vaultId: string,
+    groupPermissionsList: GroupAccess[],
+  ) {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "VaultsGrantGroupPermissions",
+          parameters: {
+            vault_id: vaultId,
+            group_permissions_list: groupPermissionsList,
+          },
+        },
+      },
+    };
+    await this.#inner.core.invoke(invocationConfig);
+  }
+
+  public async updateGroupPermissions(
+    groupPermissionsList: GroupVaultAccess[],
+  ) {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "VaultsUpdateGroupPermissions",
+          parameters: {
+            group_permissions_list: groupPermissionsList,
+          },
+        },
+      },
+    };
+    await this.#inner.core.invoke(invocationConfig);
+  }
+
+  public async revokeGroupPermissions(vaultId: string, groupId: string) {
+    const invocationConfig: InvokeConfig = {
+      invocation: {
+        clientId: this.#inner.id,
+        parameters: {
+          name: "VaultsRevokeGroupPermissions",
+          parameters: {
+            vault_id: vaultId,
+            group_id: groupId,
+          },
+        },
+      },
+    };
+    await this.#inner.core.invoke(invocationConfig);
   }
 }
