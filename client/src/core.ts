@@ -159,7 +159,9 @@ export class SharedCore {
 /**
  *  Represents the client instance on which a call is made.
  */
-export interface InnerClient {
-  id: number;
-  core: SharedCore;
+export class InnerClient {
+  constructor(
+    public id: number,
+    public readonly core: SharedCore,
+  ) {}
 }
