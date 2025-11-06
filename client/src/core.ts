@@ -6,7 +6,7 @@ import {
 } from "@1password/sdk-core";
 
 import { ReplacerFunc } from "./types";
-import { throwError } from "./errors";
+import { DesktopSessionExpired, throwError } from "./errors";
 
 // In empirical tests, we determined that maximum message size that can cross the FFI boundary
 // is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
@@ -147,7 +147,7 @@ export class SharedCore {
         `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help.`,
       );
     }
-      return invoke_sync(serializedConfig);
+    return invoke_sync(serializedConfig);
   }
 
   public releaseClient(clientId: number): void {
@@ -165,4 +165,18 @@ export class InnerClient {
     public readonly core: SharedCore,
     public config: ClientAuthConfig,
   ) {}
+
+  public async invoke(config: InvokeConfig): Promise<string> {
+    try {
+      return await this.core.invoke(config);
+    } catch (err: any) {
+      if (err instanceof DesktopSessionExpired) {
+        const newId = await this.core.initClient(this.config);
+        this.id = parseInt(newId, 10);
+        config.invocation.clientId = this.id;
+        return await this.core.invoke(config);
+      }
+      throw err;
+    }
+  }
 }
