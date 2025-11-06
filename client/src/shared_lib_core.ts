@@ -143,33 +143,28 @@ export class SharedLibCore implements Core {
 
     const inputBuf = Buffer.from(JSON.stringify(req), "utf8");
 
-    try {
-      const nativeResponse = await this.lib.sendMessage(inputBuf);
+    const nativeResponse = await this.lib.sendMessage(inputBuf);
 
-      if (!(nativeResponse instanceof Uint8Array)) {
-        throw new Error(
-          `Native function returned an unexpected type. Expected Uint8Array, got ${typeof nativeResponse}`,
-        );
-      }
+    if (!(nativeResponse instanceof Uint8Array)) {
+      throw new Error(
+        `Native function returned an unexpected type. Expected Uint8Array, got ${typeof nativeResponse}`,
+      );
+    }
 
-      const respString = new TextDecoder().decode(nativeResponse);
-      const response = JSON.parse(respString) as SharedLibResponse;
+    const respString = new TextDecoder().decode(nativeResponse);
+    const response = JSON.parse(respString) as SharedLibResponse;
 
-      if (response.success) {
-        const decodedPayload = Buffer.from(response.payload).toString("utf8");
-        // On success, the payload is the actual result string
-        return decodedPayload;
-      } else {
-        // On failure, convert the error payload to a readable string and throw
-        const errorMessage = Array.isArray(response.payload)
-          ? String.fromCharCode(...response.payload)
-          : JSON.stringify(response.payload);
+    if (response.success) {
+      const decodedPayload = Buffer.from(response.payload).toString("utf8");
+      // On success, the payload is the actual result string
+      return decodedPayload;
+    } else {
+      // On failure, convert the error payload to a readable string and throw
+      const errorMessage = Array.isArray(response.payload)
+        ? String.fromCharCode(...response.payload)
+        : JSON.stringify(response.payload);
 
-        throwError(errorMessage);
-      }
-    } catch (e) {
-      // Catch errors from the native call or from JSON parsing
-      throw e;
+      throwError(errorMessage);
     }
   }
 

@@ -160,7 +160,7 @@ export class SharedCore {
  *  Represents the client instance on which a call is made.
  */
 export class InnerClient {
-  constructor(
+  public constructor(
     public id: number,
     public readonly core: SharedCore,
     public config: ClientAuthConfig,
@@ -169,7 +169,7 @@ export class InnerClient {
   public async invoke(config: InvokeConfig): Promise<string> {
     try {
       return await this.core.invoke(config);
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof DesktopSessionExpired) {
         const newId = await this.core.initClient(this.config);
         this.id = parseInt(newId, 10);
