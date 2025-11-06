@@ -163,5 +163,6 @@ export class InnerClient {
   constructor(
     public id: number,
     public readonly core: SharedCore,
+    public config: ClientAuthConfig,
   ) {}
 }
