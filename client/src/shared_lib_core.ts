@@ -3,6 +3,7 @@ import * as os from "os";
 import * as path from "path";
 
 import { Core } from "./core";
+import { throwError } from "./errors";
 
 /**
  * Find the 1Password shared lib path by asking an the wasm core synchronously.
@@ -164,11 +165,10 @@ export class SharedLibCore implements Core {
           ? String.fromCharCode(...response.payload)
           : JSON.stringify(response.payload);
 
-        throw new Error(`Native library returned an error: ${errorMessage}`);
+        throwError(errorMessage);
       }
     } catch (e) {
       // Catch errors from the native call or from JSON parsing
-      console.error("An error occurred during the native library call:", e);
       throw e;
     }
   }

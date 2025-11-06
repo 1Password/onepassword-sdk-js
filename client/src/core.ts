@@ -123,11 +123,7 @@ export class SharedCore {
 
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
-    try {
-      return await this.inner.initClient(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
+    return this.inner.initClient(serializedConfig);
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {
@@ -139,11 +135,7 @@ export class SharedCore {
         `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help."`,
       );
     }
-    try {
-      return await this.inner.invoke(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
+    return this.inner.invoke(serializedConfig);
   }
 
   public invoke_sync(config: InvokeConfig): string {
@@ -155,11 +147,7 @@ export class SharedCore {
         `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help.`,
       );
     }
-    try {
       return invoke_sync(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
   }
 
   public releaseClient(clientId: number): void {
