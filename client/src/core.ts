@@ -6,7 +6,7 @@ import {
 } from "@1password/sdk-core";
 
 import { ReplacerFunc } from "./types";
-import { DesktopSessionExpired, throwError } from "./errors";
+import { DesktopSessionExpiredError, throwError } from "./errors";
 
 // In empirical tests, we determined that maximum message size that can cross the FFI boundary
 // is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
@@ -170,7 +170,7 @@ export class InnerClient {
     try {
       return await this.core.invoke(config);
     } catch (err: unknown) {
-      if (err instanceof DesktopSessionExpired) {
+      if (err instanceof DesktopSessionExpiredError) {
         const newId = await this.core.initClient(this.config);
         this.id = parseInt(newId, 10);
         config.invocation.clientId = this.id;
