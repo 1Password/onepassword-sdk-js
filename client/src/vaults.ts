@@ -18,7 +18,7 @@ export interface VaultsApi {
   /**
    * List information about vaults that's configurable based on some input parameters.
    */
-  list(params?: VaultListParams): Promise<VaultOverview[]>;
+  list(params: VaultListParams | undefined): Promise<VaultOverview[]>;
 
   getOverview(vaultUuid: string): Promise<VaultOverview>;
 
@@ -41,7 +41,9 @@ export class Vaults implements VaultsApi {
   /**
    * List information about vaults that's configurable based on some input parameters.
    */
-  public async list(params: VaultListParams): Promise<VaultOverview[]> {
+  public async list(
+    params: VaultListParams | undefined,
+  ): Promise<VaultOverview[]> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
