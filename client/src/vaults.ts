@@ -54,7 +54,7 @@ export class Vaults implements VaultsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as VaultOverview[];
   }
@@ -72,7 +72,7 @@ export class Vaults implements VaultsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as VaultOverview;
   }
@@ -94,7 +94,7 @@ export class Vaults implements VaultsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Vault;
   }
@@ -115,7 +115,7 @@ export class Vaults implements VaultsApi {
         },
       },
     };
-    await this.#inner.core.invoke(invocationConfig);
+    await this.#inner.invoke(invocationConfig);
   }
 
   public async updateGroupPermissions(
@@ -132,7 +132,7 @@ export class Vaults implements VaultsApi {
         },
       },
     };
-    await this.#inner.core.invoke(invocationConfig);
+    await this.#inner.invoke(invocationConfig);
   }
 
   public async revokeGroupPermissions(vaultId: string, groupId: string) {
@@ -148,6 +148,6 @@ export class Vaults implements VaultsApi {
         },
       },
     };
-    await this.#inner.core.invoke(invocationConfig);
+    await this.#inner.invoke(invocationConfig);
   }
 }

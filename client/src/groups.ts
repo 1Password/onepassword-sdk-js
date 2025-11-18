@@ -34,7 +34,7 @@ export class Groups implements GroupsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Group;
   }

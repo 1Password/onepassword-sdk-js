@@ -47,7 +47,7 @@ export class Secrets implements SecretsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as string;
   }
@@ -70,7 +70,7 @@ export class Secrets implements SecretsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ResolveAllResponse;
   }
