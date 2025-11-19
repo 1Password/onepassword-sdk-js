@@ -59,7 +59,7 @@ export class ItemsFiles implements ItemsFilesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
   }
@@ -86,7 +86,7 @@ export class ItemsFiles implements ItemsFilesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Uint8Array;
   }
@@ -113,7 +113,7 @@ export class ItemsFiles implements ItemsFilesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
   }
@@ -138,7 +138,7 @@ export class ItemsFiles implements ItemsFilesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
   }

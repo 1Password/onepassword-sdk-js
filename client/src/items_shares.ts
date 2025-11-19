@@ -63,7 +63,7 @@ export class ItemsShares implements ItemsSharesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ItemShareAccountPolicy;
   }
@@ -88,7 +88,7 @@ export class ItemsShares implements ItemsSharesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ValidRecipient[];
   }
@@ -115,7 +115,7 @@ export class ItemsShares implements ItemsSharesApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as string;
   }

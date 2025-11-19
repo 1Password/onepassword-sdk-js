@@ -99,7 +99,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
   }
@@ -124,7 +124,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ItemsUpdateAllResponse;
   }
@@ -146,7 +146,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
   }
@@ -171,7 +171,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ItemsGetAllResponse;
   }
@@ -192,7 +192,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as Item;
   }
@@ -213,7 +213,7 @@ export class Items implements ItemsApi {
         },
       },
     };
-    await this.#inner.core.invoke(invocationConfig);
+    await this.#inner.invoke(invocationConfig);
   }
 
   /**
@@ -236,7 +236,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ItemsDeleteAllResponse;
   }
@@ -257,7 +257,7 @@ export class Items implements ItemsApi {
         },
       },
     };
-    await this.#inner.core.invoke(invocationConfig);
+    await this.#inner.invoke(invocationConfig);
   }
 
   /**
@@ -280,7 +280,7 @@ export class Items implements ItemsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ItemOverview[];
   }
