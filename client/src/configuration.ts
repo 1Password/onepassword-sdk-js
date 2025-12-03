@@ -17,7 +17,7 @@ export interface ClientConfiguration {
 type Auth = string | DesktopAuth;
 
 /**
- * Setting that specifies that a client should use the desktop app to authenticate.
+ * Setting that specifies a client should use the desktop app to authenticate. Set accountName to your 1Password account name as shown at the top left sidebar of the app, or your account UUID.
  */
 export class DesktopAuth {
   public accountName: string;
