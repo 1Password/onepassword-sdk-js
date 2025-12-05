@@ -51,8 +51,9 @@ const find1PasswordLibPath = (customLocation?: string): string => {
       throw new Error(`Unsupported platform: ${platform}`);
   }
 
-  if (typeof customLocation == "string" && customLocation.length > 0)
+  if (typeof customLocation === "string" && customLocation.length > 0) {
     searchPaths.unshift(customLocation);
+  }
 
   // Iterate through the possible paths and return the first one that exists.
   for (const addonPath of searchPaths) {
