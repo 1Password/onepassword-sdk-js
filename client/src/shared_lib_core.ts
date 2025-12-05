@@ -8,7 +8,7 @@ import { throwError } from "./errors";
 /**
  * Find the 1Password shared lib path by asking an the wasm core synchronously.
  */
-const find1PasswordLibPath = (): string => {
+const find1PasswordLibPath = (customLocation?: string): string => {
   const platform: NodeJS.Platform = os.platform();
   const appRoot: string = path.dirname(process.execPath);
   let searchPaths: string[] = [];
@@ -47,10 +47,12 @@ const find1PasswordLibPath = (): string => {
         ),
       ];
       break;
-
     default:
       throw new Error(`Unsupported platform: ${platform}`);
   }
+
+  if (typeof customLocation == "string" && customLocation.length > 0)
+    searchPaths.unshift(customLocation);
 
   // Iterate through the possible paths and return the first one that exists.
   for (const addonPath of searchPaths) {
@@ -85,9 +87,9 @@ export class SharedLibCore implements Core {
   private lib: DesktopIPCClient | null = null;
   private acccountName: string;
 
-  public constructor(accountName: string) {
+  public constructor(accountName: string, libraryPath?: string) {
     try {
-      const libPath = find1PasswordLibPath();
+      const libPath = find1PasswordLibPath(libraryPath);
       const moduleStub = { exports: {} };
       process.dlopen(moduleStub, libPath);
 
