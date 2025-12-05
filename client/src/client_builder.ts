@@ -20,7 +20,7 @@ export const createClientWithCore = async (
   const authConfig = clientAuthConfig(config);
   if (authConfig.accountName) {
     core.setInner(
-      new SharedLibCore(authConfig.accountName, config.customSharedLibraryPath),
+      new SharedLibCore(authConfig.accountName, config.sharedLibraryPath),
     );
   }
   const clientId = await core.initClient(authConfig);
