@@ -78,7 +78,7 @@ export class Secrets implements SecretsApi {
   /**
    * Validate the secret reference to ensure there are no syntax errors.
    */
-  public static validateSecretReference(secretReference: string) {
+  public static validateSecretReference(secretReference: string): void {
     const sharedCore = new SharedCore();
     const invocationConfig: InvokeConfig = {
       invocation: {
@@ -93,6 +93,9 @@ export class Secrets implements SecretsApi {
     sharedCore.invoke_sync(invocationConfig);
   }
 
+  /**
+   * Generate a password using the provided recipe.
+   */
   public static generatePassword(
     recipe: PasswordRecipe,
   ): GeneratePasswordResponse {

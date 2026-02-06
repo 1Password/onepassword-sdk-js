@@ -37,11 +37,6 @@ function handleError(f, args) {
     }
 }
 
-function getArrayU8FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
-}
-
 function isLikeNone(x) {
     return x === undefined || x === null;
 }
@@ -207,18 +202,6 @@ function debugString(val) {
     return className;
 }
 /**
- * Initializes an SDK client with a given configuration.
- * @param {string} config
- * @returns {Promise<string>}
- */
-module.exports.init_client = function(config) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client(ptr0, len0);
-    return ret;
-};
-
-/**
  * Handles all asynchronous invocations to the SDK core received from the SDK.
  * @param {string} parameters
  * @returns {Promise<string>}
@@ -230,11 +213,36 @@ module.exports.invoke = function(parameters) {
     return ret;
 };
 
+/**
+ * Initializes an SDK client with a given configuration.
+ * @param {string} config
+ * @returns {Promise<string>}
+ */
+module.exports.init_client = function(config) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.init_client(ptr0, len0);
+    return ret;
+};
+
 function takeFromExternrefTable0(idx) {
     const value = wasm.__wbindgen_export_2.get(idx);
     wasm.__externref_table_dealloc(idx);
     return value;
 }
+/**
+ * Drops a client, releasing the memory allocated for it.
+ * @param {string} client_id
+ */
+module.exports.release_client = function(client_id) {
+    const ptr0 = passStringToWasm0(client_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.release_client(ptr0, len0);
+    if (ret[1]) {
+        throw takeFromExternrefTable0(ret[0]);
+    }
+};
+
 /**
  * Handles all synchronous invocations to the SDK core received from the SDK.
  * @param {string} parameters
@@ -261,29 +269,16 @@ module.exports.invoke_sync = function(parameters) {
     }
 };
 
-/**
- * Drops a client, releasing the memory allocated for it.
- * @param {string} client_id
- */
-module.exports.release_client = function(client_id) {
-    const ptr0 = passStringToWasm0(client_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.release_client(ptr0, len0);
-    if (ret[1]) {
-        throw takeFromExternrefTable0(ret[0]);
-    }
-};
-
 function __wbg_adapter_30(arg0, arg1) {
-    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h32a292ce38c5403f(arg0, arg1);
+    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hb15e53e0e5133441(arg0, arg1);
 }
 
 function __wbg_adapter_33(arg0, arg1, arg2) {
-    wasm.closure2326_externref_shim(arg0, arg1, arg2);
+    wasm.closure2417_externref_shim(arg0, arg1, arg2);
 }
 
-function __wbg_adapter_160(arg0, arg1, arg2, arg3) {
-    wasm.closure2475_externref_shim(arg0, arg1, arg2, arg3);
+function __wbg_adapter_144(arg0, arg1, arg2, arg3) {
+    wasm.closure2568_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_RequestCache = ["default", "no-store", "reload", "no-cache", "force-cache", "only-if-cached"];
@@ -324,12 +319,12 @@ module.exports.__wbg_call_7cccdd69e0791ae2 = function() { return handleError(fun
     return ret;
 }, arguments) };
 
-module.exports.__wbg_clearTimeout_7a42b49784aea641 = function(arg0) {
+module.exports.__wbg_clearTimeout_42d9ccd50822fd3a = function(arg0) {
     const ret = clearTimeout(arg0);
     return ret;
 };
 
-module.exports.__wbg_crypto_574e78ad8b13b65f = function(arg0) {
+module.exports.__wbg_crypto_86f2631e91b51511 = function(arg0) {
     const ret = arg0.crypto;
     return ret;
 };
@@ -344,7 +339,7 @@ module.exports.__wbg_fetch_509096533071c657 = function(arg0, arg1) {
     return ret;
 };
 
-module.exports.__wbg_fetch_74a3e84ebd2c9a0e = function(arg0) {
+module.exports.__wbg_fetch_6bbc32f991730587 = function(arg0) {
     const ret = fetch(arg0);
     return ret;
 };
@@ -354,12 +349,7 @@ module.exports.__wbg_getFullYear_17d3c9e4db748eb7 = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_getRandomValues_5754b82ca6952f9b = function() { return handleError(function (arg0, arg1, arg2) {
-    const ret = arg0.getRandomValues(getArrayU8FromWasm0(arg1, arg2));
-    return ret;
-}, arguments) };
-
-module.exports.__wbg_getRandomValues_b8f5dbd5f3995a9e = function() { return handleError(function (arg0, arg1) {
+module.exports.__wbg_getRandomValues_b3f15fcbfabb0f8b = function() { return handleError(function (arg0, arg1) {
     arg0.getRandomValues(arg1);
 }, arguments) };
 
@@ -380,17 +370,6 @@ module.exports.__wbg_has_a5ea9117f258a0ec = function() { return handleError(func
 
 module.exports.__wbg_headers_9cb51cfd2ac780a4 = function(arg0) {
     const ret = arg0.headers;
-    return ret;
-};
-
-module.exports.__wbg_instanceof_Crypto_437466a97e9010b9 = function(arg0) {
-    let result;
-    try {
-        result = arg0 instanceof Crypto;
-    } catch (_) {
-        result = false;
-    }
-    const ret = result;
     return ret;
 };
 
@@ -447,7 +426,7 @@ module.exports.__wbg_length_a446193dc22c12f8 = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_msCrypto_a61aeb35a24c1329 = function(arg0) {
+module.exports.__wbg_msCrypto_d562bbe83e0d4b91 = function(arg0) {
     const ret = arg0.msCrypto;
     return ret;
 };
@@ -479,7 +458,7 @@ module.exports.__wbg_new_23a2665fac83c611 = function(arg0, arg1) {
             const a = state0.a;
             state0.a = 0;
             try {
-                return __wbg_adapter_160(a, state0.b, arg0, arg1);
+                return __wbg_adapter_144(a, state0.b, arg0, arg1);
             } finally {
                 state0.a = a;
             }
@@ -541,7 +520,7 @@ module.exports.__wbg_next_6574e1a8a62d1055 = function() { return handleError(fun
     return ret;
 }, arguments) };
 
-module.exports.__wbg_node_905d3e251edff8a2 = function(arg0) {
+module.exports.__wbg_node_e1f24f89a7336c2e = function(arg0) {
     const ret = arg0.node;
     return ret;
 };
@@ -561,7 +540,7 @@ module.exports.__wbg_parse_def2e24ef1252aff = function() { return handleError(fu
     return ret;
 }, arguments) };
 
-module.exports.__wbg_process_dc0fbacc7c1c06f7 = function(arg0) {
+module.exports.__wbg_process_3975fd6c72f520aa = function(arg0) {
     const ret = arg0.process;
     return ret;
 };
@@ -575,11 +554,11 @@ module.exports.__wbg_queueMicrotask_d3219def82552485 = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_randomFillSync_ac0988aba3254290 = function() { return handleError(function (arg0, arg1) {
+module.exports.__wbg_randomFillSync_f8c153b79f285817 = function() { return handleError(function (arg0, arg1) {
     arg0.randomFillSync(arg1);
 }, arguments) };
 
-module.exports.__wbg_require_60cc747a6bc5215a = function() { return handleError(function () {
+module.exports.__wbg_require_b74f47fc2d022fd6 = function() { return handleError(function () {
     const ret = module.require;
     return ret;
 }, arguments) };
@@ -594,7 +573,7 @@ module.exports.__wbg_self_b29ea9f89ecb0567 = function() { return handleError(fun
     return ret;
 }, arguments) };
 
-module.exports.__wbg_setTimeout_7bb3429662ab1e70 = function(arg0, arg1) {
+module.exports.__wbg_setTimeout_4ec014681668a581 = function(arg0, arg1) {
     const ret = setTimeout(arg0, arg1);
     return ret;
 };
@@ -709,7 +688,7 @@ module.exports.__wbg_values_99f7a68c7f313d66 = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_versions_c01dfd4722a88165 = function(arg0) {
+module.exports.__wbg_versions_4e31226f5e8dc909 = function(arg0) {
     const ret = arg0.versions;
     return ret;
 };
@@ -729,13 +708,13 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper8700 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 2309, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper8973 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2401, __wbg_adapter_30);
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper8731 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 2327, __wbg_adapter_33);
+module.exports.__wbindgen_closure_wrapper9014 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2418, __wbg_adapter_33);
     return ret;
 };
 

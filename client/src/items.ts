@@ -34,7 +34,7 @@ export interface ItemsApi {
   ): Promise<ItemsUpdateAllResponse>;
 
   /**
-   * Get an item by vault and item ID
+   * Get an item by vault and item ID.
    */
   get(vaultId: string, itemId: string): Promise<Item>;
 
@@ -51,7 +51,7 @@ export interface ItemsApi {
   /**
    * Delete an item.
    */
-  delete(vaultId: string, itemId: string);
+  delete(vaultId: string, itemId: string): Promise<void>;
 
   /**
    * Delete items in batch, within a single vault.
@@ -64,7 +64,7 @@ export interface ItemsApi {
   /**
    * Archive an item.
    */
-  archive(vaultId: string, itemId: string);
+  archive(vaultId: string, itemId: string): Promise<void>;
 
   /**
    * List items based on filters.
@@ -130,7 +130,7 @@ export class Items implements ItemsApi {
   }
 
   /**
-   * Get an item by vault and item ID
+   * Get an item by vault and item ID.
    */
   public async get(vaultId: string, itemId: string): Promise<Item> {
     const invocationConfig: InvokeConfig = {
@@ -200,7 +200,7 @@ export class Items implements ItemsApi {
   /**
    * Delete an item.
    */
-  public async delete(vaultId: string, itemId: string) {
+  public async delete(vaultId: string, itemId: string): Promise<void> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,
@@ -244,7 +244,7 @@ export class Items implements ItemsApi {
   /**
    * Archive an item.
    */
-  public async archive(vaultId: string, itemId: string) {
+  public async archive(vaultId: string, itemId: string): Promise<void> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,

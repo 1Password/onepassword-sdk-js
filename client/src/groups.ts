@@ -7,6 +7,9 @@ import { Group, GroupGetParams, ReviverFunc } from "./types.js";
  * The Groups API holds all the operations the SDK client can perform on 1Password groups.
  */
 export interface GroupsApi {
+  /**
+   * Get a group by its ID and parameters.
+   */
   get(groupId: string, groupParams: GroupGetParams): Promise<Group>;
 }
 
@@ -17,6 +20,9 @@ export class Groups implements GroupsApi {
     this.#inner = inner;
   }
 
+  /**
+   * Get a group by its ID and parameters.
+   */
   public async get(
     groupId: string,
     groupParams: GroupGetParams,

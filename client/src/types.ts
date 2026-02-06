@@ -25,6 +25,16 @@ export interface DocumentCreateParams {
   content: Uint8Array;
 }
 
+/** Represents an environment variable (name:value pair) and it's masked state */
+export interface EnvironmentVariable {
+  /** An environment variable's name */
+  name: string;
+  /** An environment variable's value */
+  value: string;
+  /** An environment variable's masked state */
+  masked: boolean;
+}
+
 export interface FileAttributes {
   /** The name of the file */
   name: string;
@@ -52,6 +62,12 @@ export interface FileCreateParams {
 export interface GeneratePasswordResponse {
   /** The generated password. */
   password: string;
+}
+
+/** Response containing the full set of environment variables from an Environment. */
+export interface GetVariablesResponse {
+  /** List of environment variables. */
+  variables: EnvironmentVariable[];
 }
 
 export enum GroupType {
@@ -135,7 +151,7 @@ export interface Group {
  */
 export interface GroupAccess {
   /** The group's ID */
-  group_id: string;
+  groupId: string;
   /** The group's set of permissions for the vault */
   permissions: number;
 }
@@ -147,9 +163,9 @@ export interface GroupGetParams {
 /** Represents a group's access to a 1Password vault. */
 export interface GroupVaultAccess {
   /** The vault's ID */
-  vault_id: string;
+  vaultId: string;
   /** The group's ID */
-  group_id: string;
+  groupId: string;
   /** The group's set of permissions for the vault */
   permissions: number;
 }
@@ -578,10 +594,16 @@ export interface Vault {
   activeItemCount: number;
   /** The content version number of the vault. It gets incremented whenever the state of the vault's contents changes (e.g. items from within the vault get created or updated). */
   contentVersion: number;
-  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its title or icon. */
+  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its name or icon. */
   attributeVersion: number;
   /** The access information associated with the vault. */
   access?: VaultAccess[];
+}
+
+export interface VaultCreateParams {
+  title: string;
+  description?: string;
+  allowAdminsAccess?: boolean;
 }
 
 /** Represents the possible query parameters used for retrieving extra information about a vault. */
@@ -608,12 +630,17 @@ export interface VaultOverview {
   activeItemCount: number;
   /** The content version number of the vault. It gets incremented whenever the state of the vault's contents changes (e.g. items from within the vault get created or updated). */
   contentVersion: number;
-  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its title or icon. */
+  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its name or icon. */
   attributeVersion: number;
   /** The time the vault was created at */
   createdAt: Date;
   /** The time the vault was updated at */
   updatedAt: Date;
+}
+
+export interface VaultUpdateParams {
+  title?: string;
+  description?: string;
 }
 
 export type ItemListFilter = {
