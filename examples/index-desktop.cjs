@@ -20,7 +20,7 @@ async function main() {
   // [developer-docs.sdk.js/common-js.client-initialization]-end
 
   await showcaseVaultOperations(client);
-  //await showcaseBatchItemOperations(client, vaultId);
+  await showcaseBatchItemOperations(client, vaultId);
 
   // [developer-docs.sdk.js/common-js.list-items]-start
   const items = await client.items.list(vaultId);
