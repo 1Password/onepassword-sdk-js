@@ -25,16 +25,6 @@ export interface DocumentCreateParams {
   content: Uint8Array;
 }
 
-/** Represents an environment variable (name:value pair) and it's masked state */
-export interface EnvironmentVariable {
-  /** An environment variable's name */
-  name: string;
-  /** An environment variable's value */
-  value: string;
-  /** An environment variable's masked state */
-  masked: boolean;
-}
-
 export interface FileAttributes {
   /** The name of the file */
   name: string;
@@ -62,12 +52,6 @@ export interface FileCreateParams {
 export interface GeneratePasswordResponse {
   /** The generated password. */
   password: string;
-}
-
-/** Response containing the full set of environment variables from an Environment. */
-export interface GetVariablesResponse {
-  /** List of environment variables. */
-  variables: EnvironmentVariable[];
 }
 
 export enum GroupType {
