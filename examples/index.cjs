@@ -203,55 +203,6 @@ async function showcaseVaultOperations() {
   }
 }
 
-async function showcaseGroupPermissionsOperations() {
-  const vaultId = process.env.OP_VAULT_ID;
-
-  if (!vaultId) {
-    throw new Error("Missing required environment variable: OP_VAULT_ID");
-  }
-
-  const groupId = process.env.OP_GROUP_ID;
-
-  if (!groupId) {
-    throw new Error("Missing required environment variable: OP_GROUP_ID");
-  }
-
-  // Creates an authenticated client.
-  const client = await sdk.createClient({
-    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    integrationName: "My 1Password Integration",
-    integrationVersion: "v1.0.0",
-  });
-
-  // Grant group permissions
-  await client.vaults.grantGroupPermissions(vaultId, [
-    { groupId, permissions: sdk.READ_ITEMS },
-  ]);
-  console.log(
-    `Granted READ_ITEMS permissions to group "${groupId}" on vault "${vaultId}"`,
-  );
-
-  // Update group permissions
-  await client.vaults.updateGroupPermissions([
-    {
-      vaultId,
-      groupId,
-      permissions: sdk.READ_ITEMS | sdk.CREATE_ITEMS | sdk.UPDATE_ITEMS,
-    },
-  ]);
-  console.log(
-    `Updated group "${groupId}" permissions to MANAGE_VAULT on vault "${vaultId}"`,
-  );
-
-  // Revoke group permissions
-  await client.vaults.revokeGroupPermissions(vaultId, groupId);
-  console.log(`Revoked group "${groupId}" permissions on vault "${vaultId}"`);
-
-  // Get a group
-  const group = await client.groups.get(groupId, { vaultPermissions: false });
-  console.log(JSON.stringify(group));
-}
-
 async function showcaseBatchItemOperations() {
   const vaultId = process.env.OP_VAULT_ID;
 
@@ -354,4 +305,3 @@ manageItems();
 generatePassword();
 showcaseVaultOperations();
 showcaseBatchItemOperations();
-showcaseGroupPermissionsOperations();
