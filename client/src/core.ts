@@ -6,7 +6,7 @@ import {
 } from "@1password/sdk-core";
 
 import { ReplacerFunc } from "./types";
-import { throwError } from "./errors";
+import { DesktopSessionExpiredError, throwError } from "./errors";
 
 // In empirical tests, we determined that maximum message size that can cross the FFI boundary
 // is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
@@ -20,26 +20,21 @@ export interface Core {
   /**
    *  Allocates a new authenticated client and returns its id.
    */
-  initClient(config: ClientAuthConfig): Promise<string>;
+  initClient(config: string): Promise<string>;
   /**
    *  Calls async business logic from a given client and returns the result.
    */
-  invoke(config: InvokeConfig): Promise<string>;
-  /**
-   *  Calls sync business logic from a given client and returns the result.
-   */
-  invoke_sync(config: InvokeConfig): string;
+  invoke(config: string): Promise<string>;
   /**
    *  Deallocates memory held by the given client in the SDK core when it goes out of scope.
    */
-  releaseClient(clientId: number): void;
+  releaseClient(clientId: string): void;
 }
 
 /**
  *  Wraps configuration information needed to allocate and authenticate a client instance and sends it to the SDK core.
  */
 export interface ClientAuthConfig {
-  serviceAccountToken: string;
   programmingLanguage: string;
   sdkVersion: string;
   integrationName: string;
@@ -49,6 +44,9 @@ export interface ClientAuthConfig {
   os: string;
   osVersion: string;
   architecture: string;
+
+  serviceAccountToken?: string; // only used when service account token auth is selected
+  accountName?: string; // only used when desktop auth is selected
 }
 
 /**
@@ -83,17 +81,49 @@ export interface Parameters {
   parameters: { [key: string]: unknown };
 }
 
-/**
- *  An implementation of the `Core` interface that shares resources across all clients.
- */
-export class SharedCore implements Core {
-  public async initClient(config: ClientAuthConfig): Promise<string> {
-    const serializedConfig = JSON.stringify(config);
+export class WasmCore implements Core {
+  public async initClient(config: string): Promise<string> {
     try {
-      return await init_client(serializedConfig);
+      return await init_client(config);
     } catch (e) {
       throwError(e as string);
     }
+  }
+
+  public async invoke(config: string): Promise<string> {
+    try {
+      return await invoke(config);
+    } catch (e) {
+      throwError(e as string);
+    }
+  }
+
+  public releaseClient(clientId: string): void {
+    try {
+      release_client(clientId);
+    } catch (e) {
+      console.warn("failed to release client:", e);
+    }
+  }
+}
+
+/**
+ *  An implementation of the `Core` interface that shares resources across all clients.
+ */
+export class SharedCore {
+  private inner: Core;
+
+  public constructor() {
+    this.inner = new WasmCore();
+  }
+
+  public setInner(core: Core) {
+    this.inner = core;
+  }
+
+  public async initClient(config: ClientAuthConfig): Promise<string> {
+    const serializedConfig = JSON.stringify(config);
+    return this.inner.initClient(serializedConfig);
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {
@@ -105,11 +135,7 @@ export class SharedCore implements Core {
         `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help."`,
       );
     }
-    try {
-      return await invoke(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
+    return this.inner.invoke(serializedConfig);
   }
 
   public invoke_sync(config: InvokeConfig): string {
@@ -121,23 +147,36 @@ export class SharedCore implements Core {
         `message size exceeds the limit of ${messageLimit} bytes, please contact 1Password at support@1password.com or https://developer.1password.com/joinslack if you need help.`,
       );
     }
-    try {
-      return invoke_sync(serializedConfig);
-    } catch (e) {
-      throwError(e as string);
-    }
+    return invoke_sync(serializedConfig);
   }
 
   public releaseClient(clientId: number): void {
     const serializedId = JSON.stringify(clientId);
-    release_client(serializedId);
+    this.inner.releaseClient(serializedId);
   }
 }
 
 /**
  *  Represents the client instance on which a call is made.
  */
-export interface InnerClient {
-  id: number;
-  core: Core;
+export class InnerClient {
+  public constructor(
+    public id: number,
+    public readonly core: SharedCore,
+    public config: ClientAuthConfig,
+  ) {}
+
+  public async invoke(config: InvokeConfig): Promise<string> {
+    try {
+      return await this.core.invoke(config);
+    } catch (err: unknown) {
+      if (err instanceof DesktopSessionExpiredError) {
+        const newId = await this.core.initClient(this.config);
+        this.id = parseInt(newId, 10);
+        config.invocation.clientId = this.id;
+        return await this.core.invoke(config);
+      }
+      throw err;
+    }
+  }
 }

@@ -10,7 +10,7 @@ import {
 
 /**
  * The Secrets API includes all operations the SDK client can perform on secrets.
- * Use secret reference URIs to securely load secrets from 1Password: op://<vault-name>/<item-name>[/<section-name>]/<field-name>
+ * Use secret reference URIs to securely load secrets from 1Password: `op://<vault-name>/<item-name>[/<section-name>]/<field-name>`
  */
 export interface SecretsApi {
   /**
@@ -47,7 +47,7 @@ export class Secrets implements SecretsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as string;
   }
@@ -70,7 +70,7 @@ export class Secrets implements SecretsApi {
       },
     };
     return JSON.parse(
-      await this.#inner.core.invoke(invocationConfig),
+      await this.#inner.invoke(invocationConfig),
       ReviverFunc,
     ) as ResolveAllResponse;
   }
@@ -78,7 +78,7 @@ export class Secrets implements SecretsApi {
   /**
    * Validate the secret reference to ensure there are no syntax errors.
    */
-  public static validateSecretReference(secretReference: string) {
+  public static validateSecretReference(secretReference: string): void {
     const sharedCore = new SharedCore();
     const invocationConfig: InvokeConfig = {
       invocation: {
@@ -93,6 +93,9 @@ export class Secrets implements SecretsApi {
     sharedCore.invoke_sync(invocationConfig);
   }
 
+  /**
+   * Generate a password using the provided recipe.
+   */
   public static generatePassword(
     recipe: PasswordRecipe,
   ): GeneratePasswordResponse {

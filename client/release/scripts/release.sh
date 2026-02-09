@@ -68,7 +68,9 @@ if [ "$core_modified" = "true" ]; then
     case "$files_are_ok" in
         y)
             npm publish --tag "${RELEASE_CHANNEL}"
-            npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
+            if [ "${RELEASE_CHANNEL}" = "stable" ]; then
+                npm dist-tag add "@1password/sdk-core@$version_sdk_core" latest
+            fi
             echo "Publishing and tagging on NPM completed."
             ;;
         n)
@@ -99,14 +101,16 @@ fi
   npm install 
 
   # Check if all files pertaining to sdk are included
-  RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-test 
+  RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-test
   read -p "Is everything good? (y/n)" files_are_ok
 
     case "$files_are_ok" in
         y)
-            RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-prod 
-            npm dist-tag add @1password/sdk@${version_sdk} latest
-            
+            RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-prod
+            if [ "${RELEASE_CHANNEL}" = "stable" ]; then
+                npm dist-tag add @1password/sdk@${version_sdk} latest
+            fi
+
             # Wait for npm to be update to the latest version
             wait_for_npm_publish @1password/sdk "${version_sdk}"
             # Set the package version regardless if npm published or not

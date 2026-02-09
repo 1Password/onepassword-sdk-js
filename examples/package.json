@@ -4,11 +4,12 @@
   "scripts": {
     "esm-example": "node index.mjs",
     "commonjs-example": "node index.cjs",
+    "commonjs-example-desktop": "node index-desktop.cjs",
     "prettier": "prettier --check index.*js",
     "prettier-fix": "prettier --write index.*js"
   },
   "dependencies": {
-    "@1password/sdk": "0.3.1"
+    "@1password/sdk": "0.4.0-beta.2"
   },
   "devDependencies": {
     "prettier": "3.1.1"

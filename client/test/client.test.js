@@ -1,5 +1,6 @@
 const { createClientWithCore } = require("../dist/client_builder.js");
 const { clientAuthConfig, getOsName, VERSION, LANGUAGE } = require("../dist/configuration.js");
+const { SharedCore } = require("../dist/core.js");
 const { TestCore } = require("./test_core");
 
 test("the right configuration is created", () => {
@@ -23,13 +24,15 @@ test("the right configuration is created", () => {
 
 test("authenticated client resolves secrets correctly", () => {
   const core = new TestCore();
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(core);
   createClientWithCore(
     {
       auth: "test token",
       integrationName: "test integration",
       integrationVersion: "test integration",
     },
-    core,
+    sharedCore,
   ).then((client) => {
     expect(client.secrets).toBeDefined();
     expect(core.id).toBe(1);

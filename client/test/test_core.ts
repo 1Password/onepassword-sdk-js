@@ -15,20 +15,21 @@ export class TestCore implements Core {
       JSON.stringify(config.invocation.parameters.parameters))
   }
 
-  async initClient(config: ClientAuthConfig): Promise<string> {
+  async initClient(config: string): Promise<string> {
     const res = this.id.toString();
     this.id++;
     return res;
   }
 
-  async invoke(config: InvokeConfig): Promise<string> {
+  async invoke(config: string): Promise<string> {
+    const parsedConfig: InvokeConfig = JSON.parse(config);
     return JSON.stringify("method " +
-      config.invocation.parameters.name +
+      parsedConfig.invocation.parameters.name +
       " called on client " +
-      config.invocation.clientId +
+      parsedConfig.invocation.clientId +
       " with parameters " +
-      JSON.stringify(config.invocation.parameters.parameters))
+      JSON.stringify(parsedConfig.invocation.parameters.parameters))
   }
 
-  async releaseClient(clientId: number) { }
+  async releaseClient(clientId: string) { }
 }

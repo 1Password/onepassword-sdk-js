@@ -10,6 +10,7 @@ export const DEFAULT_INTEGRATION_VERSION = "Unknown";
 
 // auto-generated static exports
 export { Secrets } from "./secrets.js";
+export { DesktopAuth } from "./configuration.js";
 
 export * from "./client.js";
 export * from "./errors.js";
