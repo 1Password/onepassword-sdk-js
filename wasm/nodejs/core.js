@@ -202,18 +202,6 @@ function debugString(val) {
     return className;
 }
 /**
- * Initializes an SDK client with a given configuration.
- * @param {string} config
- * @returns {Promise<string>}
- */
-module.exports.init_client = function(config) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client(ptr0, len0);
-    return ret;
-};
-
-/**
  * Handles all asynchronous invocations to the SDK core received from the SDK.
  * @param {string} parameters
  * @returns {Promise<string>}
@@ -225,11 +213,36 @@ module.exports.invoke = function(parameters) {
     return ret;
 };
 
+/**
+ * Initializes an SDK client with a given configuration.
+ * @param {string} config
+ * @returns {Promise<string>}
+ */
+module.exports.init_client = function(config) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.init_client(ptr0, len0);
+    return ret;
+};
+
 function takeFromExternrefTable0(idx) {
     const value = wasm.__wbindgen_export_2.get(idx);
     wasm.__externref_table_dealloc(idx);
     return value;
 }
+/**
+ * Drops a client, releasing the memory allocated for it.
+ * @param {string} client_id
+ */
+module.exports.release_client = function(client_id) {
+    const ptr0 = passStringToWasm0(client_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.release_client(ptr0, len0);
+    if (ret[1]) {
+        throw takeFromExternrefTable0(ret[0]);
+    }
+};
+
 /**
  * Handles all synchronous invocations to the SDK core received from the SDK.
  * @param {string} parameters
@@ -256,29 +269,16 @@ module.exports.invoke_sync = function(parameters) {
     }
 };
 
-/**
- * Drops a client, releasing the memory allocated for it.
- * @param {string} client_id
- */
-module.exports.release_client = function(client_id) {
-    const ptr0 = passStringToWasm0(client_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.release_client(ptr0, len0);
-    if (ret[1]) {
-        throw takeFromExternrefTable0(ret[0]);
-    }
-};
-
 function __wbg_adapter_30(arg0, arg1) {
-    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h4fa304e9a7297dba(arg0, arg1);
+    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hb15e53e0e5133441(arg0, arg1);
 }
 
 function __wbg_adapter_33(arg0, arg1, arg2) {
-    wasm.closure2484_externref_shim(arg0, arg1, arg2);
+    wasm.closure2417_externref_shim(arg0, arg1, arg2);
 }
 
-function __wbg_adapter_156(arg0, arg1, arg2, arg3) {
-    wasm.closure2632_externref_shim(arg0, arg1, arg2, arg3);
+function __wbg_adapter_144(arg0, arg1, arg2, arg3) {
+    wasm.closure2568_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_RequestCache = ["default", "no-store", "reload", "no-cache", "force-cache", "only-if-cached"];
@@ -458,7 +458,7 @@ module.exports.__wbg_new_23a2665fac83c611 = function(arg0, arg1) {
             const a = state0.a;
             state0.a = 0;
             try {
-                return __wbg_adapter_156(a, state0.b, arg0, arg1);
+                return __wbg_adapter_144(a, state0.b, arg0, arg1);
             } finally {
                 state0.a = a;
             }
@@ -708,13 +708,13 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper9169 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 2463, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper8973 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2401, __wbg_adapter_30);
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper9209 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 2485, __wbg_adapter_33);
+module.exports.__wbindgen_closure_wrapper9014 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 2418, __wbg_adapter_33);
     return ret;
 };
 
