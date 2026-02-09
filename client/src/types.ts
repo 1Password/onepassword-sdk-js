@@ -614,7 +614,7 @@ export interface VaultOverview {
   activeItemCount: number;
   /** The content version number of the vault. It gets incremented whenever the state of the vault's contents changes (e.g. items from within the vault get created or updated). */
   contentVersion: number;
-  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its name or icon. */
+  /** The attribute version number of the vault. It gets incremented whenever vault presentation information changes, such as its title or icon. */
   attributeVersion: number;
   /** The time the vault was created at */
   createdAt: Date;
