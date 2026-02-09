@@ -135,7 +135,7 @@ export interface Group {
  */
 export interface GroupAccess {
   /** The group's ID */
-  group_id: string;
+  groupId: string;
   /** The group's set of permissions for the vault */
   permissions: number;
 }
@@ -147,9 +147,9 @@ export interface GroupGetParams {
 /** Represents a group's access to a 1Password vault. */
 export interface GroupVaultAccess {
   /** The vault's ID */
-  vault_id: string;
+  vaultId: string;
   /** The group's ID */
-  group_id: string;
+  groupId: string;
   /** The group's set of permissions for the vault */
   permissions: number;
 }
@@ -584,6 +584,12 @@ export interface Vault {
   access?: VaultAccess[];
 }
 
+export interface VaultCreateParams {
+  title: string;
+  description?: string;
+  allowAdminsAccess?: boolean;
+}
+
 /** Represents the possible query parameters used for retrieving extra information about a vault. */
 export interface VaultGetParams {
   /** The vault's accessor params. */
@@ -614,6 +620,11 @@ export interface VaultOverview {
   createdAt: Date;
   /** The time the vault was updated at */
   updatedAt: Date;
+}
+
+export interface VaultUpdateParams {
+  title?: string;
+  description?: string;
 }
 
 export type ItemListFilter = {

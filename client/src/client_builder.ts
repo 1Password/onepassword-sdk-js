@@ -1,4 +1,4 @@
-import { Core, InnerClient, SharedCore } from "./core.js";
+import { InnerClient, SharedCore } from "./core.js";
 import { ClientConfiguration, clientAuthConfig } from "./configuration.js";
 import { Client } from "./client.js";
 import { SharedLibCore } from "./shared_lib_core.js";
