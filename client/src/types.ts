@@ -25,7 +25,7 @@ export interface DocumentCreateParams {
   content: Uint8Array;
 }
 
-/** Represents an environment variable (name:value pair) and it's masked state */
+/** Represents an environment variable (name:value pair) and its masked state */
 export interface EnvironmentVariable {
   /** An environment variable's name */
   name: string;
