@@ -12,7 +12,7 @@ async function main() {
   // [developer-docs.sdk.js/common-js.client-initialization]-start
   // Connects to the 1Password desktop app.  
   const client = await sdk.createClient({
-    auth: new sdk.DesktopAuth("Morgan Dev Test"),
+    auth: new sdk.DesktopAuth("YourAccountNameAsShownInTheDesktopApp"),
     // Set the following to your own integration name and version.
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
