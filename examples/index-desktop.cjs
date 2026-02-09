@@ -146,7 +146,7 @@ async function main() {
 
   if (process.env.OP_ENVIRONMENT_ID) {
     // [developer-docs.sdk.js.get-environment-variables]-start
-    // Fetch variables from a 1Password Environment
+    // Read variables from a 1Password Environment
     const environment = await client.environments.getVariables(process.env.OP_ENVIRONMENT_ID);
     for (const variable of environment.variables) {
       console.log(`${variable.name}: ${variable.value} (masked: ${variable.masked})`);

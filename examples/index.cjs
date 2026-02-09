@@ -170,7 +170,7 @@ async function getEnvironmentVariables() {
   });
 
   // [developer-docs.sdk.js.get-environment-variables]-start
-  // Fetch variables from a 1Password Environment
+  // Read variables from a 1Password Environment
   const environment = await client.environments.getVariables(
     process.env.OP_ENVIRONMENT_ID,
   );

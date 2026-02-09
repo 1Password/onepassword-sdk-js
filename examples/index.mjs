@@ -502,7 +502,7 @@ async function resolveAllSecrets(client) {
 
 async function getEnvironmentVariables(client) {
   // [developer-docs.sdk.js.get-environment-variables]-start
-  // Fetch variables from a 1Password Environment
+  // Read variables from a 1Password Environment
   const environment = await client.environments.getVariables(
     process.env.OP_ENVIRONMENT_ID,
   );
