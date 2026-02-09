@@ -163,7 +163,6 @@ function generatePassword() {
 }
 
 async function showcaseVaultOperations() {
-
   // Creates an authenticated client.
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
@@ -181,7 +180,7 @@ async function showcaseVaultOperations() {
   // Get vault overview
   const vaultOverview = await client.vaults.getOverview(createdVault.id);
   console.log(JSON.stringify(vaultOverview));
-  
+
   // Update vault
   await client.vaults.update(createdVault.id, {
     title: "JS SDK Vault Updated",
@@ -190,7 +189,7 @@ async function showcaseVaultOperations() {
   console.log(`Updated vault "${createdVault.id}"`);
 
   // Get vault details
-  const vault = await client.vaults.get(createdVault.id, {accessors: false});
+  const vault = await client.vaults.get(createdVault.id, { accessors: false });
   console.log(JSON.stringify(vault));
 
   // Get vault details
@@ -205,17 +204,16 @@ async function showcaseVaultOperations() {
 }
 
 async function showcaseGroupPermissionsOperations() {
-
   const vaultId = process.env.OP_VAULT_ID;
 
   if (!vaultId) {
-    throw new Error("Missing required environment variable: OP_VAULT_ID")
+    throw new Error("Missing required environment variable: OP_VAULT_ID");
   }
-  
+
   const groupId = process.env.OP_GROUP_ID;
 
   if (!groupId) {
-    throw new Error("Missing required environment variable: OP_GROUP_ID")
+    throw new Error("Missing required environment variable: OP_GROUP_ID");
   }
 
   // Creates an authenticated client.
@@ -224,29 +222,41 @@ async function showcaseGroupPermissionsOperations() {
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
- 
+
   // Grant group permissions
-  await client.vaults.grantGroupPermissions(vaultId, [{groupId, permissions: sdk.READ_ITEMS}]);
-  console.log(`Granted READ_ITEMS permissions to group "${groupId}" on vault "${vaultId}"`);
+  await client.vaults.grantGroupPermissions(vaultId, [
+    { groupId, permissions: sdk.READ_ITEMS },
+  ]);
+  console.log(
+    `Granted READ_ITEMS permissions to group "${groupId}" on vault "${vaultId}"`,
+  );
 
   // Update group permissions
-  await client.vaults.updateGroupPermissions([{vaultId, groupId, permissions: sdk.READ_ITEMS | sdk.CREATE_ITEMS | sdk.UPDATE_ITEMS}]);
-  console.log(`Updated group "${groupId}" permissions to MANAGE_VAULT on vault "${vaultId}"`);
+  await client.vaults.updateGroupPermissions([
+    {
+      vaultId,
+      groupId,
+      permissions: sdk.READ_ITEMS | sdk.CREATE_ITEMS | sdk.UPDATE_ITEMS,
+    },
+  ]);
+  console.log(
+    `Updated group "${groupId}" permissions to MANAGE_VAULT on vault "${vaultId}"`,
+  );
 
   // Revoke group permissions
   await client.vaults.revokeGroupPermissions(vaultId, groupId);
   console.log(`Revoked group "${groupId}" permissions on vault "${vaultId}"`);
 
   // Get a group
-  const group = await client.groups.get(groupId, {vaultPermissions: false})
-  console.log(JSON.stringify(group))
+  const group = await client.groups.get(groupId, { vaultPermissions: false });
+  console.log(JSON.stringify(group));
 }
 
-async function showcaseBatchItemOperations(){
+async function showcaseBatchItemOperations() {
   const vaultId = process.env.OP_VAULT_ID;
 
   if (!vaultId) {
-    throw new Error("Missing required environment variable: OP_VAULT_ID")
+    throw new Error("Missing required environment variable: OP_VAULT_ID");
   }
 
   // Creates an authenticated client.
@@ -298,19 +308,21 @@ async function showcaseBatchItemOperations(){
           autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite,
         },
       ],
-    })
+    });
   }
 
   // Create all items in the same vault in a single batch
-  const batchCreateResponse = await client.items.createAll(vaultId, itemsToCreate)
+  const batchCreateResponse = await client.items.createAll(
+    vaultId,
+    itemsToCreate,
+  );
 
   let itemIDs = [];
   for (const res of batchCreateResponse.individualResponses) {
     if (res.content) {
       console.log(`Created item "${res.content.title}" (${res.content.id})`);
       itemIDs.push(res.content.id);
-    }
-    else if (res.error) {
+    } else if (res.error) {
       console.log(`[Batch create] Something went wrong: ${res.error}`);
     }
   }
@@ -320,19 +332,19 @@ async function showcaseBatchItemOperations(){
   for (const res of batchGetResponse.individualResponses) {
     if (res.content) {
       console.log(`Obtained item "${res.content.title}" (${res.content.id})`);
-    }
-    else if (res.error) {
+    } else if (res.error) {
       console.log(`[Batch get] Something went wrong: ${res.error}`);
     }
   }
 
   // Delete multiple items from the same vault in a single batch
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
-  for (const [id, res] of Object.entries(batchDeleteResponse.individualResponses)) {
+  for (const [id, res] of Object.entries(
+    batchDeleteResponse.individualResponses,
+  )) {
     if (res.error) {
       console.log(`[Batch delete] Something went wrong: ${res.error}`);
-    }
-    else {
+    } else {
       console.log(`Deleted item ${id}`);
     }
   }
