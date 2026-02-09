@@ -34,14 +34,14 @@ async function main() {
   // [developer-docs.sdk.js/common-js.list-items]-end
 
   // [developer-docs.sdk.js/common-js.get-vault-overview]-start
-	// Get vault overview
+  // Get vault overview
   const vaultOverview = await client.vaults.getOverview(vaultId);
   console.log(JSON.stringify(vaultOverview));
-	// [developer-docs.sdk.js/common-js.get-vault-overview]-end
+  // [developer-docs.sdk.js/common-js.get-vault-overview]-end
 
   // [developer-docs.sdk.js/common-js.get-vault-details]-start
-	// Get vault details
-  const vault = await client.vaults.get(vaultOverview.id, {accessors: false});
+  // Get vault details
+  const vault = await client.vaults.get(vaultOverview.id, { accessors: false });
   console.log(JSON.stringify(vault));
   // [developer-docs.sdk.js/common-js.get-vault-details]-end
 
@@ -91,7 +91,7 @@ async function main() {
     })
   }
 
-	// Create all items in the same vault in a single batch
+  // Create all items in the same vault in a single batch
   const batchCreateResponse = await client.items.createAll(vault.id, itemsToCreate)
 
   let itemIDs = [];
@@ -107,7 +107,7 @@ async function main() {
   // [developer-docs.sdk.js/common-js.batch-create-items]-end
 
   // [developer-docs.sdk.js/common-js.batch-get-items]-start
-	// Get multiple items form the same vault in a single batch
+  // Get multiple items form the same vault in a single batch
   const batchGetResponse = await client.items.getAll(vault.id, itemIDs);
   for (const res of batchGetResponse.individualResponses) {
     if (res.content) {
@@ -120,7 +120,7 @@ async function main() {
   // [developer-docs.sdk.js/common-js.batch-get-items]-end
 
   // [developer-docs.sdk.js/common-js.batch-delete-items]-start
-	// Delete multiple items from the same vault in a single batch
+  // Delete multiple items from the same vault in a single batch
   const batchDeleteResponse = await client.items.deleteAll(vault.id, itemIDs);
   for (const [id, res] of Object.entries(batchDeleteResponse.individualResponses)) {
     if (res.error) {
@@ -140,9 +140,19 @@ async function main() {
 
   // [developer-docs.sdk.js/common-js.get-group]-start
   // Get a group
-  const group = await client.groups.get(groupId, {vaultPermissions: false})
+  const group = await client.groups.get(groupId, { vaultPermissions: false })
   console.log(JSON.stringify(group))
   // [developer-docs.sdk.js/common-js.get-group]-end
+
+  if (process.env.OP_ENVIRONMENT_ID) {
+    // [developer-docs.sdk.js.get-environment-variables]-start
+    // Read variables from a 1Password Environment
+    const environment = await client.environments.getVariables(process.env.OP_ENVIRONMENT_ID);
+    for (const variable of environment.variables) {
+      console.log(`${variable.name}: ${variable.value} (masked: ${variable.masked})`);
+    }
+    // [developer-docs.sdk.js.get-environment-variables]-end
+  }
 }
 
 main();
