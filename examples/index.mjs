@@ -497,82 +497,82 @@ async function resolveAllSecrets(client) {
 }
 
 async function showcaseVaultOperations(client) {
-  // [developer-docs.sdk.js/common-js.create-vault]-start
+  // [developer-docs.sdk.js.create-vault]-start
   // Create a vault
   createdVault = await client.vaults.create({
     title: "JS SDK Vault",
     description: "A vault created via the JS SDK",
   });
   console.log(`Created vault "${createdVault.title}" (${createdVault.id})`);
-  // [developer-docs.sdk.js/common-js.create-vault]-end
+  // [developer-docs.sdk.js.create-vault]-end
 
 
-  // [developer-docs.sdk.js/common-js.get-vault-overview]-start
+  // [developer-docs.sdk.js.get-vault-overview]-start
 	// Get vault overview
   const vaultOverview = await client.vaults.getOverview(createdVault.id);
   console.log(JSON.stringify(vaultOverview));
-	// [developer-docs.sdk.js/common-js.get-vault-overview]-end
+	// [developer-docs.sdk.js.get-vault-overview]-end
   
-  // [developer-docs.sdk.js/common-js.update-vault]-start
+  // [developer-docs.sdk.js.update-vault]-start
   // Update vault
   await client.vaults.update(createdVault.id, {
     title: "JS SDK Vault Updated",
     description: "An updated vault created via the SDK",
   });
   console.log(`Updated vault "${createdVault.id}"`);
-  // [developer-docs.sdk.js/common-js.update-vault]-end
+  // [developer-docs.sdk.js.update-vault]-end
 
-  // [developer-docs.sdk.js/common-js.get-vault-details]-start
+  // [developer-docs.sdk.js.get-vault-details]-start
 	// Get vault details
   const vault = await client.vaults.get(createdVault.id, {accessors: false});
   console.log(JSON.stringify(vault));
-  // [developer-docs.sdk.js/common-js.get-vault-details]-end
+  // [developer-docs.sdk.js.get-vault-details]-end
 
-  // [developer-docs.sdk.js/common-js.delete-vault]-start
+  // [developer-docs.sdk.js.delete-vault]-start
 	// Get vault details
   await client.vaults.delete(createdVault.id);
   console.log(`Deleted vault "${createdVault.id}"`);
-  // [developer-docs.sdk.js/common-js.delete-vault]-start
+  // [developer-docs.sdk.js.delete-vault]-start
 
-  // [developer-docs.sdk.js/common-js.list-vaults]-start
+  // [developer-docs.sdk.js.list-vaults]-start
   // List vaults
   const vaults = await client.vaults.list({ decryptDetails: true });
   for await (const vault of vaults) {
     console.log(JSON.stringify(vault, null, 2));
   }
-  // [developer-docs.sdk.js/common-js.list-vaults]-end
+  // [developer-docs.sdk.js.list-vaults]-end
 }
 
 async function showcaseGroupPermissionsOperations(client, vaultId, groupId) {
  
-  // [developer-docs.sdk.js/common-js.grant-group-permissions]-start
+  // [developer-docs.sdk.js.grant-group-permissions]-start
   // Grant group permissions
   await client.vaults.grantGroupPermissions(vaultId, [{groupId, permissions: sdk.READ_ITEMS}]);
   console.log(`Granted READ_ITEMS permissions to group "${groupId}" on vault "${vaultId}"`);
-  // [developer-docs.sdk.js/common-js.grant-group-permissions]-end
+  // [developer-docs.sdk.js.grant-group-permissions]-end
 
-  // [developer-docs.sdk.js/common-js.update-group-permissions]-start
+  // [developer-docs.sdk.js.update-group-permissions]-start
   // Update group permissions
   await client.vaults.updateGroupPermissions([{vaultId, groupId, permissions: sdk.READ_ITEMS | sdk.CREATE_ITEMS | sdk.UPDATE_ITEMS}]);
   console.log(`Updated group "${groupId}" permissions to MANAGE_VAULT on vault "${vaultId}"`);
-  // [developer-docs.sdk.js/common-js.update-group-permissions]-end
+  // [developer-docs.sdk.js.update-group-permissions]-end
 
-  // [developer-docs.sdk.js/common-js.revoke-group-permissions]-start
+  // [developer-docs.sdk.js.revoke-group-permissions]-start
   // Revoke group permissions
   await client.vaults.revokeGroupPermissions(vaultId, groupId);
   console.log(`Revoked group "${groupId}" permissions on vault "${vaultId}"`);
-  // [developer-docs.sdk.js/common-js.revoke-group-permissions]-end
+  // [developer-docs.sdk.js.revoke-group-permissions]-end
 
-  // [developer-docs.sdk.js/common-js.get-group]-start
+  // [developer-docs.sdk.js.get-group]-start
   // Get a group
   const group = await client.groups.get(groupId, {vaultPermissions: false})
   console.log(JSON.stringify(group))
-  // [developer-docs.sdk.js/common-js.get-group]-end
+  // [developer-docs.sdk.js.get-group]-end
 
 }
 
 async function showcaseBatchItemOperations(client, vaultId){
-  // [developer-docs.sdk.js/common-js.batch-create-items]-start
+  // [developer-docs.sdk.js.batch-create-items]-start
   itemsToCreate = [];
   for (let i = 1; i <= 3; i++) {
     itemsToCreate.push({
@@ -631,9 +631,9 @@ async function showcaseBatchItemOperations(client, vaultId){
       console.log(`[Batch create] Something went wrong: ${res.error}`);
     }
   }
-  // [developer-docs.sdk.js/common-js.batch-create-items]-end
+  // [developer-docs.sdk.js.batch-create-items]-end
 
-  // [developer-docs.sdk.js/common-js.batch-get-items]-start
+  // [developer-docs.sdk.js.batch-get-items]-start
   // Get multiple items form the same vault in a single batch
   const batchGetResponse = await client.items.getAll(vaultId, itemIDs);
   for (const res of batchGetResponse.individualResponses) {
@@ -645,7 +645,7 @@ async function showcaseBatchItemOperations(client, vaultId){
     }
   }
 
-  // [developer-docs.sdk.js/common-js.batch-delete-items]-start
+  // [developer-docs.sdk.js.batch-delete-items]-start
   // Delete multiple items from the same vault in a single batch
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
   for (const [id, res] of Object.entries(batchDeleteResponse.individualResponses)) {
@@ -656,5 +656,5 @@ async function showcaseBatchItemOperations(client, vaultId){
       console.log(`Deleted item ${id}`);
     }
   }
-  // [developer-docs.sdk.js/common-js.batch-delete-items]-end
+  // [developer-docs.sdk.js.batch-delete-items]-end
 }
