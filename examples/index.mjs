@@ -532,7 +532,7 @@ async function showcaseVaultOperations(client) {
 	// Get vault details
   await client.vaults.delete(createdVault.id);
   console.log(`Deleted vault "${createdVault.id}"`);
-  // [developer-docs.sdk.js.delete-vault]-start
+  // [developer-docs.sdk.js.delete-vault]-end
 
   // [developer-docs.sdk.js.list-vaults]-start
   // List vaults
