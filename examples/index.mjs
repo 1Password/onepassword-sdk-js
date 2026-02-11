@@ -503,7 +503,11 @@ async function showcaseVaultOperations(client) {
     title: "JS SDK Vault",
     description: "A vault created via the JS SDK",
   });
-  console.log(`Created vault "${createdVault.title}" (${createdVault.id})`);
+  console.log(
+    "Created vault",
+    createdVault.title,
+    "(" + createdVault.id + ")",
+  );
   // [developer-docs.sdk.js.create-vault]-end
 
   // [developer-docs.sdk.js.get-vault-overview]-start
@@ -518,7 +522,7 @@ async function showcaseVaultOperations(client) {
     title: "JS SDK Vault Updated",
     description: "An updated vault created via the SDK",
   });
-  console.log(`Updated vault "${createdVault.id}"`);
+  console.log("Updated vault", createdVault.id);
   // [developer-docs.sdk.js.update-vault]-end
 
   // [developer-docs.sdk.js.get-vault-details]-start
@@ -528,9 +532,9 @@ async function showcaseVaultOperations(client) {
   // [developer-docs.sdk.js.get-vault-details]-end
 
   // [developer-docs.sdk.js.delete-vault]-start
-  // Delete a vault
+  // Delete vault
   await client.vaults.delete(createdVault.id);
-  console.log(`Deleted vault "${createdVault.id}"`);
+  console.log("Deleted vault", createdVault.id);
   // [developer-docs.sdk.js.delete-vault]-end
 
   // [developer-docs.sdk.js.list-vaults]-start
@@ -549,7 +553,10 @@ async function showcaseGroupPermissionsOperations(client, vaultId, groupId) {
     { groupId, permissions: sdk.READ_ITEMS },
   ]);
   console.log(
-    `Granted READ_ITEMS permissions to group "${groupId}" on vault "${vaultId}"`,
+    "Granted READ_ITEMS permissions to group",
+    groupId,
+    "on vault",
+    vaultId,
   );
   // [developer-docs.sdk.js.grant-group-permissions]-end
 
@@ -563,14 +570,22 @@ async function showcaseGroupPermissionsOperations(client, vaultId, groupId) {
     },
   ]);
   console.log(
-    `Updated group "${groupId}" permissions to MANAGE_VAULT on vault "${vaultId}"`,
+    "Updated group",
+    groupId,
+    "permissions to MANAGE_VAULT on vault",
+    vaultId,
   );
   // [developer-docs.sdk.js.update-group-permissions]-end
 
   // [developer-docs.sdk.js.revoke-group-permissions]-start
   // Revoke group permissions
   await client.vaults.revokeGroupPermissions(vaultId, groupId);
-  console.log(`Revoked group "${groupId}" permissions on vault "${vaultId}"`);
+  console.log(
+    "Revoked group",
+    groupId,
+    "permissions on vault",
+    vaultId,
+  );
   // [developer-docs.sdk.js.revoke-group-permissions]-end
 
   // [developer-docs.sdk.js.get-group]-start
@@ -585,7 +600,7 @@ async function showcaseBatchItemOperations(client, vaultId) {
   itemsToCreate = [];
   for (let i = 1; i <= 3; i++) {
     itemsToCreate.push({
-      title: `My Login Item ${i}`,
+      title: "My Login Item " + i,
       category: sdk.ItemCategory.Login,
       vaultId,
       fields: [
@@ -627,7 +642,6 @@ async function showcaseBatchItemOperations(client, vaultId) {
     });
   }
 
-  // Create all items in the same vault in a single batch
   const batchCreateResponse = await client.items.createAll(
     vaultId,
     itemsToCreate,
@@ -636,35 +650,50 @@ async function showcaseBatchItemOperations(client, vaultId) {
   let itemIDs = [];
   for (const res of batchCreateResponse.individualResponses) {
     if (res.content) {
-      console.log(`Created item "${res.content.title}" (${res.content.id})`);
+      console.log(
+        "Created item",
+        res.content.title,
+        "(" + res.content.id + ")",
+      );
       itemIDs.push(res.content.id);
     } else if (res.error) {
-      console.log(`[Batch create] Something went wrong: ${res.error}`);
+      console.log(
+        "[Batch create] Something went wrong:",
+        res.error,
+      );
     }
   }
   // [developer-docs.sdk.js.batch-create-items]-end
 
   // [developer-docs.sdk.js.batch-get-items]-start
-  // Get multiple items form the same vault in a single batch
   const batchGetResponse = await client.items.getAll(vaultId, itemIDs);
   for (const res of batchGetResponse.individualResponses) {
     if (res.content) {
-      console.log(`Obtained item "${res.content.title}" (${res.content.id})`);
+      console.log(
+        "Obtained item",
+        res.content.title,
+        "(" + res.content.id + ")",
+      );
     } else if (res.error) {
-      console.log(`[Batch get] Something went wrong: ${res.error}`);
+      console.log(
+        "[Batch get] Something went wrong:",
+        res.error,
+      );
     }
   }
 
   // [developer-docs.sdk.js.batch-delete-items]-start
-  // Delete multiple items from the same vault in a single batch
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
   for (const [id, res] of Object.entries(
     batchDeleteResponse.individualResponses,
   )) {
     if (res.error) {
-      console.log(`[Batch delete] Something went wrong: ${res.error}`);
+      console.log(
+        "[Batch delete] Something went wrong:",
+        res.error,
+      );
     } else {
-      console.log(`Deleted item ${id}`);
+      console.log("Deleted item", id);
     }
   }
   // [developer-docs.sdk.js.batch-delete-items]-end
