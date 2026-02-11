@@ -681,6 +681,7 @@ async function showcaseBatchItemOperations(client, vaultId) {
       );
     }
   }
+  // [developer-docs.sdk.js.batch-get-items]-end
 
   // [developer-docs.sdk.js.batch-delete-items]-start
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
