@@ -26,9 +26,15 @@ cleanup() {
 wait_for_npm_publish(){
     package_name="${1}"
     updated_npm_version="${2}"
+    # Map release channel to npm dist-tag
+    if [ "$RELEASE_CHANNEL" = "beta" ]; then
+        tag="beta"
+    else
+        tag="latest"
+    fi
 
     while true; do
-    npm_version=$(npm view "$package_name" version)
+    npm_version=$(npm view "$package_name@$tag" version)
     # if package matches npm registry than break out of loop and update package.json
     if [ "$npm_version" == "$updated_npm_version" ]; then
         echo "The package version $npm_version is up to date!"
