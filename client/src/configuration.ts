@@ -11,6 +11,7 @@ export interface ClientConfiguration {
   auth: Auth;
   integrationName: string;
   integrationVersion: string;
+  sharedLibraryPath?: string;
 }
 
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.

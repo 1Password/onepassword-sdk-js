@@ -19,7 +19,9 @@ export const createClientWithCore = async (
 ): Promise<Client> => {
   const authConfig = clientAuthConfig(config);
   if (authConfig.accountName) {
-    core.setInner(new SharedLibCore(authConfig.accountName));
+    core.setInner(
+      new SharedLibCore(authConfig.accountName, config.sharedLibraryPath),
+    );
   }
   const clientId = await core.initClient(authConfig);
   const inner = new InnerClient(parseInt(clientId, 10), core, authConfig);
