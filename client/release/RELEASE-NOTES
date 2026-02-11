@@ -1,7 +1,6 @@
-# 1Password Go SDK v0.4.1-beta.1
+# 1Password JavaScript SDK v0.4.1-beta.1
 
 ## NEW
 
 
 - **1Password Environment access:** The SDK can now read variables from a 1Password Environment.
-
