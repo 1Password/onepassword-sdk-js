@@ -503,11 +503,7 @@ async function showcaseVaultOperations(client) {
     title: "JS SDK Vault",
     description: "A vault created via the JS SDK",
   });
-  console.log(
-    "Created vault",
-    createdVault.title,
-    "(" + createdVault.id + ")",
-  );
+  console.log("Created vault", createdVault.title, "(" + createdVault.id + ")");
   // [developer-docs.sdk.js.create-vault]-end
 
   // [developer-docs.sdk.js.get-vault-overview]-start
@@ -580,12 +576,7 @@ async function showcaseGroupPermissionsOperations(client, vaultId, groupId) {
   // [developer-docs.sdk.js.revoke-group-permissions]-start
   // Revoke group permissions
   await client.vaults.revokeGroupPermissions(vaultId, groupId);
-  console.log(
-    "Revoked group",
-    groupId,
-    "permissions on vault",
-    vaultId,
-  );
+  console.log("Revoked group", groupId, "permissions on vault", vaultId);
   // [developer-docs.sdk.js.revoke-group-permissions]-end
 
   // [developer-docs.sdk.js.get-group]-start
@@ -657,10 +648,7 @@ async function showcaseBatchItemOperations(client, vaultId) {
       );
       itemIDs.push(res.content.id);
     } else if (res.error) {
-      console.log(
-        "[Batch create] Something went wrong:",
-        res.error,
-      );
+      console.log("[Batch create] Something went wrong:", res.error);
     }
   }
   // [developer-docs.sdk.js.batch-create-items]-end
@@ -675,10 +663,7 @@ async function showcaseBatchItemOperations(client, vaultId) {
         "(" + res.content.id + ")",
       );
     } else if (res.error) {
-      console.log(
-        "[Batch get] Something went wrong:",
-        res.error,
-      );
+      console.log("[Batch get] Something went wrong:", res.error);
     }
   }
   // [developer-docs.sdk.js.batch-get-items]-end
@@ -689,10 +674,7 @@ async function showcaseBatchItemOperations(client, vaultId) {
     batchDeleteResponse.individualResponses,
   )) {
     if (res.error) {
-      console.log(
-        "[Batch delete] Something went wrong:",
-        res.error,
-      );
+      console.log("[Batch delete] Something went wrong:", res.error);
     } else {
       console.log("Deleted item", id);
     }
