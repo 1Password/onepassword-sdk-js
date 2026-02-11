@@ -669,6 +669,7 @@ async function showcaseBatchItemOperations(client, vaultId) {
   // [developer-docs.sdk.js.batch-get-items]-end
 
   // [developer-docs.sdk.js.batch-delete-items]-start
+  // Delete multiple items from the same vault in a single batch
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
   for (const [id, res] of Object.entries(
     batchDeleteResponse.individualResponses,
