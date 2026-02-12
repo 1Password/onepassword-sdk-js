@@ -3,10 +3,10 @@ const sdk = require("@1password/sdk");
 // [developer-docs.sdk.js/common-js.sdk-import]-end
 
 async function fetchSecret(vaultId, itemId) {
-  // Creates an authenticated client.
+  // Create an authenticated client
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-    // Set the following to your own integration name and version.
+    // Set the following to your own integration name and version
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
@@ -16,7 +16,7 @@ async function fetchSecret(vaultId, itemId) {
 }
 
 async function manageItems() {
-  // Creates an authenticated client.
+  // Create an authenticated client
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
     integrationName: "My 1Password Integration",
@@ -80,7 +80,7 @@ async function manageItems() {
 
   fetchSecret(item.vaultId, item.id).then(console.log);
 
-  // Get a one-time password code.
+  // Get a one-time password code from an item
   let element = item.fields.find((element) => {
     return element.fieldType == sdk.ItemFieldType.Totp;
   });
@@ -101,7 +101,7 @@ async function manageItems() {
     default:
   }
 
-  // Edit an item (change the password)
+  // Update an item (change the password)
   let newItem = {
     ...item,
     fields: item.fields.map((f) => {
@@ -163,7 +163,7 @@ function generatePassword() {
 }
 
 async function showcaseVaultOperations() {
-  // Creates an authenticated client.
+  // Create an authenticated client
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
     integrationName: "My 1Password Integration",
@@ -177,11 +177,11 @@ async function showcaseVaultOperations() {
   });
   console.log(`Created vault "${createdVault.title}" (${createdVault.id})`);
 
-  // Get vault overview
+  // Get a vault overview
   const vaultOverview = await client.vaults.getOverview(createdVault.id);
   console.log(JSON.stringify(vaultOverview));
 
-  // Update vault
+  // Update a vault
   await client.vaults.update(createdVault.id, {
     title: "JS SDK Vault Updated",
     description: "An updated vault created via the SDK",
@@ -192,7 +192,7 @@ async function showcaseVaultOperations() {
   const vault = await client.vaults.get(createdVault.id, { accessors: false });
   console.log(JSON.stringify(vault));
 
-  // Get vault details
+  // Delete a vault
   await client.vaults.delete(createdVault.id);
   console.log(`Deleted vault "${createdVault.id}"`);
 
@@ -210,7 +210,7 @@ async function showcaseBatchItemOperations() {
     throw new Error("Missing required environment variable: OP_VAULT_ID");
   }
 
-  // Creates an authenticated client.
+  // Create an authenticated client
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
     integrationName: "My 1Password Integration",
@@ -262,7 +262,7 @@ async function showcaseBatchItemOperations() {
     });
   }
 
-  // Create all items in the same vault in a single batch
+  // Batch create all items in the same vault
   const batchCreateResponse = await client.items.createAll(
     vaultId,
     itemsToCreate,
@@ -278,7 +278,7 @@ async function showcaseBatchItemOperations() {
     }
   }
 
-  // Get multiple items form the same vault in a single batch
+  // Get multiple items from the same vault
   const batchGetResponse = await client.items.getAll(vaultId, itemIDs);
   for (const res of batchGetResponse.individualResponses) {
     if (res.content) {
@@ -288,7 +288,7 @@ async function showcaseBatchItemOperations() {
     }
   }
 
-  // Delete multiple items from the same vault in a single batch
+  // Delete multiple items from the same vault
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
   for (const [id, res] of Object.entries(
     batchDeleteResponse.individualResponses,
