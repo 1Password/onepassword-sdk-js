@@ -129,6 +129,7 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 **Operations:**
 
 - [x] [Retrieve secrets](https://developer.1password.com/docs/sdks/load-secrets)
+- [Read 1Password Environments (beta)](https://developer.1password.com/docs/sdks/environments)
 - [x] [Retrieve items](https://developer.1password.com/docs/sdks/manage-items#get-an-item)
 - [x] [Create items](https://developer.1password.com/docs/sdks/manage-items#create-an-item)
 - [x] [Update items](https://developer.1password.com/docs/sdks/manage-items#update-an-item)
@@ -181,6 +182,10 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [ ] List groups
 - [ ] Create groups
 - [ ] Update group membership
+
+## Environments management
+
+- [x] [Read 1Password Environments](/docs/sdks/environments) (beta)
 
 ### Compliance & reporting
 
