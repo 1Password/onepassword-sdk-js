@@ -183,9 +183,10 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [ ] Update group membership
 
 ### Compliance & reporting
+
 - [ ] Watchtower insights
 - [ ] Travel mode
-- [ ] Events ([#76](https://github.com/1Password/onepassword-sdk-go/issues/76)). For now, use [1Password Events Reporting API](https://developer.1password.com/docs/events-api/) directly.
+- [ ] Events. For now, use [1Password Events Reporting API](https://developer.1password.com/docs/events-api/) directly.
 
 ### Authentication
 
