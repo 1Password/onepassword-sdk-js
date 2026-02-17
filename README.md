@@ -182,10 +182,6 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [ ] Create groups
 - [ ] Update group membership
 
-## Environments management
-
-- [x] [Read 1Password Environments](/docs/sdks/environments) (beta)
-
 ### Compliance & reporting
 - [ ] Watchtower insights
 - [ ] Travel mode
