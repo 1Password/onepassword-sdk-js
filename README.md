@@ -20,7 +20,7 @@ You can choose between two [authentication methods](https://developer.1password.
 
 ### Option 1: 1Password desktop app
 
-[1Password desktop app authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app) is best for local integrations that require minimal setup and sensitive workflows that require human-in-the-loop approval. 
+[1Password desktop app authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app) is best for local integrations that require minimal setup from end users and sensitive workflows that require human-in-the-loop approval. 
 
 1. Install the [1Password desktop app](https://1password.com/downloads/) and sign in to your account in the app.
 2. Select your account or collection at the top of the sidebar, then navigate to **Settings** > **[Developer](onepassword://settings/developers)**.
@@ -182,7 +182,6 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [ ] Create groups
 - [ ] Update group membership
 
-
 ## Environments management
 
 - [x] [Read 1Password Environments](/docs/sdks/environments) (beta)
@@ -208,5 +207,5 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [List vaults and items](https://developer.1password.com/docs/sdks/list-vaults-items)
 - [Manage vaults](https://developer.1password.com/docs/sdks/vaults)
 - [Manage vault permissions](https://developer.1password.com/docs/sdks/vault-permissions)
-- [1Password SDK concepts](https://developer.1password.com/docs/sdks/concepts)
 - [Manage groups](https://developer.1password.com/docs/sdks/groups)
+- [1Password SDK concepts](https://developer.1password.com/docs/sdks/concepts)
