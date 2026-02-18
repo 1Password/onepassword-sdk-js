@@ -45,18 +45,22 @@ You can choose between two [authentication methods](https://developer.1password.
 6. To use the Javascript SDK in your project, replace `your-account-name` in the code below with the name of your 1Password account as it appears at the top left sidebar of the 1Password desktop app.
 
 ```js
-import { createClient } from "@1password/sdk";
+const sdk = require("@1password/sdk");
 
-// Creates an authenticated client.
-const client = await createClient({
-  auth: new sdk.DesktopAuth("your-account-name"),
-  // Set the following to your own integration name and version.
-  integrationName: "My 1Password Integration",
-  integrationVersion: "v1.0.0",
-});
+async function main() {
+  // Creates an authenticated client.
+  const client = await sdk.createClient({
+    auth: new sdk.DesktopAuth("your-account-name"),
+    // Set the following to your own integration name and version.
+    integrationName: "My 1Password Integration",
+    integrationVersion: "v1.0.0",
+  });
 
-// Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
+  // Fetches a secret.
+  const secret = await client.secrets.resolve("op://vault/item/field");
+}
+
+main()
 ```
 
 Inside `createClient()`, set `integrationName` to the name of your application and `integrationVersion` to the version of your application.
@@ -102,18 +106,22 @@ Make sure to use [secret reference URIs](https://developer.1password.com/docs/cl
 4. Use the JavaScript SDK in your project:
 
 ```js
-import { createClient } from "@1password/sdk";
+const sdk = require("@1password/sdk");
 
-// Creates an authenticated client.
-const client = await createClient({
-  auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
-  // Set the following to your own integration name and version.
-  integrationName: "My 1Password Integration",
-  integrationVersion: "v1.0.0",
-});
+async function main() {
+  // Creates an authenticated client.
+  const client = await sdk.createClient({
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+    // Set the following to your own integration name and version.
+    integrationName: "My 1Password Integration",
+    integrationVersion: "v1.0.0",
+  });
 
-// Fetches a secret.
-const secret = await client.secrets.resolve("op://vault/item/field");
+  // Fetches a secret.
+  const secret = await client.secrets.resolve("op://vault/item/field");
+}
+
+main()
 ```
 
 Make sure to use [secret reference URIs](https://developer.1password.com/docs/cli/secret-reference-syntax/) with the syntax `op://vault/item/field` to securely load secrets from 1Password into your code.
