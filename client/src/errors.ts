@@ -18,6 +18,15 @@ export class RateLimitExceededError extends Error {
   }
 }
 
+export class AuthExpiredError extends Error {
+  public message: string;
+
+  public constructor(message: string) {
+    super();
+    this.message = message;
+  }
+}
+
 export const throwError = (errString: string) => {
   interface TypedError {
     name: string;
@@ -36,6 +45,8 @@ export const throwError = (errString: string) => {
       throw new DesktopSessionExpiredError(err.message);
     case "RateLimitExceeded":
       throw new RateLimitExceededError(err.message);
+    case "AuthExpired":
+      throw new AuthExpiredError(err.message);
     default:
       throw new Error(err.message);
   }
