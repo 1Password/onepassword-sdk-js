@@ -10,10 +10,10 @@ async function main() {
   }
 
   // [developer-docs.sdk.js/common-js.client-initialization]-start
-  // Connects to the 1Password desktop app.  
+  // Connect to the 1Password desktop app
   const client = await sdk.createClient({
     auth: new sdk.DesktopAuth("YourAccountNameAsShownInTheDesktopApp"),
-    // Set the following to your own integration name and version.
+    // Set to your own integration name and version
     integrationName: "My 1Password Integration",
     integrationVersion: "v1.0.0",
   });
@@ -23,6 +23,7 @@ async function main() {
   await showcaseBatchItemOperations(client, vaultId);
 
   // [developer-docs.sdk.js/common-js.list-items]-start
+  // List items
   const items = await client.items.list(vaultId);
   for await (const item of items) {
     console.log(item.id + " " + item.title);
@@ -50,13 +51,13 @@ async function showcaseVaultOperations(client) {
 
 
   // [developer-docs.sdk.js/common-js.get-vault-overview]-start
-	// Get vault overview
+	// Get a vault overview
   const vaultOverview = await client.vaults.getOverview(createdVault.id);
   console.log(JSON.stringify(vaultOverview));
 	// [developer-docs.sdk.js/common-js.get-vault-overview]-end
   
   // [developer-docs.sdk.js/common-js.update-vault]-start
-  // Update vault
+  // Update a vault
   await client.vaults.update(createdVault.id, {
     title: "JS SDK Vault Updated",
     description: "An updated vault created via the SDK",
@@ -71,7 +72,7 @@ async function showcaseVaultOperations(client) {
   // [developer-docs.sdk.js/common-js.get-vault-details]-end
 
   // [developer-docs.sdk.js/common-js.delete-vault]-start
-	// Get vault details
+	// Delete a vault
   await client.vaults.delete(createdVault.id);
   console.log(`Deleted vault "${createdVault.id}"`);
   // [developer-docs.sdk.js/common-js.delete-vault]-start
@@ -88,19 +89,19 @@ async function showcaseVaultOperations(client) {
 async function showcaseGroupPermissionsOperations(client, vaultId, groupId) {
  
   // [developer-docs.sdk.js/common-js.grant-group-permissions]-start
-  // Grant group permissions
+  // Grant group permissions in a vault
   await client.vaults.grantGroupPermissions(vaultId, [{groupId, permissions: sdk.READ_ITEMS}]);
   console.log(`Granted READ_ITEMS permissions to group "${groupId}" on vault "${vaultId}"`);
   // [developer-docs.sdk.js/common-js.grant-group-permissions]-end
 
   // [developer-docs.sdk.js/common-js.update-group-permissions]-start
-  // Update group permissions
+  // Update group permissions in a vault
   await client.vaults.updateGroupPermissions([{vaultId, groupId, permissions: sdk.READ_ITEMS | sdk.CREATE_ITEMS | sdk.UPDATE_ITEMS}]);
   console.log(`Updated group "${groupId}" permissions to MANAGE_VAULT on vault "${vaultId}"`);
   // [developer-docs.sdk.js/common-js.update-group-permissions]-end
 
   // [developer-docs.sdk.js/common-js.revoke-group-permissions]-start
-  // Revoke group permissions
+  // Revoke a group's permissions in a vault
   await client.vaults.revokeGroupPermissions(vaultId, groupId);
   console.log(`Revoked group "${groupId}" permissions on vault "${vaultId}"`);
   // [developer-docs.sdk.js/common-js.revoke-group-permissions]-end
@@ -160,7 +161,7 @@ async function showcaseBatchItemOperations(client, vaultId){
     })
   }
 
-	// Create all items in the same vault in a single batch
+	// Batch create all items in the same vault
   const batchCreateResponse = await client.items.createAll(vaultId, itemsToCreate)
 
   let itemIDs = [];
@@ -176,7 +177,7 @@ async function showcaseBatchItemOperations(client, vaultId){
   // [developer-docs.sdk.js/common-js.batch-create-items]-end
 
   // [developer-docs.sdk.js/common-js.batch-get-items]-start
-	// Get multiple items form the same vault in a single batch
+	// Get multiple items from the same vault
   const batchGetResponse = await client.items.getAll(vaultId, itemIDs);
   for (const res of batchGetResponse.individualResponses) {
     if (res.content) {
@@ -188,7 +189,7 @@ async function showcaseBatchItemOperations(client, vaultId){
   }
 
   // [developer-docs.sdk.js/common-js.batch-delete-items]-start
-	// Delete multiple items from the same vault in a single batch
+	// Delete multiple items from the same vault
   const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
   for (const [id, res] of Object.entries(batchDeleteResponse.individualResponses)) {
     if (res.error) {
