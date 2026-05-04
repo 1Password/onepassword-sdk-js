@@ -21,6 +21,13 @@ export class TestCore implements Core {
     return res;
   }
 
+  async initClientOidc(
+    config: string,
+    _fetcher: () => Promise<string>,
+  ): Promise<string> {
+    return this.initClient(config);
+  }
+
   async invoke(config: string): Promise<string> {
     const parsedConfig: InvokeConfig = JSON.parse(config);
     return JSON.stringify("method " +

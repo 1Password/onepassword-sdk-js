@@ -16,12 +16,16 @@ const finalizationRegistry = new FinalizationRegistry(
 export const createClientWithCore = async (
   config: ClientConfiguration,
   core: SharedCore,
+  oidcFetcher?: () => Promise<string>,
 ): Promise<Client> => {
   const authConfig = clientAuthConfig(config);
   if (authConfig.accountName) {
     core.setInner(new SharedLibCore(authConfig.accountName));
   }
-  const clientId = await core.initClient(authConfig);
+  console.log(authConfig);
+  const clientId = oidcFetcher
+    ? await core.initClientOidc(authConfig, oidcFetcher)
+    : await core.initClient(authConfig);
   const inner = new InnerClient(parseInt(clientId, 10), core, authConfig);
   const client = new Client(inner);
   // Cleans up associated memory from core when client instance goes out of scope.

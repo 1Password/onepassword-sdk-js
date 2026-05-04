@@ -174,6 +174,13 @@ export class SharedLibCore implements Core {
     return this.callSharedLibrary(config, "init_client");
   }
 
+  public async initClientOidc(
+    _config: string,
+    _fetcher: () => Promise<string>,
+  ): Promise<string> {
+    throw new Error("OIDC authentication is not supported with desktop auth");
+  }
+
   public async invoke(invokeConfigBytes: string): Promise<string> {
     return this.callSharedLibrary(invokeConfigBytes, "invoke");
   }

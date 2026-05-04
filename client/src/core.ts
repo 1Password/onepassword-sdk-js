@@ -1,5 +1,6 @@
 import {
   init_client,
+  init_client_oidc,
   invoke,
   invoke_sync,
   release_client,
@@ -21,6 +22,13 @@ export interface Core {
    *  Allocates a new authenticated client and returns its id.
    */
   initClient(config: string): Promise<string>;
+  /**
+   *  Allocates a new authenticated client using an OIDC token fetcher and returns its id.
+   */
+  initClientOidc(
+    config: string,
+    fetcher: () => Promise<string>,
+  ): Promise<string>;
   /**
    *  Calls async business logic from a given client and returns the result.
    */
@@ -47,6 +55,7 @@ export interface ClientAuthConfig {
 
   serviceAccountToken?: string; // only used when service account token auth is selected
   accountName?: string; // only used when desktop auth is selected
+  customerManagedSecret?: string; // only used when OIDC auth is selected
 }
 
 /**
@@ -90,6 +99,17 @@ export class WasmCore implements Core {
     }
   }
 
+  public async initClientOidc(
+    config: string,
+    fetcher: () => Promise<string>,
+  ): Promise<string> {
+    try {
+      return await init_client_oidc(config, fetcher);
+    } catch (e) {
+      throwError(e as string);
+    }
+  }
+
   public async invoke(config: string): Promise<string> {
     try {
       return await invoke(config);
@@ -124,6 +144,14 @@ export class SharedCore {
   public async initClient(config: ClientAuthConfig): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     return this.inner.initClient(serializedConfig);
+  }
+
+  public async initClientOidc(
+    config: ClientAuthConfig,
+    fetcher: () => Promise<string>,
+  ): Promise<string> {
+    const serializedConfig = JSON.stringify(config);
+    return this.inner.initClientOidc(serializedConfig, fetcher);
   }
 
   public async invoke(config: InvokeConfig): Promise<string> {

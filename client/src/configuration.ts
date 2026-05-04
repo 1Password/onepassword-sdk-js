@@ -11,6 +11,8 @@ export interface ClientConfiguration {
   auth: Auth;
   integrationName: string;
   integrationVersion: string;
+  oidcFetcher?: () => Promise<string>;
+  customerManagedSecret?: string;
 }
 
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.
@@ -56,6 +58,7 @@ export const clientAuthConfig = (
     os: getOsName(),
     osVersion: defaultOsVersion,
     architecture: os.arch(),
+    customerManagedSecret: userConfig.customerManagedSecret,
   };
 };
 
