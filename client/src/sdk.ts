@@ -22,5 +22,4 @@ export * from "./types.js";
  */
 export const createClient = async (
   config: ClientConfiguration,
-): Promise<Client> =>
-  createClientWithCore(config, new SharedCore(), config.oidcFetcher);
+): Promise<Client> => createClientWithCore(config, new SharedCore());
