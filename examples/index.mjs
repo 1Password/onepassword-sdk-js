@@ -9,14 +9,10 @@ import sdk from "@1password/sdk";
 // [developer-docs.sdk.js.client-initialization]-start
 // Create an authenticated client
 const client = await sdk.createClient({
+  auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
   // Set to your own integration name and version
   integrationName: "My 1Password Integration",
   integrationVersion: "v1.0.0",
-  oidcFetcher: async () => "hello from the sdk",
-  workloadDetails: {
-    customerManagedSecret: "fake_customer_managed_secret",
-    workloadUuid: "ff",
-  },
 });
 // [developer-docs.sdk.js.client-initialization]-end
 
@@ -32,4 +28,670 @@ const vaultId = process.env.OP_VAULT_ID;
 
 if (!vaultId) {
   throw new Error("Missing required environment variable: OP_VAULT_ID");
+}
+
+// [developer-docs.sdk.js.list-items]-start
+// List items
+const overviews = await client.items.list(vaultId);
+for (const overview of overviews) {
+  console.log(overview.id + " " + overview.title);
+}
+// [developer-docs.sdk.js.list-items]-end
+
+// [developer-docs.sdk.js.use-item-filters]-start
+// List items using item filters
+const archivedOverviews = await client.items.list(vaultId, {
+  type: "ByState",
+  content: { active: false, archived: true },
+});
+for (const overview of archivedOverviews) {
+  console.log(overview.id + " " + overview.title);
+}
+// [developer-docs.sdk.js.use-item-filters]-end
+
+// [developer-docs.sdk.js.validate-secret-reference]-start
+// Validate a secret reference
+try {
+  sdk.Secrets.validateSecretReference("op://vault/item/field");
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.validate-secret-reference]-end
+
+// [developer-docs.sdk.js.create-item]-start
+// Create an item
+let item = await client.items.create({
+  title: "My Item",
+  category: sdk.ItemCategory.Login,
+  vaultId: vaultId,
+  fields: [
+    {
+      id: "username",
+      title: "username",
+      fieldType: sdk.ItemFieldType.Text,
+      value: "my username",
+    },
+    {
+      id: "password",
+      title: "password",
+      fieldType: sdk.ItemFieldType.Concealed,
+      value: "my secret value",
+    },
+    {
+      id: "onetimepassword",
+      title: "one-time password",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Totp,
+      value:
+        "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
+    },
+  ],
+  sections: [
+    {
+      id: "custom section",
+      title: "my section",
+    },
+  ],
+  tags: ["test tag 1", "test tag 2"],
+  websites: [
+    {
+      url: "example.com",
+      label: "url",
+      autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite,
+    },
+  ],
+});
+// [developer-docs.sdk.js.create-item]-end
+
+// [developer-docs.sdk.js.resolve-secret]-start
+// Fetch a secret using a secret reference
+const secret = await client.secrets.resolve(
+  "op://" + item.vaultId + "/" + item.id + "/username",
+);
+console.log(secret);
+// [developer-docs.sdk.js.resolve-secret]-end
+
+// [developer-docs.sdk.js.resolve-totp-code]-start
+// Fetch a one-time password code using a secret reference
+const code = await client.secrets.resolve(
+  `op://${item.vaultId}/${item.id}/TOTP_onetimepassword?attribute=totp`,
+);
+console.log(code);
+// [developer-docs.sdk.js.resolve-totp-code]-end
+
+// [developer-docs.sdk.js.get-totp-item-crud]-start
+// Get a one-time password code from an item
+let element = item.fields.find((element) => {
+  return element.fieldType == sdk.ItemFieldType.Totp;
+});
+
+if (!element) {
+  console.error("no totp field found on item");
+} else {
+  switch (element.details.type) {
+    case "Otp": {
+      if (element.details.content.code) {
+        console.log(element.details.content.code);
+      } else {
+        console.error(element.details.content.errorMessage);
+      }
+    }
+    default:
+  }
+}
+// [developer-docs.sdk.js.get-totp-item-crud]-end
+
+// [developer-docs.sdk.js.get-item]-start
+// Get an item
+let retrievedItem = await client.items.get(item.vaultId, item.id);
+// [developer-docs.sdk.js.get-item]-end
+
+// [developer-docs.sdk.js.update-item]-start
+// Update an item (change the password)
+let newItem = {
+  ...retrievedItem,
+  fields: retrievedItem.fields.map((f) => {
+    if (f.title == "password") {
+      return { ...f, value: "my-new-password" };
+    } else {
+      return f;
+    }
+  }),
+};
+let updatedItem = await client.items.put(newItem);
+// [developer-docs.sdk.js.update-item]-end
+
+console.log(updatedItem.fields);
+
+// [developer-docs.sdk.js.generate-pin-password]-start
+// Generate a PIN password
+try {
+  let pinPassword = sdk.Secrets.generatePassword({
+    type: "Pin",
+    parameters: {
+      length: 8,
+    },
+  });
+  console.log(pinPassword);
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.generate-pin-password]-end
+
+// [developer-docs.sdk.js.generate-memorable-password]-start
+// Generate a memorable password
+try {
+  let memorablePassword = sdk.Secrets.generatePassword({
+    type: "Memorable",
+    parameters: {
+      separatorType: sdk.SeparatorType.Digits,
+      capitalize: true,
+      wordListType: sdk.WordListType.FullWords,
+      wordCount: 8,
+    },
+  });
+  console.log(memorablePassword);
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.generate-memorable-password]-end
+
+// [developer-docs.sdk.js.generate-random-password]-start
+// Generate a random password
+try {
+  let randomPassword = sdk.Secrets.generatePassword({
+    type: "Random",
+    parameters: {
+      includeDigits: true,
+      includeSymbols: true,
+      length: 8,
+    },
+  });
+  console.log(randomPassword);
+} catch (error) {
+  console.error(error);
+}
+// [developer-docs.sdk.js.generate-random-password]-end
+shareItem(client, updatedItem.vaultId, updatedItem.id);
+await resolveAllSecrets(
+  client,
+  updatedItem.vaultId,
+  updatedItem.id,
+  "username",
+  "password",
+);
+await createSshKeyItem(client, item.vaultId);
+await createAndReplaceDocumentItem(client, item.vaultId);
+await createAndAttachAndDeleteFileFieldItem(client, item.vaultId);
+await archiveItem(client, updatedItem.vaultId, updatedItem.id);
+// [developer-docs.sdk.js.delete-item]-start
+// Delete an item
+await client.items.delete(item.vaultId, item.id);
+// [developer-docs.sdk.js.delete-item]-end
+
+async function shareItem(client, vaultId, itemId) {
+  // [developer-docs.sdk.js.item-share-get-item]-start
+  // Get an item to share
+  let item = await client.items.get(vaultId, itemId);
+  console.log(item);
+  // [developer-docs.sdk.js.item-share-get-item]-end
+
+  // [developer-docs.sdk.js.item-share-get-account-policy]-start
+  // Get your item sharing account policy
+  let policy = await client.items.shares.getAccountPolicy(
+    item.vaultId,
+    item.id,
+  );
+  console.log(policy);
+  // [developer-docs.sdk.js.item-share-get-account-policy]-end
+
+  // [developer-docs.sdk.js.item-share-validate-recipients]-start
+  // Validate item share recipients
+  let valid_recipients = await client.items.shares.validateRecipients(policy, [
+    "helloworld@agilebits.com",
+  ]);
+
+  console.log(valid_recipients);
+  // [developer-docs.sdk.js.item-share-validate-recipients]-end
+
+  // [developer-docs.sdk.js.item-share-create-share]-start
+  // Create a unique link to share the item
+  let share_link = await client.items.shares.create(item, policy, {
+    expireAfter: sdk.ItemShareDuration.OneHour,
+    oneTimeOnly: false,
+    recipients: valid_recipients,
+  });
+
+  console.log(share_link);
+  // [developer-docs.sdk.js.item-share-create-share]-end
+}
+
+async function archiveItem(client, vaultId, itemId) {
+  // [developer-docs.sdk.js.archive-item]-start
+  // Archive an item
+  await client.items.archive(vaultId, itemId);
+  // [developer-docs.sdk.js.archive-item]-end
+}
+
+async function createSshKeyItem(client) {
+  // [developer-docs.sdk.js.create-sshkey-item]-start
+  const privateKey = crypto.generateKeyPairSync("rsa", {
+    modulusLength: 4096, // 4096-bit key
+    privateKeyEncoding: {
+      type: "pkcs8", // PKCS#8 Private Key format
+      format: "pem",
+    },
+  });
+  // Create an SSH Key item
+  let item = await client.items.create({
+    title: "SSH Key Item Created With JS SDK",
+    category: sdk.ItemCategory.SshKey,
+    vaultId: vaultId,
+    fields: [
+      {
+        id: "private_key",
+        title: "private key",
+        fieldType: sdk.ItemFieldType.SshKey,
+        value: privateKey.privateKey,
+        sectionId: "custom section",
+      },
+    ],
+    sections: [
+      {
+        id: "custom section",
+        title: "my section",
+      },
+    ],
+  });
+  console.log(item.fields[0].value);
+  console.log(item.fields[0].details.content.publicKey);
+  console.log(item.fields[0].details.content.fingerprint);
+  console.log(item.fields[0].details.content.keyType);
+  // [developer-docs.sdk.js.create-sshkey-item]-end
+  await client.items.delete(item.vaultId, item.id);
+}
+
+async function createAndReplaceDocumentItem(client, vaultId) {
+  // [developer-docs.sdk.js.create-document-item]-start
+  // Create a Document item
+  let item = await client.items.create({
+    title: "Document Item Created With JS SDK",
+    category: sdk.ItemCategory.Document,
+    vaultId: vaultId,
+    document: {
+      name: "file.txt",
+      content: new Uint8Array(fs.readFileSync("file.txt")),
+    },
+  });
+  // [developer-docs.sdk.js.create-document-item]-end
+
+  // [developer-docs.sdk.js.replace-document-item]-start
+  // Replace the document in the Document item
+  let replacedDocumentItem = await client.items.files.replaceDocument(item, {
+    name: "file2.txt",
+    content: new Uint8Array(fs.readFileSync("file2.txt")),
+  });
+  // [developer-docs.sdk.js.replace-document-item]-end
+
+  // [developer-docs.sdk.js.read-document-item]-start
+  // Read the content of the Document item
+  let content = await client.items.files.read(
+    replacedDocumentItem.vaultId,
+    replacedDocumentItem.id,
+    replacedDocumentItem.document,
+  );
+  // [developer-docs.sdk.js.read-document-item]-end
+
+  console.log(new TextDecoder("utf-8").decode(content));
+
+  await client.items.delete(
+    replacedDocumentItem.vaultId,
+    replacedDocumentItem.id,
+  );
+}
+
+async function createAndAttachAndDeleteFileFieldItem(client, vaultId) {
+  // [developer-docs.sdk.js.create-item-with-file-field]-start
+  // Create an item with a file attached in a file field
+  let item = await client.items.create({
+    title: "Login with File Field Item Created With JS SDK",
+    category: sdk.ItemCategory.Login,
+    vaultId: vaultId,
+    fields: [
+      {
+        id: "username",
+        title: "username",
+        fieldType: sdk.ItemFieldType.Text,
+        value: "my username",
+      },
+      {
+        id: "password",
+        title: "password",
+        fieldType: sdk.ItemFieldType.Concealed,
+        value: "my secret value",
+      },
+    ],
+    sections: [
+      {
+        id: "custom section",
+        title: "my section",
+      },
+    ],
+    files: [
+      {
+        name: "file.txt",
+        content: new Uint8Array(fs.readFileSync("file.txt")),
+        sectionId: "custom section",
+        fieldId: "file_field",
+      },
+    ],
+  });
+  // [developer-docs.sdk.js.create-item-with-file-field]-end
+
+  // [developer-docs.sdk.js.read-file-field]-start
+  // Read the content of the file field from an item
+  let content = await client.items.files.read(
+    item.vaultId,
+    item.id,
+    item.files[0].attributes,
+  );
+  // [developer-docs.sdk.js.read-file-field]-end
+
+  console.log(new TextDecoder("utf-8").decode(content));
+
+  // [developer-docs.sdk.js.attach-file-field-item]-start
+  // Attach a file field to the item
+  let attachedItem = await client.items.files.attach(item, {
+    name: "file2.txt",
+    content: new Uint8Array(fs.readFileSync("file2.txt")),
+    sectionId: "custom section",
+    fieldId: "new_file_field",
+  });
+  // [developer-docs.sdk.js.attach-file-field-item]-end
+
+  // [developer-docs.sdk.js.delete-file-field-item]-start
+  // Delete a file field from an item
+  let deletedItem = await client.items.files.delete(
+    attachedItem,
+    attachedItem.files[1].sectionId,
+    attachedItem.files[1].fieldId,
+  );
+  // [developer-docs.sdk.js.delete-file-field-item]-end
+
+  console.log(deletedItem.files.length);
+
+  await client.items.delete(deletedItem.vaultId, deletedItem.id);
+}
+
+function generateSpecialItemFields() {
+  fields: [
+    // [developer-docs.sdk.js.address-field-type]-start
+    {
+      id: "address",
+      title: "Address",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Address,
+      value: "",
+      details: {
+        type: "Address",
+        content: {
+          street: "1234 Elm St",
+          city: "Springfield",
+          country: "USA",
+          zip: "12345",
+          state: "IL",
+        },
+      },
+    },
+    // [developer-docs.sdk.js.address-field-type]-end
+    // [developer-docs.sdk.js.date-field-type]-start
+    {
+      id: "date",
+      title: "Date",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Date,
+      value: "1998-03-15",
+    },
+    // [developer-docs.sdk.js.date-field-type]-end
+    // [developer-docs.sdk.js.month-year-field-type]-start
+    {
+      id: "month_year",
+      title: "Month Year",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.MonthYear,
+      value: "03/1998",
+    },
+    // [developer-docs.sdk.js.month-year-field-type]-end
+    // [developer-docs.sdk.js.reference-field-type]-start
+    {
+      id: "reference",
+      title: "Reference",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Reference,
+      value: "f43hnkatjllm5fsfsmgaqdhv7a",
+    },
+    // [developer-docs.sdk.js.reference-field-type]-end
+    // [developer-docs.sdk.js.totp-field-type]-start
+    {
+      id: "onetimepassword",
+      title: "One-Time Password URL",
+      sectionId: "custom section",
+      fieldType: sdk.ItemFieldType.Totp,
+      value:
+        "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
+    },
+    // [developer-docs.sdk.js.totp-field-type]-end
+  ];
+}
+
+async function resolveAllSecrets(client) {
+  // [developer-docs.sdk.js.resolve-bulk-secret]-start
+  try {
+    // Fetch multiple secrets using secret references
+    const secrets = await client.secrets.resolveAll([
+      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username",
+      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password",
+    ]);
+
+    for (const [_, response] of Object.entries(secrets.individualResponses)) {
+      if (response.error) {
+        console.error("Error resolving secret:", response.error);
+        continue;
+      }
+
+      console.log(response.content.secret);
+    }
+  } catch (error) {
+    console.error("An unexpected error occurred:", error);
+  }
+  // [developer-docs.sdk.js.resolve-bulk-secret]-end
+}
+
+async function showcaseVaultOperations(client) {
+  // [developer-docs.sdk.js.create-vault]-start
+  // Create a vault
+  createdVault = await client.vaults.create({
+    title: "JS SDK Vault",
+    description: "A vault created via the JS SDK",
+  });
+  console.log("Created vault", createdVault.title, "(" + createdVault.id + ")");
+  // [developer-docs.sdk.js.create-vault]-end
+
+  // [developer-docs.sdk.js.get-vault-overview]-start
+  // Get a vault overview
+  const vaultOverview = await client.vaults.getOverview(createdVault.id);
+  console.log(JSON.stringify(vaultOverview));
+  // [developer-docs.sdk.js.get-vault-overview]-end
+
+  // [developer-docs.sdk.js.update-vault]-start
+  // Update a vault
+  await client.vaults.update(createdVault.id, {
+    title: "JS SDK Vault Updated",
+    description: "An updated vault created via the SDK",
+  });
+  console.log("Updated vault", createdVault.id);
+  // [developer-docs.sdk.js.update-vault]-end
+
+  // [developer-docs.sdk.js.get-vault-details]-start
+  // Get vault details
+  const vault = await client.vaults.get(createdVault.id, { accessors: false });
+  console.log(JSON.stringify(vault));
+  // [developer-docs.sdk.js.get-vault-details]-end
+
+  // [developer-docs.sdk.js.delete-vault]-start
+  // Delete a vault
+  await client.vaults.delete(createdVault.id);
+  console.log("Deleted vault", createdVault.id);
+  // [developer-docs.sdk.js.delete-vault]-end
+
+  // [developer-docs.sdk.js.list-vaults]-start
+  // List vaults
+  const vaults = await client.vaults.list({ decryptDetails: true });
+  for await (const vault of vaults) {
+    console.log(JSON.stringify(vault, null, 2));
+  }
+  // [developer-docs.sdk.js.list-vaults]-end
+}
+
+async function showcaseGroupPermissionsOperations(client, vaultId, groupId) {
+  // [developer-docs.sdk.js.grant-group-permissions]-start
+  // Grant group permissions in a vault
+  await client.vaults.grantGroupPermissions(vaultId, [
+    { groupId, permissions: sdk.READ_ITEMS },
+  ]);
+  console.log(
+    "Granted READ_ITEMS permissions to group",
+    groupId,
+    "on vault",
+    vaultId,
+  );
+  // [developer-docs.sdk.js.grant-group-permissions]-end
+
+  // [developer-docs.sdk.js.update-group-permissions]-start
+  // Update group permissions in a vault
+  await client.vaults.updateGroupPermissions([
+    {
+      vaultId,
+      groupId,
+      permissions: sdk.READ_ITEMS | sdk.CREATE_ITEMS | sdk.UPDATE_ITEMS,
+    },
+  ]);
+  console.log(
+    "Updated group",
+    groupId,
+    "permissions to MANAGE_VAULT on vault",
+    vaultId,
+  );
+  // [developer-docs.sdk.js.update-group-permissions]-end
+
+  // [developer-docs.sdk.js.revoke-group-permissions]-start
+  // Revoke a group's permissions in a vault
+  await client.vaults.revokeGroupPermissions(vaultId, groupId);
+  console.log("Revoked group", groupId, "permissions on vault", vaultId);
+  // [developer-docs.sdk.js.revoke-group-permissions]-end
+
+  // [developer-docs.sdk.js.get-group]-start
+  // Get a group
+  const group = await client.groups.get(groupId, { vaultPermissions: false });
+  console.log(JSON.stringify(group));
+  // [developer-docs.sdk.js.get-group]-end
+}
+
+async function showcaseBatchItemOperations(client, vaultId) {
+  // [developer-docs.sdk.js.batch-create-items]-start
+  itemsToCreate = [];
+  for (let i = 1; i <= 3; i++) {
+    itemsToCreate.push({
+      title: "My Login Item " + i,
+      category: sdk.ItemCategory.Login,
+      vaultId,
+      fields: [
+        {
+          id: "username",
+          title: "username",
+          fieldType: sdk.ItemFieldType.Text,
+          value: "my username",
+        },
+        {
+          id: "password",
+          title: "password",
+          fieldType: sdk.ItemFieldType.Concealed,
+          value: "my secret value",
+        },
+        {
+          id: "onetimepassword",
+          title: "one-time password",
+          sectionId: "custom section",
+          fieldType: sdk.ItemFieldType.Totp,
+          value:
+            "otpauth://totp/my-example-otp?secret=jncrjgbdjnrncbjsr&issuer=1Password",
+        },
+      ],
+      sections: [
+        {
+          id: "custom section",
+          title: "my section",
+        },
+      ],
+      tags: ["test tag 1", "test tag 2"],
+      websites: [
+        {
+          url: "example.com",
+          label: "url",
+          autofillBehavior: sdk.AutofillBehavior.AnywhereOnWebsite,
+        },
+      ],
+    });
+  }
+
+  // Batch create all items in the same vault
+  const batchCreateResponse = await client.items.createAll(
+    vaultId,
+    itemsToCreate,
+  );
+
+  let itemIDs = [];
+  for (const res of batchCreateResponse.individualResponses) {
+    if (res.content) {
+      console.log(
+        "Created item",
+        res.content.title,
+        "(" + res.content.id + ")",
+      );
+      itemIDs.push(res.content.id);
+    } else if (res.error) {
+      console.log("[Batch create] Something went wrong:", res.error);
+    }
+  }
+  // [developer-docs.sdk.js.batch-create-items]-end
+
+  // [developer-docs.sdk.js.batch-get-items]-start
+  // Get multiple items from the same vault
+  const batchGetResponse = await client.items.getAll(vaultId, itemIDs);
+  for (const res of batchGetResponse.individualResponses) {
+    if (res.content) {
+      console.log(
+        "Obtained item",
+        res.content.title,
+        "(" + res.content.id + ")",
+      );
+    } else if (res.error) {
+      console.log("[Batch get] Something went wrong:", res.error);
+    }
+  }
+  // [developer-docs.sdk.js.batch-get-items]-end
+
+  // [developer-docs.sdk.js.batch-delete-items]-start
+  // Delete multiple items from the same vault
+  const batchDeleteResponse = await client.items.deleteAll(vaultId, itemIDs);
+  for (const [id, res] of Object.entries(
+    batchDeleteResponse.individualResponses,
+  )) {
+    if (res.error) {
+      console.log("[Batch delete] Something went wrong:", res.error);
+    } else {
+      console.log("Deleted item", id);
+    }
+  }
+  // [developer-docs.sdk.js.batch-delete-items]-end
 }
