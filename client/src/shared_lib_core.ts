@@ -174,6 +174,7 @@ export class SharedLibCore implements Core {
     return this.callSharedLibrary(config, "init_client");
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async initClientOidc(
     config: string,
     _fetcher: () => Promise<string>,
