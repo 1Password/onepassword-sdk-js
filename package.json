@@ -2,6 +2,15 @@
   "author": "1Password",
   "license": "MIT",
   "private": true,
+  "name": "@1password/sdk",
+  "main": "./client/dist/sdk.js",
+  "types": "./client/dist/sdk.d.ts",
+  "exports": {
+    ".": {
+      "types": "./client/dist/sdk.d.ts",
+      "default": "./client/dist/sdk.js"
+    }
+  },
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
