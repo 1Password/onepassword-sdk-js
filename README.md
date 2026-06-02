@@ -207,6 +207,8 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [x] [User authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app)
 - [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
 
+*By accessing or using 1Password Developer Tools, you agree to the [API and SDK Terms of Service](https://1password.com/legal/api-sdk-terms-of-service).*
+
 ## 📖 Learn more
 
 - [Load secrets](https://developer.1password.com/docs/sdks/load-secrets)
