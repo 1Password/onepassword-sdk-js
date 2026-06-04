@@ -56,10 +56,7 @@ package-lock.json
 .parcel-cache
 
 # Dist folder
-# Normally `dist` is built at `npm publish` time and shipped with the npm package,
-# so it's gitignored upstream. This is a private fork consumed directly by
-# load-secret-actions (not via npm), so the built `client/dist` must be committed.
-# dist
+dist
 
 # temp directory
 .temp
