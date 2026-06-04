@@ -122,6 +122,7 @@ export enum GroupState {
 export enum VaultAccessorType {
   User = "user",
   Group = "group",
+  Broker = "broker",
 }
 
 /** Represents the vault access information. */

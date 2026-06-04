@@ -23,7 +23,7 @@ export class TestCore implements Core {
 
   async initClientOidc(
     config: string,
-    _fetcher: () => Promise<string>,
+    _fetcher: (string) => Promise<string>,
   ): Promise<string> {
     return this.initClient(config);
   }

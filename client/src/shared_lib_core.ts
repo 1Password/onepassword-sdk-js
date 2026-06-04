@@ -177,7 +177,7 @@ export class SharedLibCore implements Core {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async initClientOidc(
     config: string,
-    _fetcher: () => Promise<string>,
+    _fetcher: (audience: string) => Promise<string>,
   ): Promise<string> {
     throw new Error("OIDC authentication is not supported with desktop auth");
   }
