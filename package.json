@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "prepare": "npm run build --workspace client",
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
     "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples",
@@ -26,6 +27,10 @@
     "release-no-core-stable": "client/release/scripts/release.sh false stable",
     "release-stable": "client/release/scripts/release.sh true stable"
   },
+  "files": [
+    "client/dist",
+    "wasm"
+  ],
   "workspaces": [
     "client",
     "examples",
