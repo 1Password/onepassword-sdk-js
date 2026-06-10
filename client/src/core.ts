@@ -27,7 +27,7 @@ export interface Core {
    */
   initClientOidc(
     config: string,
-    fetcher: () => Promise<string>,
+    fetcher: (audience: string) => Promise<string>,
   ): Promise<string>;
   /**
    *  Calls async business logic from a given client and returns the result.
@@ -109,7 +109,7 @@ export class WasmCore implements Core {
 
   public async initClientOidc(
     config: string,
-    fetcher: () => Promise<string>,
+    fetcher: (audience: string) => Promise<string>,
   ): Promise<string> {
     try {
       return await init_client_oidc(config, fetcher);
@@ -156,7 +156,7 @@ export class SharedCore {
 
   public async initClientOidc(
     config: ClientAuthConfig,
-    fetcher: () => Promise<string>,
+    fetcher: (audience: string) => Promise<string>,
   ): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     return this.inner.initClientOidc(serializedConfig, fetcher);

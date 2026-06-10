@@ -206,37 +206,6 @@ function debugString(val) {
     // TODO we could test for more things here, like `Set`s and `Map`s.
     return className;
 }
-
-module.exports.start = function() {
-    wasm.start();
-};
-
-/**
- * Initializes an SDK client with a given configuration.
- * @param {string} config
- * @returns {Promise<string>}
- */
-module.exports.init_client = function(config) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client(ptr0, len0);
-    return ret;
-};
-
-/**
- * Initializes an SDK client with an OIDC token fetcher.
- * The `fetcher` parameter is a JS function `() => Promise<string>`.
- * @param {string} config
- * @param {Function} fetcher
- * @returns {Promise<string>}
- */
-module.exports.init_client_oidc = function(config, fetcher) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client_oidc(ptr0, len0, fetcher);
-    return ret;
-};
-
 /**
  * Handles all asynchronous invocations to the SDK core received from the SDK.
  * @param {string} parameters
@@ -246,6 +215,20 @@ module.exports.invoke = function(parameters) {
     const ptr0 = passStringToWasm0(parameters, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
     const ret = wasm.invoke(ptr0, len0);
+    return ret;
+};
+
+/**
+ * Initializes an SDK client with an OIDC token fetcher.
+ * The `fetcher` parameter is a JS function `(string) => Promise<string>`.
+ * @param {string} config
+ * @param {Function} fetcher
+ * @returns {Promise<string>}
+ */
+module.exports.init_client_oidc = function(config, fetcher) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.init_client_oidc(ptr0, len0, fetcher);
     return ret;
 };
 
@@ -280,6 +263,10 @@ module.exports.invoke_sync = function(parameters) {
     }
 };
 
+module.exports.start = function() {
+    wasm.start();
+};
+
 /**
  * Drops a client, releasing the memory allocated for it.
  * @param {string} client_id
@@ -293,16 +280,28 @@ module.exports.release_client = function(client_id) {
     }
 };
 
+/**
+ * Initializes an SDK client with a given configuration.
+ * @param {string} config
+ * @returns {Promise<string>}
+ */
+module.exports.init_client = function(config) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.init_client(ptr0, len0);
+    return ret;
+};
+
 function __wbg_adapter_30(arg0, arg1) {
-    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h9d0e1814e0bda954(arg0, arg1);
+    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h312f85565b096a79(arg0, arg1);
 }
 
 function __wbg_adapter_33(arg0, arg1, arg2) {
-    wasm.closure4032_externref_shim(arg0, arg1, arg2);
+    wasm.closure3938_externref_shim(arg0, arg1, arg2);
 }
 
-function __wbg_adapter_212(arg0, arg1, arg2, arg3) {
-    wasm.closure4141_externref_shim(arg0, arg1, arg2, arg3);
+function __wbg_adapter_228(arg0, arg1, arg2, arg3) {
+    wasm.closure4050_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_ReadableStreamType = ["bytes"];
@@ -331,13 +330,6 @@ class IntoUnderlyingByteSource {
         wasm.__wbg_intounderlyingbytesource_free(ptr, 0);
     }
     /**
-     * @returns {ReadableStreamType}
-     */
-    get type() {
-        const ret = wasm.intounderlyingbytesource_type(this.__wbg_ptr);
-        return __wbindgen_enum_ReadableStreamType[ret];
-    }
-    /**
      * @returns {number}
      */
     get autoAllocateChunkSize() {
@@ -346,17 +338,24 @@ class IntoUnderlyingByteSource {
     }
     /**
      * @param {ReadableByteStreamController} controller
-     */
-    start(controller) {
-        wasm.intounderlyingbytesource_start(this.__wbg_ptr, controller);
-    }
-    /**
-     * @param {ReadableByteStreamController} controller
      * @returns {Promise<any>}
      */
     pull(controller) {
         const ret = wasm.intounderlyingbytesource_pull(this.__wbg_ptr, controller);
         return ret;
+    }
+    /**
+     * @param {ReadableByteStreamController} controller
+     */
+    start(controller) {
+        wasm.intounderlyingbytesource_start(this.__wbg_ptr, controller);
+    }
+    /**
+     * @returns {ReadableStreamType}
+     */
+    get type() {
+        const ret = wasm.intounderlyingbytesource_type(this.__wbg_ptr);
+        return __wbindgen_enum_ReadableStreamType[ret];
     }
     cancel() {
         const ptr = this.__destroy_into_raw();
@@ -383,11 +382,12 @@ class IntoUnderlyingSink {
         wasm.__wbg_intounderlyingsink_free(ptr, 0);
     }
     /**
-     * @param {any} chunk
+     * @param {any} reason
      * @returns {Promise<any>}
      */
-    write(chunk) {
-        const ret = wasm.intounderlyingsink_write(this.__wbg_ptr, chunk);
+    abort(reason) {
+        const ptr = this.__destroy_into_raw();
+        const ret = wasm.intounderlyingsink_abort(ptr, reason);
         return ret;
     }
     /**
@@ -399,12 +399,11 @@ class IntoUnderlyingSink {
         return ret;
     }
     /**
-     * @param {any} reason
+     * @param {any} chunk
      * @returns {Promise<any>}
      */
-    abort(reason) {
-        const ptr = this.__destroy_into_raw();
-        const ret = wasm.intounderlyingsink_abort(ptr, reason);
+    write(chunk) {
+        const ret = wasm.intounderlyingsink_write(this.__wbg_ptr, chunk);
         return ret;
     }
 }
@@ -681,7 +680,7 @@ module.exports.__wbg_new_23a2665fac83c611 = function(arg0, arg1) {
             const a = state0.a;
             state0.a = 0;
             try {
-                return __wbg_adapter_212(a, state0.b, arg0, arg1);
+                return __wbg_adapter_228(a, state0.b, arg0, arg1);
             } finally {
                 state0.a = a;
             }
@@ -986,13 +985,13 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper14263 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 4001, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper13809 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 3875, __wbg_adapter_30);
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper14360 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 4033, __wbg_adapter_33);
+module.exports.__wbindgen_closure_wrapper13955 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 3939, __wbg_adapter_33);
     return ret;
 };
 

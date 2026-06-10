@@ -11,7 +11,7 @@ export interface ClientConfiguration {
   auth?: Auth;
   integrationName: string;
   integrationVersion: string;
-  oidcFetcher?: () => Promise<string>;
+  oidcFetcher?: (audience: string) => Promise<string>;
   workloadDetails?: WorkloadDetails;
 }
 
