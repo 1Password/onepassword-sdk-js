@@ -207,6 +207,18 @@ function debugString(val) {
     return className;
 }
 /**
+ * Handles all asynchronous invocations to the SDK core received from the SDK.
+ * @param {string} parameters
+ * @returns {Promise<string>}
+ */
+module.exports.invoke = function(parameters) {
+    const ptr0 = passStringToWasm0(parameters, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.invoke(ptr0, len0);
+    return ret;
+};
+
+/**
  * Initializes an SDK client with an OIDC token fetcher.
  * The `fetcher` parameter is a JS function `(string) => Promise<string>`.
  * @param {string} config
@@ -218,10 +230,6 @@ module.exports.init_client_oidc = function(config, fetcher) {
     const len0 = WASM_VECTOR_LEN;
     const ret = wasm.init_client_oidc(ptr0, len0, fetcher);
     return ret;
-};
-
-module.exports.start = function() {
-    wasm.start();
 };
 
 function takeFromExternrefTable0(idx) {
@@ -255,16 +263,8 @@ module.exports.invoke_sync = function(parameters) {
     }
 };
 
-/**
- * Initializes an SDK client with a given configuration.
- * @param {string} config
- * @returns {Promise<string>}
- */
-module.exports.init_client = function(config) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client(ptr0, len0);
-    return ret;
+module.exports.start = function() {
+    wasm.start();
 };
 
 /**
@@ -281,14 +281,14 @@ module.exports.release_client = function(client_id) {
 };
 
 /**
- * Handles all asynchronous invocations to the SDK core received from the SDK.
- * @param {string} parameters
+ * Initializes an SDK client with a given configuration.
+ * @param {string} config
  * @returns {Promise<string>}
  */
-module.exports.invoke = function(parameters) {
-    const ptr0 = passStringToWasm0(parameters, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+module.exports.init_client = function(config) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.invoke(ptr0, len0);
+    const ret = wasm.init_client(ptr0, len0);
     return ret;
 };
 
@@ -985,12 +985,12 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper13815 = function(arg0, arg1, arg2) {
+module.exports.__wbindgen_closure_wrapper13809 = function(arg0, arg1, arg2) {
     const ret = makeMutClosure(arg0, arg1, 3875, __wbg_adapter_30);
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper13961 = function(arg0, arg1, arg2) {
+module.exports.__wbindgen_closure_wrapper13955 = function(arg0, arg1, arg2) {
     const ret = makeMutClosure(arg0, arg1, 3939, __wbg_adapter_33);
     return ret;
 };
