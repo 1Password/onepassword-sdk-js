@@ -21,7 +21,9 @@ export const createClientWithCore = async (
   if (authConfig.accountName) {
     core.setInner(new SharedLibCore(authConfig.accountName));
   }
-  const clientId = await core.initClient(authConfig);
+  const clientId = config.oidcFetcher
+  ? await core.initClientOidc(authConfig, config.oidcFetcher)
+  : await core.initClient(authConfig);
   const inner = new InnerClient(parseInt(clientId, 10), core, authConfig);
   const client = new Client(inner);
   // Cleans up associated memory from core when client instance goes out of scope.
