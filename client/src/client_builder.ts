@@ -17,6 +17,12 @@ export const createClientWithCore = async (
   config: ClientConfiguration,
   core: SharedCore,
 ): Promise<Client> => {
+  if (!config.auth && !config.oidcFetcher) {
+    throw new Error(
+      "createClient requires either `auth` (service account token) or `oidcFetcher` (workload identity).",
+    );
+  }
+
   const authConfig = clientAuthConfig(config);
   if (authConfig.accountName) {
     core.setInner(new SharedLibCore(authConfig.accountName));
