@@ -145,20 +145,6 @@ Field types:
 
 Instead of a service account token, you can authenticate a workload by providing an OIDC token fetcher and your workload details. The SDK calls your `oidcFetcher` to obtain a token when it needs one:
 
-```js
-import { createClient } from "@1password/sdk";
-
-const client = await createClient({
-  oidcFetcher: async (audience) => fetchOidcToken(audience),
-  workloadDetails: {
-    customerManagedSecret: process.env.OP_CUSTOMER_MANAGED_SECRET,
-    workloadUuid: "<your-workload-uuid>",
-  },
-  integrationName: "My 1Password Integration",
-  integrationVersion: "v1.0.0",
-});
-```
-
 ## 📖 Learn more
 
 - [Load secrets with 1Password SDKs](https://developer.1password.com/docs/sdks/load-secrets)

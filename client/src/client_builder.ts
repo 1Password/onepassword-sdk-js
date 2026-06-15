@@ -22,6 +22,11 @@ export const createClientWithCore = async (
       "createClient requires either `auth` (service account token) or `oidcFetcher` (workload identity).",
     );
   }
+  if (config.oidcFetcher && !config.workloadDetails) {
+    throw new Error(
+      "`oidcFetcher` (workload identity) requires `workloadDetails` to be set.",
+    );
+  }
 
   const authConfig = clientAuthConfig(config);
   if (authConfig.accountName) {
