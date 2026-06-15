@@ -135,6 +135,7 @@ Field types:
 ### Authentication
 
 - [x] [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/get-started/)
+- [x] Workload identity via [1Password Credential Broker](https://www.1password.dev/environments/credential-broker) (private beta, GitHub Actions only) supplies secrets to a workflow at runtime after verifying its identity.
 - [ ] User authentication
 - [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
 
