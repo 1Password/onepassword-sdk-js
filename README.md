@@ -135,8 +135,15 @@ Field types:
 ### Authentication
 
 - [x] [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/get-started/)
+- [x] [Workload identity](#workload-identity-beta) (beta)
 - [ ] User authentication
 - [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
+
+### Workload identity (beta)
+
+> **Private beta.** Currently available for GitHub Actions via 1Password Credential Broker.
+
+Instead of a service account token, you can authenticate a workload by providing an OIDC token fetcher and your workload details. The SDK calls your `oidcFetcher` to obtain a token when it needs one.
 
 ## 📖 Learn more
 
