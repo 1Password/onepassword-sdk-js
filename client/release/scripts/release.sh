@@ -63,14 +63,6 @@ if [ -z "${GITHUB_TOKEN}" ]; then
 fi
 
 if [ "$core_modified" = "true" ]; then
-    # Point the client at the new core version BEFORE bumping wasm below.
-    #
-    # Why this order matters: bumping the wasm version makes npm re-link the workspace
-    # and rebuild the client. The client only uses our local core when their versions
-    # match. If the client still asks for the OLD version, npm grabs the old core from
-    # the registry instead and the build fails, because the old core doesn't have the
-    # new functions yet. Setting the client's version first keeps them matched, so the
-    # rebuild uses our local core.
     npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}" --workspace client
 
     cd wasm
@@ -106,8 +98,6 @@ fi
   if [ "$core_modified" = true ]; then
     # Wait for npm to be update to the latest version
     wait_for_npm_publish @1password/sdk-core "${version_sdk_core}"
-    # Set the package version regardless if npm published or not
-    npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}"
   fi
 
   # Update sdk version number to the latest
