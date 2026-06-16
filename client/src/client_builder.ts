@@ -17,11 +17,24 @@ export const createClientWithCore = async (
   config: ClientConfiguration,
   core: SharedCore,
 ): Promise<Client> => {
+  if (!config.auth && !config.oidcFetcher) {
+    throw new Error(
+      "createClient requires either `auth` (service account token) or `oidcFetcher` (workload identity).",
+    );
+  }
+  if (config.oidcFetcher && !config.workloadDetails) {
+    throw new Error(
+      "`oidcFetcher` (workload identity) requires `workloadDetails` to be set.",
+    );
+  }
+
   const authConfig = clientAuthConfig(config);
   if (authConfig.accountName) {
     core.setInner(new SharedLibCore(authConfig.accountName));
   }
-  const clientId = await core.initClient(authConfig);
+  const clientId = config.oidcFetcher
+    ? await core.initClientOidc(authConfig, config.oidcFetcher)
+    : await core.initClient(authConfig);
   const inner = new InnerClient(parseInt(clientId, 10), core, authConfig);
   const client = new Client(inner);
   // Cleans up associated memory from core when client instance goes out of scope.

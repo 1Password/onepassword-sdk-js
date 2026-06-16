@@ -1,6 +1,6 @@
 import os from "os";
 import { SDK_BUILD_NUMBER } from "./version.js";
-import { ClientAuthConfig } from "./core.js";
+import { ClientAuthConfig, WorkloadDetails } from "./core.js";
 
 export const LANGUAGE = "JS";
 export const VERSION = SDK_BUILD_NUMBER;
@@ -8,9 +8,11 @@ export const VERSION = SDK_BUILD_NUMBER;
 // Contains information necessary to configure an SDK client.
 export interface ClientConfiguration {
   // Auth currently only accepts a service account token. Read more about how to get started with service accounts: https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account
-  auth: Auth;
+  auth?: Auth;
   integrationName: string;
   integrationVersion: string;
+  oidcFetcher?: (audience: string) => Promise<string>;
+  workloadDetails?: WorkloadDetails;
 }
 
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.
@@ -56,6 +58,7 @@ export const clientAuthConfig = (
     os: getOsName(),
     osVersion: defaultOsVersion,
     architecture: os.arch(),
+    workloadDetails: userConfig.workloadDetails,
   };
 };
 
