@@ -19,7 +19,7 @@ cleanup() {
     cd "$(git rev-parse --show-toplevel)"
     # restores all files
     git checkout -- .
-    exit 1   
+    exit 1
 }
 
 # waits for NPM to publish on internal registry to update package json
@@ -63,6 +63,8 @@ if [ -z "${GITHUB_TOKEN}" ]; then
 fi
 
 if [ "$core_modified" = "true" ]; then
+    npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}" --workspace client
+
     cd wasm
     # Update core version number to the latest
     npm version "${version_sdk_core}"
@@ -96,15 +98,13 @@ fi
   if [ "$core_modified" = true ]; then
     # Wait for npm to be update to the latest version
     wait_for_npm_publish @1password/sdk-core "${version_sdk_core}"
-    # Set the package version regardless if npm published or not
-    npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}"
   fi
 
   # Update sdk version number to the latest
   npm version "${version_sdk}"
 
   # Check if the latest core is pulled correctly
-  npm install 
+  npm install
 
   # Check if all files pertaining to sdk are included
   RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-test
