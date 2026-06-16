@@ -19,7 +19,7 @@ cleanup() {
     cd "$(git rev-parse --show-toplevel)"
     # restores all files
     git checkout -- .
-    exit 1   
+    exit 1
 }
 
 # waits for NPM to publish on internal registry to update package json
@@ -63,6 +63,16 @@ if [ -z "${GITHUB_TOKEN}" ]; then
 fi
 
 if [ "$core_modified" = "true" ]; then
+    # Point the client at the new core version BEFORE bumping wasm below.
+    #
+    # Why this order matters: bumping the wasm version makes npm re-link the workspace
+    # and rebuild the client. The client only uses our local core when their versions
+    # match. If the client still asks for the OLD version, npm grabs the old core from
+    # the registry instead and the build fails, because the old core doesn't have the
+    # new functions yet. Setting the client's version first keeps them matched, so the
+    # rebuild uses our local core.
+    npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}" --workspace client
+
     cd wasm
     # Update core version number to the latest
     npm version "${version_sdk_core}"
@@ -104,7 +114,7 @@ fi
   npm version "${version_sdk}"
 
   # Check if the latest core is pulled correctly
-  npm install 
+  npm install
 
   # Check if all files pertaining to sdk are included
   RELEASE_CHANNEL="${RELEASE_CHANNEL}" npm run publish-test
