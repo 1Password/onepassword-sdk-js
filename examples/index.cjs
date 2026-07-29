@@ -302,7 +302,13 @@ async function showcaseBatchItemOperations() {
 }
 
 async function getEnvironmentVariables() {
-  // [developer-docs.sdk.js.get-environment-variables]-start
+  // Create an authenticated client
+  const client = await sdk.createClient({
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+    integrationName: "My 1Password Integration",
+    integrationVersion: "v1.0.0",
+  });
+
   // Read variables from a 1Password Environment
   const environment = await client.environments.getVariables(
     process.env.OP_ENVIRONMENT_ID,
@@ -312,7 +318,6 @@ async function getEnvironmentVariables() {
       `${variable.name}: ${variable.value} (masked: ${variable.masked})`,
     );
   }
-  // [developer-docs.sdk.js.get-environment-variables]-end
 }
 
 manageItems();

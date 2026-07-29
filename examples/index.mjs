@@ -230,7 +230,7 @@ await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end
 
 if (process.env.OP_ENVIRONMENT_ID) {
-  getEnvironmentVariables(client);
+  await getEnvironmentVariables(client);
 }
 
 async function shareItem(client, vaultId, itemId) {
