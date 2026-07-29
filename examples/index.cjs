@@ -301,7 +301,30 @@ async function showcaseBatchItemOperations() {
   }
 }
 
+async function getEnvironmentVariables() {
+  // Create an authenticated client
+  const client = await sdk.createClient({
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+    integrationName: "My 1Password Integration",
+    integrationVersion: "v1.0.0",
+  });
+
+  // Read variables from a 1Password Environment
+  const environment = await client.environments.getVariables(
+    process.env.OP_ENVIRONMENT_ID,
+  );
+  for (const variable of environment.variables) {
+    console.log(
+      `${variable.name}: ${variable.value} (masked: ${variable.masked})`,
+    );
+  }
+}
+
 manageItems();
 generatePassword();
 showcaseVaultOperations();
 showcaseBatchItemOperations();
+
+if (process.env.OP_ENVIRONMENT_ID) {
+  getEnvironmentVariables();
+}

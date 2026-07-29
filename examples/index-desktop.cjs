@@ -37,6 +37,16 @@ async function main() {
   }
 
   await showcaseGroupPermissionsOperations(client, vaultId, groupId);
+
+  if (process.env.OP_ENVIRONMENT_ID) {
+    // [developer-docs.sdk.js.get-environment-variables]-start
+    // Read variables from a 1Password Environment
+    const environment = await client.environments.getVariables(process.env.OP_ENVIRONMENT_ID);
+    for (const variable of environment.variables) {
+      console.log(`${variable.name}: ${variable.value} (masked: ${variable.masked})`);
+    }
+    // [developer-docs.sdk.js.get-environment-variables]-end
+  }
 }
 
 async function showcaseVaultOperations(client) {

@@ -229,6 +229,10 @@ await archiveItem(client, updatedItem.vaultId, updatedItem.id);
 await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end
 
+if (process.env.OP_ENVIRONMENT_ID) {
+  await getEnvironmentVariables(client);
+}
+
 async function shareItem(client, vaultId, itemId) {
   // [developer-docs.sdk.js.item-share-get-item]-start
   // Get an item to share
@@ -694,4 +698,18 @@ async function showcaseBatchItemOperations(client, vaultId) {
     }
   }
   // [developer-docs.sdk.js.batch-delete-items]-end
+}
+
+async function getEnvironmentVariables(client) {
+  // [developer-docs.sdk.js.get-environment-variables]-start
+  // Read variables from a 1Password Environment
+  const environment = await client.environments.getVariables(
+    process.env.OP_ENVIRONMENT_ID,
+  );
+  for (const variable of environment.variables) {
+    console.log(
+      `${variable.name}: ${variable.value} (masked: ${variable.masked})`,
+    );
+  }
+  // [developer-docs.sdk.js.get-environment-variables]-end
 }
