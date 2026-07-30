@@ -1,11 +1,7 @@
-# 1Password JavaScript SDK v0.4.1
+# 1Password JavaScript SDK v0.5.0-beta.1
 
 ## NEW
 
 
-- **1Password Environment access:** The SDK can now read variables from a 1Password Environment.
+- **Workload Identity authentication (private beta):** The SDK can now authenticate using workload identity via 1Password Credential Broker. Provide an `oidcFetcher` and `workloadDetails` to `createClient()` instead of a service account token. Currently in private beta and available for GitHub Actions only.
 
-## IMPROVED
-
-- **Documentation:** The README now covers desktop app authentication and an updated list of supported functionality. Examples cover vault and group permission operations, and are consistent with the other 1Password SDKs.
-- **Terms of Service:** The README now links the terms of service that apply to the 1Password APIs/SDKs.

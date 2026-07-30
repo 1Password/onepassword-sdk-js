@@ -22,7 +22,7 @@ You can choose between two [authentication methods](https://developer.1password.
 
 ### Option 1: 1Password desktop app
 
-[1Password desktop app authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app) is best for local integrations that require minimal setup from end users and sensitive workflows that require human-in-the-loop approval. 
+[1Password desktop app authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app) is best for local integrations that require minimal setup from end users and sensitive workflows that require human-in-the-loop approval.
 
 1. Install the [1Password desktop app](https://1password.com/downloads/) and sign in to your account in the app.
 2. Select your account or collection at the top of the sidebar, then navigate to **Settings** > **Developer**.
@@ -206,8 +206,15 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 ### Authentication
 
 - [x] [1Password Service Accounts](https://developer.1password.com/docs/sdks/concepts#1password-service-account)
+- [x] [Workload identity](#workload-identity-public-preview) (public preview)
 - [x] [User authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app)
 - [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
+
+### Workload identity (public preview)
+
+> **Public Preview** This feature is currently in *public preview*. Please see documentation [here](https://www.1password.dev/environments/credential-broker).
+
+Instead of a service account token, you can authenticate a workload by providing an OIDC token fetcher and your workload details. The SDK calls your `oidcFetcher` to obtain a token when it needs one.
 
 ## 📖 Learn more
 

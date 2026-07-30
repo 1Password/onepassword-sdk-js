@@ -40,6 +40,32 @@ jobs:
           OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
         run: npm run esm-example
 
+  test-workload-identity:
+    name: Test workload identity
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm install
+
+      - name: Test
+        env:
+          OP_WORKLOAD_ID: ${{ secrets.OP_WORKLOAD_ID }}
+          OP_ENVIRONMENT_ID: ${{ secrets.OP_ENVIRONMENT_ID }}
+          OP_INTEGRATION_KEY: ${{ secrets.OP_INTEGRATION_KEY }}
+        run: npm test --workspace client -- workload_identity
+
   lint:
     name: Lint
     runs-on: ubuntu-latest

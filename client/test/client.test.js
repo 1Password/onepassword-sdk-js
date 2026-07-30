@@ -22,6 +22,39 @@ test("the right configuration is created", () => {
   expect(config.architecture).toContain("64");
 });
 
+test("createClient throws when neither auth nor oidcFetcher is provided", async () => {
+  const core = new TestCore();
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(core);
+
+  await expect(
+    createClientWithCore(
+      {
+        integrationName: "test integration",
+        integrationVersion: "test integration",
+      },
+      sharedCore,
+    ),
+  ).rejects.toThrow(/either `auth`.*or `oidcFetcher`/);
+});
+
+test("createClient throws when oidcFetcher is set without workloadDetails", async () => {
+  const core = new TestCore();
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(core);
+
+  await expect(
+    createClientWithCore(
+      {
+        oidcFetcher: async () => "token",
+        integrationName: "test integration",
+        integrationVersion: "test integration",
+      },
+      sharedCore,
+    ),
+  ).rejects.toThrow(/`workloadDetails`/);
+});
+
 test("authenticated client resolves secrets correctly", () => {
   const core = new TestCore();
   const sharedCore = new SharedCore();
