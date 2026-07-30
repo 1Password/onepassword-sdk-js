@@ -25,7 +25,14 @@ export interface DocumentCreateParams {
   content: Uint8Array;
 }
 
-/** Represents an environment variable (name:value pair) and its masked state */
+/**
+ * One environment variable resolved by the credential broker.
+ *
+ * Shared between the Environments API (`GetVariablesResponse`) and the
+ * Credentials API (`CredentialResponse::Environment`, gated on
+ * `brokered-access`), since both surfaces read from the same credential
+ * broker enclave endpoint.
+ */
 export interface EnvironmentVariable {
   /** An environment variable's name */
   name: string;
