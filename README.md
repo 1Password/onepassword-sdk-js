@@ -210,7 +210,7 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 - [x] [User authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app)
 - [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
 
-### Workload identity (beta)
+### Workload identity (public preview)
 
 > **Public Preview** This feature is currently in *public preview*. Please see documentation [here](https://www.1password.dev/environments/credential-broker).
 
