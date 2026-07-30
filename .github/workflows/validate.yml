@@ -63,9 +63,8 @@ jobs:
 
       - name: Test
         env:
-          # IDs, not credentials — 1Password's own setup snippet inlines them.
-          OP_WORKLOAD_ID: ${{ vars.OP_WORKLOAD_ID }}
-          OP_ENVIRONMENT_ID: ${{ vars.OP_ENVIRONMENT_ID }}
+          OP_WORKLOAD_ID: ${{ secrets.OP_WORKLOAD_ID }}
+          OP_ENVIRONMENT_ID: ${{ secrets.OP_ENVIRONMENT_ID }}
           OP_INTEGRATION_KEY: ${{ secrets.OP_INTEGRATION_KEY }}
         run: npm test --workspace client -- workload_identity
 
