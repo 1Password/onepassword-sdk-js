@@ -6,7 +6,7 @@ const WORKLOAD_ID = process.env.OP_WORKLOAD_ID;
 const INTEGRATION_KEY = process.env.OP_INTEGRATION_KEY;
 const ENVIRONMENT_ID = process.env.OP_ENVIRONMENT_ID;
 
-// Workaround for an SDK bug: this is temporary with plans to fix in the future.
+// Workaround for an SDK bug: this is temporary fix and can be removed once the SDK is updated to a version that includes the fix.
 const unpad = (secret) => secret.replace(/=+$/, "");
 
 const missing = [
