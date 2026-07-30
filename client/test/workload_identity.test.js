@@ -14,6 +14,12 @@ const WORKLOAD_ID = process.env.OP_WORKLOAD_ID;
 const INTEGRATION_KEY = process.env.OP_INTEGRATION_KEY;
 const ENVIRONMENT_ID = process.env.OP_ENVIRONMENT_ID;
 
+// Workaround for an SDK bug: the core rejects a padded base64 secret with
+// "customer managed secret base64 decoding failed". Stripping the padding is
+// safe either way — an unpadded secret is left untouched — so this can stay
+// until the core accepts both forms.
+const unpad = (secret) => secret.replace(/=+$/, "");
+
 const missing = [
   ["ACTIONS_ID_TOKEN_REQUEST_URL", OIDC_TOKEN_URL],
   ["ACTIONS_ID_TOKEN_REQUEST_TOKEN", OIDC_TOKEN_REQUEST_TOKEN],
@@ -75,7 +81,7 @@ testWorkloadIdentity(
       },
       workloadDetails: {
         workloadUuid: WORKLOAD_ID,
-        customerManagedSecret: INTEGRATION_KEY,
+        customerManagedSecret: unpad(INTEGRATION_KEY),
       },
       integrationName: "Integration_Test_JS",
       integrationVersion: DEFAULT_INTEGRATION_VERSION,
