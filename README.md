@@ -141,7 +141,7 @@ Field types:
 
 ### Workload identity (beta)
 
-> **Private beta.** Currently available for GitHub Actions via 1Password Credential Broker.
+> **Public Preview** This feature is currently in *public preview*. Please see documentation [here](https://www.1password.dev/environments/credential-broker).
 
 Instead of a service account token, you can authenticate a workload by providing an OIDC token fetcher and your workload details. The SDK calls your `oidcFetcher` to obtain a token when it needs one.
 
