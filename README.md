@@ -206,7 +206,7 @@ Inside `createClient()`, set `integrationName` to the name of your application a
 ### Authentication
 
 - [x] [1Password Service Accounts](https://developer.1password.com/docs/sdks/concepts#1password-service-account)
-- [x] [Workload identity](#workload-identity-beta) (public preview)
+- [x] [Workload identity](#workload-identity-public-preview) (public preview)
 - [x] [User authentication](https://developer.1password.com/docs/sdks/concepts#1password-desktop-app)
 - [ ] 1Password Connect. For now, use [1Password/connect-sdk-js](https://github.com/1Password/connect-sdk-js).
 
