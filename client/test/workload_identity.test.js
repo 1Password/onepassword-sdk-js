@@ -6,9 +6,6 @@ const WORKLOAD_ID = process.env.OP_WORKLOAD_ID;
 const INTEGRATION_KEY = process.env.OP_INTEGRATION_KEY;
 const ENVIRONMENT_ID = process.env.OP_ENVIRONMENT_ID;
 
-// Workaround for an SDK bug: this is temporary fix and can be removed once the SDK is updated to a version that includes the fix.
-const unpad = (secret) => secret.replace(/=+$/, "");
-
 const missing = [
   ["ACTIONS_ID_TOKEN_REQUEST_URL", OIDC_TOKEN_URL],
   ["ACTIONS_ID_TOKEN_REQUEST_TOKEN", OIDC_TOKEN_REQUEST_TOKEN],
@@ -68,7 +65,9 @@ testWorkloadIdentity(
       },
       workloadDetails: {
         workloadUuid: WORKLOAD_ID,
-        customerManagedSecret: unpad(INTEGRATION_KEY),
+        // Passed exactly as issued — the SDK strips base64 padding itself,
+        // so this doubles as the regression test for padded keys.
+        customerManagedSecret: INTEGRATION_KEY,
       },
       integrationName: "Integration_Test_JS",
       integrationVersion: DEFAULT_INTEGRATION_VERSION,
