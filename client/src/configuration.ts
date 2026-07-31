@@ -58,7 +58,12 @@ export const clientAuthConfig = (
     os: getOsName(),
     osVersion: defaultOsVersion,
     architecture: os.arch(),
-    workloadDetails: userConfig.workloadDetails,
+    workloadDetails: userConfig.workloadDetails && {
+      ...userConfig.workloadDetails,
+      // The core decodes this as unpadded base64; issued keys may be padded.
+      customerManagedSecret:
+        userConfig.workloadDetails.customerManagedSecret.replace(/=+$/, ""),
+    },
   };
 };
 

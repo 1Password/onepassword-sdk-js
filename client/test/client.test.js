@@ -20,6 +20,27 @@ test("the right configuration is created", () => {
   expect(config.os).toBe(getOsName());
   expect(config.osVersion).toBe("0.0.0");
   expect(config.architecture).toContain("64");
+  expect(config.workloadDetails).toBeUndefined();
+});
+
+const workloadConfigWithSecret = (customerManagedSecret) =>
+  clientAuthConfig({
+    workloadDetails: { workloadUuid: "workload-uuid", customerManagedSecret },
+    integrationName: "Test app",
+    integrationVersion: "v1",
+  });
+
+test("base64 padding is stripped from the customer managed secret", () => {
+  const config = workloadConfigWithSecret("ops_cGFkZGVk==");
+
+  expect(config.workloadDetails.customerManagedSecret).toBe("ops_cGFkZGVk");
+  expect(config.workloadDetails.workloadUuid).toBe("workload-uuid");
+});
+
+test("an unpadded customer managed secret is left untouched", () => {
+  const config = workloadConfigWithSecret("ops_dW5wYWRkZWQ");
+
+  expect(config.workloadDetails.customerManagedSecret).toBe("ops_dW5wYWRkZWQ");
 });
 
 test("createClient throws when neither auth nor oidcFetcher is provided", async () => {
