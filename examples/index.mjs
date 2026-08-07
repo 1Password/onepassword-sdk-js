@@ -488,13 +488,13 @@ function generateSpecialItemFields() {
   ];
 }
 
-async function resolveAllSecrets(client) {
+async function resolveAllSecrets(client, vaultId, itemId, fieldId, fieldId2) {
   // [developer-docs.sdk.js.resolve-bulk-secret]-start
   try {
     // Fetch multiple secrets using secret references
     const secrets = await client.secrets.resolveAll([
-      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username",
-      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password",
+      `op://${vaultId}/${itemId}/${fieldId}`,
+      `op://${vaultId}/${itemId}/${fieldId2}`,
     ]);
 
     for (const [_, response] of Object.entries(secrets.individualResponses)) {

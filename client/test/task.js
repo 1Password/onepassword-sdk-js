@@ -14,7 +14,7 @@ async function retrieveSecret() {
         integrationVersion: DEFAULT_INTEGRATION_VERSION,
     })
 
-    return await client.secrets.resolve("op://gowwbvgow7kxocrfmfvtwni6vi/6ydrn7ne6mwnqc2prsbqx4i4aq/password")
+    return await client.secrets.resolve("op://dm42px5dmgusczoarfdubfmodm/2fwfzpvjvaey2lwph5jupovjaq/password")
 }
 
 module.exports = { retrieveSecret }
