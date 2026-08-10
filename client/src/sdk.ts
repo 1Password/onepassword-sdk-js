@@ -3,9 +3,7 @@
 import { SharedCore } from "./core.js";
 import { ClientConfiguration } from "./configuration.js";
 import { Client } from "./client.js";
-import {
-  createClientWithCore,
-} from "./client_builder.js";
+import { createClientWithCore } from "./client_builder.js";
 
 export const DEFAULT_INTEGRATION_NAME = "Unknown";
 export const DEFAULT_INTEGRATION_VERSION = "Unknown";
@@ -25,3 +23,16 @@ export * from "./types.js";
 export const createClient = async (
   config: ClientConfiguration,
 ): Promise<Client> => createClientWithCore(config, new SharedCore());
+
+import { WorkloadClientConfiguration } from "./configuration.js";
+import { WorkloadClient } from "./client.js";
+import { createWorkloadClientWithCore } from "./client_builder.js";
+
+/**
+ * Creates a 1Password workload (broker) client, obtained through the workload-identity init path.
+ * @returns The authenticated 1Password workload client.
+ */
+export const createWorkloadClient = async (
+  config: WorkloadClientConfiguration,
+): Promise<WorkloadClient> =>
+  createWorkloadClientWithCore(config, new SharedCore());
