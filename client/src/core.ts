@@ -8,6 +8,7 @@ import {
 
 import { ReplacerFunc } from "./types";
 import { DesktopSessionExpiredError, throwError } from "./errors";
+import type { WorkloadClientConfiguration } from "./configuration.js";
 
 // In empirical tests, we determined that maximum message size that can cross the FFI boundary
 // is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
@@ -155,9 +156,10 @@ export class SharedCore {
   }
 
   public async initClientOidc(
-    config: ClientAuthConfig,
+    config: WorkloadClientConfiguration,
     fetcher: (audience: string) => Promise<string>,
   ): Promise<string> {
+    // The oidcFetcher is passed separately and dropped by JSON serialization.
     const serializedConfig = JSON.stringify(config);
     return this.inner.initClientOidc(serializedConfig, fetcher);
   }
@@ -199,18 +201,35 @@ export class InnerClient {
   public constructor(
     public id: number,
     public readonly core: SharedCore,
-    public config: ClientAuthConfig,
   ) {}
 
   public async invoke(config: InvokeConfig): Promise<string> {
+    return await this.core.invoke(config);
+  }
+}
+
+/**
+ *  A token- or desktop-authenticated client. It retains the auth config so it can
+ *  transparently re-initialize after a desktop session expires.
+ */
+export class StandardClient extends InnerClient {
+  public constructor(
+    id: number,
+    core: SharedCore,
+    public config: ClientAuthConfig,
+  ) {
+    super(id, core);
+  }
+
+  public override async invoke(config: InvokeConfig): Promise<string> {
     try {
-      return await this.core.invoke(config);
+      return await super.invoke(config);
     } catch (err: unknown) {
       if (err instanceof DesktopSessionExpiredError) {
         const newId = await this.core.initClient(this.config);
         this.id = parseInt(newId, 10);
         config.invocation.clientId = this.id;
-        return await this.core.invoke(config);
+        return await super.invoke(config);
       }
       throw err;
     }

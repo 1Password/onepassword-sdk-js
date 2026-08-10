@@ -23,3 +23,16 @@ export * from "./types.js";
 export const createClient = async (
   config: ClientConfiguration,
 ): Promise<Client> => createClientWithCore(config, new SharedCore());
+
+import { WorkloadClientConfiguration } from "./configuration.js";
+import { WorkloadClient } from "./client.js";
+import { createWorkloadClientWithCore } from "./client_builder.js";
+
+/**
+ * Creates a 1Password workload (broker) client, obtained through the workload-identity init path.
+ * @returns The authenticated 1Password workload client.
+ */
+export const createWorkloadClient = async (
+  config: WorkloadClientConfiguration,
+): Promise<WorkloadClient> =>
+  createWorkloadClientWithCore(config, new SharedCore());

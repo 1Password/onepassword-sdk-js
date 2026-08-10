@@ -18,6 +18,21 @@ export interface AddressFieldDetails {
   state: string;
 }
 
+/**
+ * A reference to a 1Password Credential Broker configuration.
+ *
+ * Passed to a `client.credential_broker.<kind>.get` call to fetch a
+ * credential. The `reference` string has the form:
+ *
+ * ```text
+ * //api.1password.com/credential-broker/accounts/<account>/capability/<name>/configurations/<id>
+ * ```
+ */
+export interface CredentialReference {
+  /** The reference path. */
+  reference: string;
+}
+
 export interface DocumentCreateParams {
   /** The name of the file */
   name: string;
@@ -25,7 +40,14 @@ export interface DocumentCreateParams {
   content: Uint8Array;
 }
 
-/** Represents an environment variable (name:value pair) and its masked state */
+/**
+ * One environment variable resolved by the credential broker.
+ *
+ * Shared between the Environments API (`GetVariablesResponse`) and the
+ * Credential Broker API (`EnvironmentCredential`, gated on
+ * `brokered-access`), since both surfaces read from the same credential
+ * broker enclave endpoint.
+ */
 export interface EnvironmentVariable {
   /** An environment variable's name */
   name: string;
@@ -33,6 +55,18 @@ export interface EnvironmentVariable {
   value: string;
   /** An environment variable's masked state */
   masked: boolean;
+}
+
+/**
+ * An environment credential brokered by 1Password: a bundle of
+ * environment variables.
+ *
+ * Returned by
+ * [`Environment::get`](crate::client::Environment::get).
+ */
+export interface EnvironmentCredential {
+  /** The environment variables in the bundle. */
+  variables: EnvironmentVariable[];
 }
 
 export interface FileAttributes {
