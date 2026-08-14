@@ -211,6 +211,44 @@ module.exports.start = function() {
     wasm.start();
 };
 
+/**
+ * Initializes an SDK client with a given configuration.
+ * @param {string} config
+ * @returns {Promise<string>}
+ */
+module.exports.init_client = function(config) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.init_client(ptr0, len0);
+    return ret;
+};
+
+/**
+ * Initializes an SDK client with an OIDC token fetcher.
+ * The `fetcher` parameter is a JS function `(string) => Promise<string>`.
+ * @param {string} config
+ * @param {Function} fetcher
+ * @returns {Promise<string>}
+ */
+module.exports.init_client_oidc = function(config, fetcher) {
+    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.init_client_oidc(ptr0, len0, fetcher);
+    return ret;
+};
+
+/**
+ * Handles all asynchronous invocations to the SDK core received from the SDK.
+ * @param {string} parameters
+ * @returns {Promise<string>}
+ */
+module.exports.invoke = function(parameters) {
+    const ptr0 = passStringToWasm0(parameters, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.invoke(ptr0, len0);
+    return ret;
+};
+
 function takeFromExternrefTable0(idx) {
     const value = wasm.__wbindgen_export_2.get(idx);
     wasm.__externref_table_dealloc(idx);
@@ -243,18 +281,6 @@ module.exports.invoke_sync = function(parameters) {
 };
 
 /**
- * Handles all asynchronous invocations to the SDK core received from the SDK.
- * @param {string} parameters
- * @returns {Promise<string>}
- */
-module.exports.invoke = function(parameters) {
-    const ptr0 = passStringToWasm0(parameters, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.invoke(ptr0, len0);
-    return ret;
-};
-
-/**
  * Drops a client, releasing the memory allocated for it.
  * @param {string} client_id
  */
@@ -267,42 +293,16 @@ module.exports.release_client = function(client_id) {
     }
 };
 
-/**
- * Initializes an SDK client with an OIDC token fetcher.
- * The `fetcher` parameter is a JS function `(string) => Promise<string>`.
- * @param {string} config
- * @param {Function} fetcher
- * @returns {Promise<string>}
- */
-module.exports.init_client_oidc = function(config, fetcher) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client_oidc(ptr0, len0, fetcher);
-    return ret;
-};
-
-/**
- * Initializes an SDK client with a given configuration.
- * @param {string} config
- * @returns {Promise<string>}
- */
-module.exports.init_client = function(config) {
-    const ptr0 = passStringToWasm0(config, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.init_client(ptr0, len0);
-    return ret;
-};
-
 function __wbg_adapter_30(arg0, arg1) {
-    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__he8bb6100c57d2f6c(arg0, arg1);
+    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hdc33ac5d46956d1a(arg0, arg1);
 }
 
 function __wbg_adapter_33(arg0, arg1, arg2) {
-    wasm.closure3898_externref_shim(arg0, arg1, arg2);
+    wasm.closure4027_externref_shim(arg0, arg1, arg2);
 }
 
-function __wbg_adapter_152(arg0, arg1, arg2, arg3) {
-    wasm.closure3998_externref_shim(arg0, arg1, arg2, arg3);
+function __wbg_adapter_172(arg0, arg1, arg2, arg3) {
+    wasm.closure4135_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_RequestCache = ["default", "no-store", "reload", "no-cache", "force-cache", "only-if-cached"];
@@ -506,7 +506,7 @@ module.exports.__wbg_new_23a2665fac83c611 = function(arg0, arg1) {
             const a = state0.a;
             state0.a = 0;
             try {
-                return __wbg_adapter_152(a, state0.b, arg0, arg1);
+                return __wbg_adapter_172(a, state0.b, arg0, arg1);
             } finally {
                 state0.a = a;
             }
@@ -773,13 +773,13 @@ module.exports.__wbindgen_cb_drop = function(arg0) {
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper13902 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 3885, __wbg_adapter_30);
+module.exports.__wbindgen_closure_wrapper14549 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 4006, __wbg_adapter_30);
     return ret;
 };
 
-module.exports.__wbindgen_closure_wrapper13940 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 3899, __wbg_adapter_33);
+module.exports.__wbindgen_closure_wrapper14595 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 4028, __wbg_adapter_33);
     return ret;
 };
 

@@ -4,18 +4,77 @@
 
 export type ErrorMessage = string;
 
-/** Additional attributes for OTP fields. */
-export interface AddressFieldDetails {
-  /** The street address */
-  street: string;
-  /** The city */
-  city: string;
-  /** The country */
-  country: string;
-  /** The ZIP code */
-  zip: string;
-  /** The state */
-  state: string;
+/** The lifecycle state of an access request. */
+export enum AccessRequestState {
+  /** The request is awaiting a decision. */
+  Pending = "pending",
+  /** The request was approved and credentials were granted. */
+  Resolved = "resolved",
+  /** The request was denied by the user. */
+  Denied = "denied",
+  /** The request could not be processed. */
+  Failed = "failed",
+}
+
+/** The credential types an access request entry can ask for. */
+export enum AccessRequestEntryType {
+  /** A login credential (username / password / TOTP). */
+  Login = "login",
+}
+
+/** A requested credential within a created access request. */
+export interface AccessRequestEntry {
+  /**
+   * The SDK-minted identifier used to correlate this entry with a
+   * [`ResolvedAccessRequestEntry`] in the request status.
+   */
+  id: string;
+  /** The credential type requested. */
+  credentialType: AccessRequestEntryType;
+}
+
+/** A server-managed access request. */
+export interface AccessRequest {
+  /**
+   * The canonical resource path.
+   * Format: `accounts/{account}/credential-broker-access-requests/{id}`
+   */
+  path: string;
+  /**
+   * The client-generated identifier of the request. Pass to
+   * `credentialBroker.accessRequest.get` to poll the request status.
+   */
+  id: string;
+  /**
+   * The canonical AEP resource path of the identity for which
+   * credential access is requested.
+   */
+  identity: string;
+  /** The current lifecycle state. */
+  state: AccessRequestState;
+  /** The time the request was created. */
+  createdAt: Date;
+  /**
+   * The requested entries as created, each carrying its SDK-minted id.
+   * Correlate against [`ResolvedAccessRequestEntry::entry_id`] in the
+   * request status.
+   */
+  entries: AccessRequestEntry[];
+}
+
+/** A single credential need within an access request. */
+export interface AccessRequestEntryParams {
+  /** The credential type requested. */
+  credentialType: AccessRequestEntryType;
+}
+
+/** The parameters for creating an access request. */
+export interface AccessRequestCreateParams {
+  /**
+   * The requested credentials, in presentation order. Must contain
+   * between 1 and 5 entries.
+   */
+  entries: AccessRequestEntryParams[];
 }
 
 /**
@@ -31,6 +90,43 @@ export interface AddressFieldDetails {
 export interface CredentialReference {
   /** The reference path. */
   reference: string;
+}
+
+/** A credential granted in response to a requested entry. */
+export interface ResolvedAccessRequestEntry {
+  /**
+   * The requested entry satisfied by this credential, if any. When
+   * missing, this credential was additionally chosen during
+   * resolution on top of the requested credentials.
+   */
+  entryId?: string;
+  /**
+   * The credential-broker reference to fetch the credential with
+   * (e.g. via `credentialBroker.login.get`).
+   */
+  reference: CredentialReference;
+}
+
+/** The non-sensitive status of an access request. */
+export interface AccessRequestStatus {
+  /** The current lifecycle state. */
+  state: AccessRequestState;
+  /** The credentials granted when the request is resolved. */
+  resolved: ResolvedAccessRequestEntry[];
+}
+
+/** Additional attributes for OTP fields. */
+export interface AddressFieldDetails {
+  /** The street address */
+  street: string;
+  /** The city */
+  city: string;
+  /** The country */
+  country: string;
+  /** The ZIP code */
+  zip: string;
+  /** The state */
+  state: string;
 }
 
 export interface DocumentCreateParams {
@@ -540,6 +636,22 @@ export interface ItemsGetAllResponse {
 
 export interface ItemsUpdateAllResponse {
   individualResponses: Response<Item, ItemUpdateFailureReason>[];
+}
+
+/**
+ * A login credential brokered by 1Password.
+ * Fields are none when the corresponding item field doesn't exist.
+ *
+ * Returned by
+ * [`Login::get`](crate::client::Login::get).
+ */
+export interface LoginCredential {
+  /** The login's username. */
+  username?: string;
+  /** The login's password. */
+  password?: string;
+  /** Current one-time-password code, if the login has a TOTP field. */
+  totp?: string;
 }
 
 /** Additional attributes for OTP fields. */

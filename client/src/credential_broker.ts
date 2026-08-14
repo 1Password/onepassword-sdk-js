@@ -6,24 +6,38 @@ import {
   CredentialBrokerEnvironmentApi,
   CredentialBrokerEnvironment,
 } from "./credential_broker_environment.js";
+import {
+  CredentialBrokerLoginApi,
+  CredentialBrokerLogin,
+} from "./credential_broker_login.js";
+import {
+  CredentialBrokerAccessRequestApi,
+  CredentialBrokerAccessRequest,
+} from "./credential_broker_access_request.js";
 
 /**
  * Root namespace for the 1Password Credential Broker.
  *
  * Marker trait — no methods of its own. Each supported credential kind is a
  * nested API accessed as `client.credential_broker.<kind>`
- * ([`Environment`] today; `Login`, `ApiKey`, ... as they land).
+ * ([`Environment`] and [`Login`] today; `ApiKey`, ... as they land).
  */
 export interface CredentialBrokerApi {
   environment: CredentialBrokerEnvironmentApi;
+  login: CredentialBrokerLoginApi;
+  accessRequest: CredentialBrokerAccessRequestApi;
 }
 
 export class CredentialBroker implements CredentialBrokerApi {
   #inner: InnerClient;
   public environment: CredentialBrokerEnvironmentApi;
+  public login: CredentialBrokerLoginApi;
+  public accessRequest: CredentialBrokerAccessRequestApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
     this.environment = new CredentialBrokerEnvironment(inner);
+    this.login = new CredentialBrokerLogin(inner);
+    this.accessRequest = new CredentialBrokerAccessRequest(inner);
   }
 }
