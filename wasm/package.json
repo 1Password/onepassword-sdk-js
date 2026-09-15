@@ -8,9 +8,25 @@
     "nodejs/core_bg.wasm.d.ts",
     "nodejs/core_bg.wasm",
     "nodejs/core.d.ts",
-    "nodejs/core.js"
+    "nodejs/core.js",
+    "web/core_bg.wasm.d.ts",
+    "web/core_bg.wasm",
+    "web/core.d.ts",
+    "web/core.js"
   ],
   "scripts": {},
   "main": "nodejs/core.js",
-  "types": "nodejs/core.d.ts"
+  "types": "nodejs/core.d.ts",
+  "exports": {
+    ".": {
+      "types": "./nodejs/core.d.ts",
+      "browser": "./web/core.js",
+      "default": "./nodejs/core.js"
+    },
+    "./web": {
+      "types": "./web/core.d.ts",
+      "default": "./web/core.js"
+    },
+    "./web/*": "./web/*"
+  }
 }
