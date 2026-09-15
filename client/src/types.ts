@@ -22,6 +22,12 @@ export enum AccessRequestEntryType {
   Login = "login",
 }
 
+/** Type-specific parameters for a requested credential. */
+export interface AccessRequestEntryParameters {
+  /** The website the requester needs to sign in to. */
+  website?: string;
+}
+
 /** A requested credential within a created access request. */
 export interface AccessRequestEntry {
   /**
@@ -30,7 +36,16 @@ export interface AccessRequestEntry {
    */
   id: string;
   /** The credential type requested. */
-  credentialType: AccessRequestEntryType;
+  type: AccessRequestEntryType;
+  /** Type-specific request parameters. */
+  parameters: AccessRequestEntryParameters;
+  /** Why this specific credential is needed, shown in the consent prompt. */
+  reason?: string;
+  /**
+   * Soft ranking signal used to order the candidate logins offered to the
+   * user.
+   */
+  keywords?: string[];
 }
 
 /** A server-managed access request. */
@@ -55,6 +70,11 @@ export interface AccessRequest {
   /** The time the request was created. */
   createdAt: Date;
   /**
+   * What the requester is trying to accomplish, shown to the user above
+   * the individual entries.
+   */
+  goal?: string;
+  /**
    * The requested entries as created, each carrying its SDK-minted id.
    * Correlate against [`ResolvedAccessRequestEntry::entry_id`] in the
    * request status.
@@ -63,18 +83,35 @@ export interface AccessRequest {
 }
 
 /** A single credential need within an access request. */
-export interface AccessRequestEntryParams {
+export interface AccessRequestEntryCreateParams {
   /** The credential type requested. */
-  credentialType: AccessRequestEntryType;
+  type: AccessRequestEntryType;
+  /** Type-specific request parameters. */
+  parameters: AccessRequestEntryParameters;
+  /** Why this specific credential is needed, shown in the consent prompt. */
+  reason?: string;
+  /**
+   * Soft ranking signal used to order the candidate logins offered to the
+   * user.
+   */
+  keywords?: string[];
 }
+
+/** @deprecated Use AccessRequestEntryCreateParams. */
+export type AccessRequestEntryParams = AccessRequestEntryCreateParams;
 
 /** The parameters for creating an access request. */
 export interface AccessRequestCreateParams {
   /**
+   * What the requester is trying to accomplish, shown to the user above
+   * the individual entries.
+   */
+  goal?: string;
+  /**
    * The requested credentials, in presentation order. Must contain
    * between 1 and 5 entries.
    */
-  entries: AccessRequestEntryParams[];
+  entries: AccessRequestEntryCreateParams[];
 }
 
 /**

@@ -50,7 +50,7 @@ export class CredentialBrokerEnvironment
       invocation: {
         clientId: this.#inner.id,
         parameters: {
-          name: "CredentialBrokerEnvironmentGet",
+          name: "CredentialBrokerEnvironmentVariablesRead",
           parameters: {
             credential_reference: credentialReference,
           },

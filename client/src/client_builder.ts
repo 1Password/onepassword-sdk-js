@@ -1,11 +1,17 @@
 import { InnerClient, StandardClient, SharedCore } from "./core.js";
 import {
   ClientConfiguration,
+  OAuthClientConfiguration,
   WorkloadClientConfiguration,
   clientAuthConfig,
 } from "./configuration.js";
 import { Client, WorkloadClient } from "./client.js";
 import { SharedLibCore } from "./shared_lib_core.js";
+
+const isOAuthClientConfiguration = (
+  config: WorkloadClientConfiguration | OAuthClientConfiguration,
+): config is OAuthClientConfiguration =>
+  "accessToken" in config || "integrationKey" in config;
 
 const finalizationRegistry = new FinalizationRegistry(
   (heldClient: InnerClient) => {
@@ -34,14 +40,19 @@ export const createClientWithCore = async (
 };
 
 /**
- * Creates a 1Password workload (broker) client with a given core implementation.
- * @returns The authenticated 1Password workload client.
+ * Creates a 1Password broker client authenticated as either a workload or an
+ * OAuth integration, with a given core implementation.
+ * @returns The authenticated 1Password broker client.
  */
 export const createWorkloadClientWithCore = async (
-  config: WorkloadClientConfiguration,
+  config: WorkloadClientConfiguration | OAuthClientConfiguration,
   core: SharedCore,
 ): Promise<WorkloadClient> => {
-  const clientId = await core.initClientOidc(config, config.oidcFetcher);
+  // ClientConfig is untagged in the Rust core. Passing only integrationKey and
+  // accessToken to init_client selects its ClientConfig::Oauth variant.
+  const clientId = isOAuthClientConfiguration(config)
+    ? await core.initClient(config)
+    : await core.initClientOidc(config, config.oidcFetcher);
   const inner = new InnerClient(parseInt(clientId, 10), core);
   const client = new WorkloadClient(inner);
   // Cleans up associated memory from core when client instance goes out of scope.

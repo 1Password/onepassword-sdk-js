@@ -13,11 +13,6 @@ function requiredEnvironmentVariable(name) {
   return value;
 }
 
-// Static OIDC token fetcher - returns a token prepared by the local fixture.
-async function staticTokenOidcFetcher() {
-  return requiredEnvironmentVariable("OIDC_TOKEN");
-}
-
 function workloadAccessAppLink(accountUuid, accessRequestId) {
   const link = new URL("onepassword://grant-workload-access");
   link.searchParams.set(
@@ -112,34 +107,35 @@ async function pollAccessRequestStatus(client, requestId) {
   );
 }
 
-async function demonstrateWorkloadClient() {
+async function demonstrateOAuthClient() {
   const accountUuid = requiredEnvironmentVariable("OP_ACCOUNT_UUID");
-  const workloadUuid = requiredEnvironmentVariable("OP_WORKLOAD_UUID");
 
   const client = await sdk.createWorkloadClient({
-    integrationName: "Credential Broker Workload Auth Example",
-    integrationVersion: "1.0.0",
-    oidcFetcher: staticTokenOidcFetcher,
-    workloadDetails: {
-      customerManagedSecret: requiredEnvironmentVariable(
-        "OP_CUSTOMER_MANAGED_SECRET",
-      ),
-      workloadUuid,
-    },
+    accessToken: requiredEnvironmentVariable("OP_OAUTH_ACCESS_TOKEN"),
+    integrationKey: requiredEnvironmentVariable("OP_OAUTH_INTEGRATION_KEY"),
   });
 
   const accessRequest = await client.credentialBroker.accessRequest.create({
     entries: [
       {
-        credentialType: sdk.AccessRequestEntryType.Login,
+        type: sdk.AccessRequestEntryType.Login,
+        parameters: {},
       },
     ],
   });
 
-  const expectedIdentity = `accounts/${accountUuid}/workloads/${workloadUuid}`;
-  if (accessRequest.identity !== expectedIdentity) {
+  const identitySegments = accessRequest.identity.split("/");
+  if (
+    identitySegments.length !== 6 ||
+    identitySegments[0] !== "oauth-clients" ||
+    !identitySegments[1] ||
+    identitySegments[2] !== "accounts" ||
+    identitySegments[3] !== accountUuid ||
+    identitySegments[4] !== "users" ||
+    !identitySegments[5]
+  ) {
     throw new Error(
-      `Expected access-request identity ${expectedIdentity}, got ${accessRequest.identity}`,
+      `Expected an OAuth access-request identity for account ${accountUuid}, got ${accessRequest.identity}`,
     );
   }
   if (accessRequest.state !== sdk.AccessRequestState.Pending) {
@@ -180,17 +176,21 @@ async function demonstrateWorkloadClient() {
         (field) => credential[field] !== undefined,
       );
       console.log(
-        `Fetched granted login credential ${index + 1}; available fields: ${availableFields.join(", ") || "none"}.`,
+        `Fetched granted login credential ${index + 1}; available fields: ${
+          availableFields.join(", ") || "none"
+        }.`,
       );
       if (process.env.OP_PRINT_GRANTED_PASSWORD === "true") {
         console.log(
-          `Granted login credential ${index + 1} password: ${credential.password ?? "<missing>"}`,
+          `Granted login credential ${index + 1} password: ${
+            credential.password ?? "<missing>"
+          }`,
         );
       }
     });
 
     console.log(
-      `Workload authentication, approval, and credential fetch succeeded for access request ${accessRequest.id}; fetched ${loginCredentials.length} login credential(s).`,
+      `OAuth authentication, approval, and credential fetch succeeded for access request ${accessRequest.id}; fetched ${loginCredentials.length} login credential(s).`,
     );
   } finally {
     if (ophProcess.exitCode === null && ophProcess.signalCode === null) {
@@ -499,13 +499,12 @@ async function showcaseBatchItemOperations() {
 }
 
 if (
-  process.env.OIDC_TOKEN ||
-  process.env.OP_CUSTOMER_MANAGED_SECRET ||
-  process.env.OP_WORKLOAD_UUID ||
+  process.env.OP_OAUTH_ACCESS_TOKEN ||
+  process.env.OP_OAUTH_INTEGRATION_KEY ||
   process.env.OP_ACCOUNT_UUID
 ) {
-  demonstrateWorkloadClient().catch((error) => {
-    console.error("Error in workload client example:", error);
+  demonstrateOAuthClient().catch((error) => {
+    console.error("Error in OAuth client example:", error);
     process.exitCode = 1;
   });
 } else {

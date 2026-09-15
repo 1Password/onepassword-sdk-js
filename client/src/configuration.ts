@@ -24,6 +24,12 @@ export interface WorkloadClientConfiguration extends BaseClientConfiguration {
   workloadDetails: WorkloadDetails;
 }
 
+// Contains the credentials returned by the OAuth authorization flow.
+export interface OAuthClientConfiguration {
+  accessToken: string;
+  integrationKey: string;
+}
+
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.
 type Auth = string | DesktopAuth;
 

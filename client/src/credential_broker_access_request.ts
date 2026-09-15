@@ -57,7 +57,7 @@ export class CredentialBrokerAccessRequest
       invocation: {
         clientId: this.#inner.id,
         parameters: {
-          name: "CredentialBrokerAccessRequestCreate",
+          name: "CredentialBrokerAccessRequestsCreate",
           parameters: {
             params,
           },
@@ -79,7 +79,7 @@ export class CredentialBrokerAccessRequest
       invocation: {
         clientId: this.#inner.id,
         parameters: {
-          name: "CredentialBrokerAccessRequestGet",
+          name: "CredentialBrokerAccessRequestsGetStatus",
           parameters: {
             access_request_id: accessRequestId,
           },

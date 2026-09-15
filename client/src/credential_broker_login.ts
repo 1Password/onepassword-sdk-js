@@ -41,7 +41,7 @@ export class CredentialBrokerLogin implements CredentialBrokerLoginApi {
       invocation: {
         clientId: this.#inner.id,
         parameters: {
-          name: "CredentialBrokerLoginGet",
+          name: "CredentialBrokerLoginsRead",
           parameters: {
             credential_reference: credentialReference,
           },
