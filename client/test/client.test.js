@@ -1,7 +1,7 @@
 const {
   createClientWithCore,
+  createOidcClientWithCore,
   createOAuthClientWithCore,
-  createWorkloadClientWithCore,
 } = require("../dist/client_builder.js");
 const {
   clientAuthConfig,
@@ -64,14 +64,15 @@ test("OAuth credentials select the OAuth client configuration", async () => {
     integrationKey: "ops_test-integration-key",
   };
 
-  await createOAuthClientWithCore(config, sharedCore);
+  const client = await createOAuthClientWithCore(config, sharedCore);
 
   expect(initClientOidc).not.toHaveBeenCalled();
   expect(initClient).toHaveBeenCalledTimes(1);
   expect(JSON.parse(initClient.mock.calls[0][0])).toEqual(config);
+  expect("accessRequest" in client.credentialBroker).toBe(true);
 });
 
-test("workload credentials use the OIDC client configuration", async () => {
+test("OIDC credentials use the OIDC client configuration", async () => {
   const core = new TestCore();
   const initClientOidc = jest.spyOn(core, "initClientOidc");
   const sharedCore = new SharedCore();
@@ -87,7 +88,7 @@ test("workload credentials use the OIDC client configuration", async () => {
     },
   };
 
-  await createWorkloadClientWithCore(config, sharedCore);
+  const client = await createOidcClientWithCore(config, sharedCore);
 
   expect(initClientOidc).toHaveBeenCalledTimes(1);
   expect(JSON.parse(initClientOidc.mock.calls[0][0])).toEqual({
@@ -96,6 +97,7 @@ test("workload credentials use the OIDC client configuration", async () => {
     workloadDetails: config.workloadDetails,
   });
   expect(initClientOidc.mock.calls[0][1]).toBe(oidcFetcher);
+  expect("accessRequest" in client.credentialBroker).toBe(false);
 });
 
 test("credential broker uses the current core invocation names", async () => {

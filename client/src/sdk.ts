@@ -3,14 +3,14 @@
 import { SharedCore } from "./core.js";
 import {
   ClientConfiguration,
+  OidcClientConfiguration,
   OAuthClientConfiguration,
-  WorkloadClientConfiguration,
 } from "./configuration.js";
-import { Client, OAuthClient, WorkloadClient } from "./client.js";
+import { Client, OAuthClient, OidcClient } from "./client.js";
 import {
   createClientWithCore,
+  createOidcClientWithCore,
   createOAuthClientWithCore,
-  createWorkloadClientWithCore,
 } from "./client_builder.js";
 
 export const DEFAULT_INTEGRATION_NAME = "Unknown";
@@ -33,13 +33,12 @@ export const createClient = async (
 ): Promise<Client> => createClientWithCore(config, new SharedCore());
 
 /**
- * Creates a 1Password workload client through the workload-identity init path.
- * @returns The authenticated 1Password workload client.
+ * Creates a 1Password OIDC client.
+ * @returns The authenticated 1Password OIDC client.
  */
-export const createWorkloadClient = async (
-  config: WorkloadClientConfiguration,
-): Promise<WorkloadClient> =>
-  createWorkloadClientWithCore(config, new SharedCore());
+export const createOidcClient = async (
+  config: OidcClientConfiguration,
+): Promise<OidcClient> => createOidcClientWithCore(config, new SharedCore());
 
 /**
  * Creates a 1Password OAuth client.

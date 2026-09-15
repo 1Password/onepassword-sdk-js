@@ -25,19 +25,32 @@ import {
 export interface CredentialBrokerApi {
   environment: CredentialBrokerEnvironmentApi;
   login: CredentialBrokerLoginApi;
-  accessRequest: CredentialBrokerAccessRequestApi;
 }
 
 export class CredentialBroker implements CredentialBrokerApi {
   #inner: InnerClient;
   public environment: CredentialBrokerEnvironmentApi;
   public login: CredentialBrokerLoginApi;
-  public accessRequest: CredentialBrokerAccessRequestApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
     this.environment = new CredentialBrokerEnvironment(inner);
     this.login = new CredentialBrokerLogin(inner);
+  }
+}
+
+export interface OAuthCredentialBrokerApi extends CredentialBrokerApi {
+  accessRequest: CredentialBrokerAccessRequestApi;
+}
+
+export class OAuthCredentialBroker
+  extends CredentialBroker
+  implements OAuthCredentialBrokerApi
+{
+  public accessRequest: CredentialBrokerAccessRequestApi;
+
+  public constructor(inner: InnerClient) {
+    super(inner);
     this.accessRequest = new CredentialBrokerAccessRequest(inner);
   }
 }

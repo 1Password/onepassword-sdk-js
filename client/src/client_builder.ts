@@ -1,11 +1,11 @@
 import { InnerClient, StandardClient, SharedCore } from "./core.js";
 import {
   ClientConfiguration,
+  OidcClientConfiguration,
   OAuthClientConfiguration,
-  WorkloadClientConfiguration,
   clientAuthConfig,
 } from "./configuration.js";
-import { Client, OAuthClient, WorkloadClient } from "./client.js";
+import { Client, OAuthClient, OidcClient } from "./client.js";
 import { SharedLibCore } from "./shared_lib_core.js";
 
 const finalizationRegistry = new FinalizationRegistry(
@@ -35,16 +35,16 @@ export const createClientWithCore = async (
 };
 
 /**
- * Creates a 1Password workload client with a given core implementation.
- * @returns The authenticated 1Password workload client.
+ * Creates a 1Password OIDC client with a given core implementation.
+ * @returns The authenticated 1Password OIDC client.
  */
-export const createWorkloadClientWithCore = async (
-  config: WorkloadClientConfiguration,
+export const createOidcClientWithCore = async (
+  config: OidcClientConfiguration,
   core: SharedCore,
-): Promise<WorkloadClient> => {
+): Promise<OidcClient> => {
   const clientId = await core.initClientOidc(config, config.oidcFetcher);
   const inner = new InnerClient(parseInt(clientId, 10), core);
-  const client = new WorkloadClient(inner);
+  const client = new OidcClient(inner);
   // Cleans up associated memory from core when client instance goes out of scope.
   finalizationRegistry.register(client, inner);
   return client;

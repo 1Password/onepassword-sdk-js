@@ -9,8 +9,8 @@ import {
 import { ReplacerFunc } from "./types";
 import { DesktopSessionExpiredError, throwError } from "./errors";
 import type {
+  OidcClientConfiguration,
   OAuthClientConfiguration,
-  WorkloadClientConfiguration,
 } from "./configuration.js";
 
 // In empirical tests, we determined that maximum message size that can cross the FFI boundary
@@ -161,7 +161,7 @@ export class SharedCore {
   }
 
   public async initClientOidc(
-    config: WorkloadClientConfiguration,
+    config: OidcClientConfiguration,
     fetcher: (audience: string) => Promise<string>,
   ): Promise<string> {
     // The oidcFetcher is passed separately and dropped by JSON serialization.
