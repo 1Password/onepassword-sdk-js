@@ -17,11 +17,16 @@ export interface ClientConfiguration extends BaseClientConfiguration {
   auth: Auth;
 }
 
-// Contains information necessary to configure a workload (broker) client,
-// authenticated through the OIDC workload-identity path.
-export interface WorkloadClientConfiguration extends BaseClientConfiguration {
+// Contains information necessary to configure an OIDC-authenticated client.
+export interface OidcClientConfiguration extends BaseClientConfiguration {
   oidcFetcher: (audience: string) => Promise<string>;
   workloadDetails: WorkloadDetails;
+}
+
+// Contains the credentials returned by the OAuth authorization flow.
+export interface OAuthClientConfiguration {
+  accessToken: string;
+  integrationKey: string;
 }
 
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.

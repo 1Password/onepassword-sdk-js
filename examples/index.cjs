@@ -1,6 +1,204 @@
 // [developer-docs.sdk.js/common-js.sdk-import]-start
 const sdk = require("@1password/sdk");
 // [developer-docs.sdk.js/common-js.sdk-import]-end
+const { spawn } = require("node:child_process");
+const { existsSync } = require("node:fs");
+const path = require("node:path");
+
+function requiredEnvironmentVariable(name) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
+function workloadAccessAppLink(accountUuid, accessRequestId) {
+  const link = new URL("onepassword://grant-workload-access");
+  link.searchParams.set(
+    "access_request",
+    `accounts/${accountUuid}/access-requests/${accessRequestId}`,
+  );
+  return link.toString();
+}
+
+async function launchLocalOph(appLink) {
+  const ophSourceDir = requiredEnvironmentVariable("OPH_SOURCE_DIR");
+  const entryPoint = path.join(ophSourceDir, "dist", "app", "main.js");
+  const electronExecutable = path.join(
+    ophSourceDir,
+    "node_modules",
+    ".bin",
+    "electron",
+  );
+
+  if (!existsSync(entryPoint)) {
+    throw new Error(
+      `Local OPH entry point not found at ${entryPoint}; build OPH first`,
+    );
+  }
+  if (!existsSync(electronExecutable)) {
+    throw new Error(
+      `Local Electron executable not found at ${electronExecutable}; install the OPH dependencies first`,
+    );
+  }
+
+  return new Promise((resolve, reject) => {
+    // This is the same local Electron launch as `pnpm start <url>` in js/oph.
+    // It deliberately does not use macOS's registered onepassword:// handler,
+    // which could select an installed app from /Applications.
+    const electronEnvironment = { ...process.env };
+    delete electronEnvironment.ELECTRON_RUN_AS_NODE;
+
+    const child = spawn(electronExecutable, ["./dist/app/main.js", appLink], {
+      cwd: ophSourceDir,
+      detached: false,
+      env: electronEnvironment,
+      // Keep Electron attached, but send its noisy stdout/stderr to /dev/null
+      // so this terminal shows only the SDK flow.
+      stdio: "ignore",
+    });
+
+    child.once("error", reject);
+    child.once("spawn", () => resolve(child));
+  });
+}
+
+async function pollAccessRequestStatus(client, requestId) {
+  const pollIntervalMs = Number.parseInt(
+    process.env.OP_ACCESS_REQUEST_POLL_INTERVAL_MS || "1000",
+    10,
+  );
+  const timeoutMs = Number.parseInt(
+    process.env.OP_ACCESS_REQUEST_TIMEOUT_MS || "300000",
+    10,
+  );
+  if (
+    !Number.isInteger(pollIntervalMs) ||
+    pollIntervalMs <= 0 ||
+    !Number.isInteger(timeoutMs) ||
+    timeoutMs <= 0
+  ) {
+    throw new Error(
+      "OP_ACCESS_REQUEST_POLL_INTERVAL_MS and OP_ACCESS_REQUEST_TIMEOUT_MS must be positive integers",
+    );
+  }
+
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const status =
+      await client.credentialBroker.accessRequests.getStatus(requestId);
+    console.log(`Polling access request ${requestId}, status: ${status.state}`);
+
+    if (
+      status.state === sdk.AccessRequestState.Resolved ||
+      status.state === sdk.AccessRequestState.Denied ||
+      status.state === sdk.AccessRequestState.Failed
+    ) {
+      return status;
+    }
+    if (status.state !== sdk.AccessRequestState.Pending) {
+      throw new Error(`Unknown access request state: ${status.state}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+  }
+
+  throw new Error(
+    `Access request ${requestId} did not reach a terminal state within ${timeoutMs}ms`,
+  );
+}
+
+async function demonstrateOAuthClient() {
+  const accountUuid = requiredEnvironmentVariable("OP_ACCOUNT_UUID");
+
+  const client = await sdk.createOAuthClient({
+    accessToken: requiredEnvironmentVariable("OP_OAUTH_ACCESS_TOKEN"),
+    integrationKey: requiredEnvironmentVariable("OP_OAUTH_INTEGRATION_KEY"),
+  });
+
+  const accessRequest = await client.credentialBroker.accessRequests.create({
+    entries: [
+      {
+        type: sdk.AccessRequestEntryType.Login,
+        parameters: {},
+      },
+    ],
+  });
+
+  const identitySegments = accessRequest.identity.split("/");
+  if (
+    identitySegments.length !== 6 ||
+    identitySegments[0] !== "oauth-clients" ||
+    !identitySegments[1] ||
+    identitySegments[2] !== "accounts" ||
+    identitySegments[3] !== accountUuid ||
+    identitySegments[4] !== "users" ||
+    !identitySegments[5]
+  ) {
+    throw new Error(
+      `Expected an OAuth access-request identity for account ${accountUuid}, got ${accessRequest.identity}`,
+    );
+  }
+  if (accessRequest.state !== sdk.AccessRequestState.Pending) {
+    throw new Error(
+      `Expected a pending access request, got ${accessRequest.state}`,
+    );
+  }
+
+  console.log(
+    `Created access request ${accessRequest.id}; opening local OPH and polling for approval...`,
+  );
+
+  const appLink = workloadAccessAppLink(accountUuid, accessRequest.id);
+  console.log(`Opening ${appLink}`);
+  const ophProcess = await launchLocalOph(appLink);
+  try {
+    const status = await pollAccessRequestStatus(client, accessRequest.id);
+
+    if (status.state !== sdk.AccessRequestState.Resolved) {
+      throw new Error(
+        `Access request ${accessRequest.id} finished with state ${status.state}`,
+      );
+    }
+    if (!status.resolved?.length) {
+      throw new Error(
+        `Resolved access request ${accessRequest.id} returned no credential references`,
+      );
+    }
+
+    const loginCredentials = await Promise.all(
+      status.resolved.map(({ reference }) =>
+        client.credentialBroker.logins.read(reference),
+      ),
+    );
+
+    loginCredentials.forEach((credential, index) => {
+      const availableFields = ["username", "password", "totp"].filter(
+        (field) => credential[field] !== undefined,
+      );
+      console.log(
+        `Fetched granted login credential ${index + 1}; available fields: ${
+          availableFields.join(", ") || "none"
+        }.`,
+      );
+      if (process.env.OP_PRINT_GRANTED_PASSWORD === "true") {
+        console.log(
+          `Granted login credential ${index + 1} password: ${
+            credential.password ?? "<missing>"
+          }`,
+        );
+      }
+    });
+
+    console.log(
+      `OAuth authentication, approval, and credential fetch succeeded for access request ${accessRequest.id}; fetched ${loginCredentials.length} login credential(s).`,
+    );
+  } finally {
+    if (ophProcess.exitCode === null && ophProcess.signalCode === null) {
+      ophProcess.kill();
+    }
+  }
+}
 
 async function fetchSecret(vaultId, itemId) {
   // Create an authenticated client
@@ -301,7 +499,18 @@ async function showcaseBatchItemOperations() {
   }
 }
 
-manageItems();
-generatePassword();
-showcaseVaultOperations();
-showcaseBatchItemOperations();
+if (
+  process.env.OP_OAUTH_ACCESS_TOKEN ||
+  process.env.OP_OAUTH_INTEGRATION_KEY ||
+  process.env.OP_ACCOUNT_UUID
+) {
+  demonstrateOAuthClient().catch((error) => {
+    console.error("Error in OAuth client example:", error);
+    process.exitCode = 1;
+  });
+} else {
+  manageItems();
+  generatePassword();
+  showcaseVaultOperations();
+  showcaseBatchItemOperations();
+}

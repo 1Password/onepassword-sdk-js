@@ -1,5 +1,14 @@
-const { createClientWithCore } = require("../dist/client_builder.js");
-const { clientAuthConfig, getOsName, VERSION, LANGUAGE } = require("../dist/configuration.js");
+const {
+  createClientWithCore,
+  createOidcClientWithCore,
+  createOAuthClientWithCore,
+} = require("../dist/client_builder.js");
+const {
+  clientAuthConfig,
+  getOsName,
+  VERSION,
+  LANGUAGE,
+} = require("../dist/configuration.js");
 const { SharedCore } = require("../dist/core.js");
 const { TestCore } = require("./test_core");
 
@@ -38,8 +47,78 @@ test("authenticated client resolves secrets correctly", () => {
     expect(core.id).toBe(1);
     client.secrets.resolve("secret_ref").then((secret) => {
       expect(secret).toBe(
-        "method SecretsResolve called on client 0 with parameters {\"secret_reference\":\"secret_ref\"}",
+        'method SecretsResolve called on client 0 with parameters {"secret_reference":"secret_ref"}',
       );
     });
   });
+});
+
+test("OAuth credentials select the OAuth client configuration", async () => {
+  const core = new TestCore();
+  const initClient = jest.spyOn(core, "initClient");
+  const initClientOidc = jest.spyOn(core, "initClientOidc");
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(core);
+  const config = {
+    accessToken: "test-access-token",
+    integrationKey: "ops_test-integration-key",
+  };
+
+  const client = await createOAuthClientWithCore(config, sharedCore);
+
+  expect(initClientOidc).not.toHaveBeenCalled();
+  expect(initClient).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(initClient.mock.calls[0][0])).toEqual(config);
+  expect("accessRequests" in client.credentialBroker).toBe(true);
+});
+
+test("OIDC credentials use the OIDC client configuration", async () => {
+  const core = new TestCore();
+  const initClientOidc = jest.spyOn(core, "initClientOidc");
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(core);
+  const oidcFetcher = async () => "test-oidc-token";
+  const config = {
+    integrationName: "test integration",
+    integrationVersion: "1.0.0",
+    oidcFetcher,
+    workloadDetails: {
+      customerManagedSecret: "test-customer-managed-secret",
+      workloadUuid: "test-workload-uuid",
+    },
+  };
+
+  const client = await createOidcClientWithCore(config, sharedCore);
+
+  expect(initClientOidc).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(initClientOidc.mock.calls[0][0])).toEqual({
+    integrationName: config.integrationName,
+    integrationVersion: config.integrationVersion,
+    workloadDetails: config.workloadDetails,
+  });
+  expect(initClientOidc.mock.calls[0][1]).toBe(oidcFetcher);
+  expect("accessRequests" in client.credentialBroker).toBe(false);
+});
+
+test("credential broker uses the current core invocation names", async () => {
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(new TestCore());
+  const client = await createOAuthClientWithCore(
+    {
+      accessToken: "test-access-token",
+      integrationKey: "ops_test-integration-key",
+    },
+    sharedCore,
+  );
+
+  const accessRequest = await client.credentialBroker.accessRequests.create({
+    entries: [{ type: "login", parameters: {} }],
+  });
+  const status =
+    await client.credentialBroker.accessRequests.getStatus("request-id");
+
+  expect(accessRequest).toContain(
+    "method CredentialBrokerAccessRequestsCreate",
+  );
+  expect(status).toContain("method CredentialBrokerAccessRequestsGetStatus");
 });

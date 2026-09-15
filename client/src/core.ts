@@ -8,7 +8,10 @@ import {
 
 import { ReplacerFunc } from "./types";
 import { DesktopSessionExpiredError, throwError } from "./errors";
-import type { WorkloadClientConfiguration } from "./configuration.js";
+import type {
+  OidcClientConfiguration,
+  OAuthClientConfiguration,
+} from "./configuration.js";
 
 // In empirical tests, we determined that maximum message size that can cross the FFI boundary
 // is ~64MB. Past this limit, the wasm-bingen FFI will throw an error and the program will crash.
@@ -150,13 +153,15 @@ export class SharedCore {
     this.inner = core;
   }
 
-  public async initClient(config: ClientAuthConfig): Promise<string> {
+  public async initClient(
+    config: ClientAuthConfig | OAuthClientConfiguration,
+  ): Promise<string> {
     const serializedConfig = JSON.stringify(config);
     return this.inner.initClient(serializedConfig);
   }
 
   public async initClientOidc(
-    config: WorkloadClientConfiguration,
+    config: OidcClientConfiguration,
     fetcher: (audience: string) => Promise<string>,
   ): Promise<string> {
     // The oidcFetcher is passed separately and dropped by JSON serialization.

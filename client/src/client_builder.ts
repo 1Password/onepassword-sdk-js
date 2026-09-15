@@ -1,10 +1,11 @@
 import { InnerClient, StandardClient, SharedCore } from "./core.js";
 import {
   ClientConfiguration,
-  WorkloadClientConfiguration,
+  OidcClientConfiguration,
+  OAuthClientConfiguration,
   clientAuthConfig,
 } from "./configuration.js";
-import { Client, WorkloadClient } from "./client.js";
+import { Client, OAuthClient, OidcClient } from "./client.js";
 import { SharedLibCore } from "./shared_lib_core.js";
 
 const finalizationRegistry = new FinalizationRegistry(
@@ -34,16 +35,34 @@ export const createClientWithCore = async (
 };
 
 /**
- * Creates a 1Password workload (broker) client with a given core implementation.
- * @returns The authenticated 1Password workload client.
+ * Creates a 1Password OIDC client with a given core implementation.
+ * @returns The authenticated 1Password OIDC client.
  */
-export const createWorkloadClientWithCore = async (
-  config: WorkloadClientConfiguration,
+export const createOidcClientWithCore = async (
+  config: OidcClientConfiguration,
   core: SharedCore,
-): Promise<WorkloadClient> => {
+): Promise<OidcClient> => {
   const clientId = await core.initClientOidc(config, config.oidcFetcher);
   const inner = new InnerClient(parseInt(clientId, 10), core);
-  const client = new WorkloadClient(inner);
+  const client = new OidcClient(inner);
+  // Cleans up associated memory from core when client instance goes out of scope.
+  finalizationRegistry.register(client, inner);
+  return client;
+};
+
+/**
+ * Creates a 1Password OAuth client with a given core implementation.
+ * @returns The authenticated 1Password OAuth client.
+ */
+export const createOAuthClientWithCore = async (
+  config: OAuthClientConfiguration,
+  core: SharedCore,
+): Promise<OAuthClient> => {
+  // ClientConfig is untagged in the Rust core. Passing only integrationKey and
+  // accessToken to init_client selects its ClientConfig::Oauth variant.
+  const clientId = await core.initClient(config);
+  const inner = new InnerClient(parseInt(clientId, 10), core);
+  const client = new OAuthClient(inner);
   // Cleans up associated memory from core when client instance goes out of scope.
   finalizationRegistry.register(client, inner);
   return client;

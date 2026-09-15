@@ -4,6 +4,151 @@
 
 export type ErrorMessage = string;
 
+/** The lifecycle state of an access request. */
+export enum AccessRequestState {
+  /** The request is awaiting a decision. */
+  Pending = "pending",
+  /** The request was approved and credentials were granted. */
+  Resolved = "resolved",
+  /** The request was denied by the user. */
+  Denied = "denied",
+  /** The request could not be processed. */
+  Failed = "failed",
+}
+
+/** The credential types an access request entry can ask for. */
+export enum AccessRequestEntryType {
+  /** A login credential (username / password / TOTP). */
+  Login = "login",
+}
+
+/** Type-specific parameters for a requested credential. */
+export interface AccessRequestEntryParameters {
+  /** The website the requester needs to sign in to. */
+  website?: string;
+}
+
+/** A requested credential within a created access request. */
+export interface AccessRequestEntry {
+  /**
+   * The SDK-minted identifier used to correlate this entry with a
+   * [`ResolvedAccessRequestEntry`] in the request status.
+   */
+  id: string;
+  /** The credential type requested. */
+  type: AccessRequestEntryType;
+  /** Type-specific request parameters. */
+  parameters: AccessRequestEntryParameters;
+  /** Why this specific credential is needed, shown in the consent prompt. */
+  reason?: string;
+  /**
+   * Soft ranking signal used to order the candidate logins offered to the
+   * user.
+   */
+  keywords?: string[];
+}
+
+/** A server-managed access request. */
+export interface AccessRequest {
+  /**
+   * The canonical resource path.
+   * Format: `accounts/{account}/credential-broker-access-requests/{id}`
+   */
+  path: string;
+  /**
+   * The client-generated identifier of the request. Pass to
+   * `credentialBroker.accessRequests.getStatus` to poll the request status.
+   */
+  id: string;
+  /**
+   * The canonical AEP resource path of the identity for which
+   * credential access is requested.
+   */
+  identity: string;
+  /** The current lifecycle state. */
+  state: AccessRequestState;
+  /** The time the request was created. */
+  createdAt: Date;
+  /**
+   * What the requester is trying to accomplish, shown to the user above
+   * the individual entries.
+   */
+  goal?: string;
+  /**
+   * The requested entries as created, each carrying its SDK-minted id.
+   * Correlate against [`ResolvedAccessRequestEntry::entry_id`] in the
+   * request status.
+   */
+  entries: AccessRequestEntry[];
+}
+
+/** A single credential need within an access request. */
+export interface AccessRequestEntryCreateParams {
+  /** The credential type requested. */
+  type: AccessRequestEntryType;
+  /** Type-specific request parameters. */
+  parameters: AccessRequestEntryParameters;
+  /** Why this specific credential is needed, shown in the consent prompt. */
+  reason?: string;
+  /**
+   * Soft ranking signal used to order the candidate logins offered to the
+   * user.
+   */
+  keywords?: string[];
+}
+
+/** The parameters for creating an access request. */
+export interface AccessRequestCreateParams {
+  /**
+   * What the requester is trying to accomplish, shown to the user above
+   * the individual entries.
+   */
+  goal?: string;
+  /**
+   * The requested credentials, in presentation order. Must contain
+   * between 1 and 5 entries.
+   */
+  entries: AccessRequestEntryCreateParams[];
+}
+
+/**
+ * A reference to a 1Password Credential Broker configuration.
+ *
+ * Passed to a `client.credential_broker.<kind>.read` call to fetch a
+ * credential. The `reference` string has the form:
+ *
+ * ```text
+ * //api.1password.com/credential-broker/accounts/<account>/capability/<name>/configurations/<id>
+ * ```
+ */
+export interface CredentialReference {
+  /** The reference path. */
+  reference: string;
+}
+
+/** A credential granted in response to a requested entry. */
+export interface ResolvedAccessRequestEntry {
+  /**
+   * The requested entry satisfied by this credential, if any. When
+   * missing, this credential was additionally chosen during
+   * resolution on top of the requested credentials.
+   */
+  entryId?: string;
+  /**
+   * The credential-broker reference to fetch the credential with
+   * (e.g. via `credentialBroker.logins.read`).
+   */
+  reference: CredentialReference;
+}
+
+/** The non-sensitive status of an access request. */
+export interface AccessRequestStatus {
+  /** The current lifecycle state. */
+  state: AccessRequestState;
+  /** The credentials granted when the request is resolved. */
+  resolved: ResolvedAccessRequestEntry[];
+}
+
 /** Additional attributes for OTP fields. */
 export interface AddressFieldDetails {
   /** The street address */
@@ -18,26 +163,27 @@ export interface AddressFieldDetails {
   state: string;
 }
 
-/**
- * A reference to a 1Password Credential Broker configuration.
- *
- * Passed to a `client.credential_broker.<kind>.get` call to fetch a
- * credential. The `reference` string has the form:
- *
- * ```text
- * //api.1password.com/credential-broker/accounts/<account>/capability/<name>/configurations/<id>
- * ```
- */
-export interface CredentialReference {
-  /** The reference path. */
-  reference: string;
-}
-
 export interface DocumentCreateParams {
   /** The name of the file */
   name: string;
   /** The content of the file */
   content: Uint8Array;
+}
+
+/** A 1Password Environment. */
+export interface Environment {
+  /** The Environment's UUID. */
+  id: string;
+  /** The Environment's name. */
+  name: string;
+  /** The content version number */
+  contentVersion: number;
+  /** The secrets count. */
+  secrets: number;
+  /** The UTC date and time the environment was created */
+  createdAt: Date;
+  /** The UTC date and time the environment was last updated */
+  updatedAt: Date;
 }
 
 /**
@@ -62,11 +208,21 @@ export interface EnvironmentVariable {
  * environment variables.
  *
  * Returned by
- * [`Environment::get`](crate::client::Environment::get).
+ * [`EnvironmentVariables::read`](crate::client::EnvironmentVariables::read).
  */
 export interface EnvironmentCredential {
   /** The environment variables in the bundle. */
   variables: EnvironmentVariable[];
+}
+
+/** A single secret from a 1Password Environment. */
+export interface EnvironmentSecret {
+  /** The secret's name. */
+  name: string;
+  /** The secret's value. */
+  value: string;
+  /** Whether the secret's value is concealed. */
+  concealed: boolean;
 }
 
 export interface FileAttributes {
@@ -540,6 +696,33 @@ export interface ItemsGetAllResponse {
 
 export interface ItemsUpdateAllResponse {
   individualResponses: Response<Item, ItemUpdateFailureReason>[];
+}
+
+/**
+ * A login credential brokered by 1Password.
+ * Fields are none when the corresponding item field doesn't exist.
+ *
+ * Returned by
+ * [`Logins::read`](crate::client::Logins::read).
+ */
+export interface LoginCredential {
+  /** The login's username. */
+  username?: string;
+  /** The login's password. */
+  password?: string;
+  /** Current one-time-password code, if the login has a TOTP field. */
+  totp?: string;
+}
+
+/**
+ * Non-secret details for a brokered login.
+ *
+ * Returned by
+ * [`Login::get_details`](crate::client::Login::get_details).
+ */
+export interface LoginDetails {
+  /** Website URLs associated with the login. */
+  websites: string[];
 }
 
 /** Additional attributes for OTP fields. */
