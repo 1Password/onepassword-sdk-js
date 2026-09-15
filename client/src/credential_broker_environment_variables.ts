@@ -11,10 +11,10 @@ import {
  * Read environment credentials — a bundle of environment variables — from
  * the 1Password Credential Broker.
  *
- * Accessed as `client.credential_broker.environment` in the generated SDK
+ * Accessed as `client.credential_broker.environment_variables` in the generated SDK
  * bindings.
  */
-export interface CredentialBrokerEnvironmentApi {
+export interface CredentialBrokerEnvironmentVariablesApi {
   /**
    * Fetch the environment credential identified by `credential_reference`.
    *
@@ -23,11 +23,13 @@ export interface CredentialBrokerEnvironmentApi {
    * or does not name an environment credential, or with [Error::CredentialReferenceAccountMismatch]
    * if it belongs to a different account than the authenticated client.
    */
-  get(credentialReference: CredentialReference): Promise<EnvironmentCredential>;
+  read(
+    credentialReference: CredentialReference,
+  ): Promise<EnvironmentCredential>;
 }
 
-export class CredentialBrokerEnvironment
-  implements CredentialBrokerEnvironmentApi
+export class CredentialBrokerEnvironmentVariables
+  implements CredentialBrokerEnvironmentVariablesApi
 {
   #inner: InnerClient;
 
@@ -43,7 +45,7 @@ export class CredentialBrokerEnvironment
    * or does not name an environment credential, or with [Error::CredentialReferenceAccountMismatch]
    * if it belongs to a different account than the authenticated client.
    */
-  public async get(
+  public async read(
     credentialReference: CredentialReference,
   ): Promise<EnvironmentCredential> {
     const invocationConfig: InvokeConfig = {

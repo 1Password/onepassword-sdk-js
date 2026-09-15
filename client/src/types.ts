@@ -57,7 +57,7 @@ export interface AccessRequest {
   path: string;
   /**
    * The client-generated identifier of the request. Pass to
-   * `credentialBroker.accessRequest.get` to poll the request status.
+   * `credentialBroker.accessRequests.getStatus` to poll the request status.
    */
   id: string;
   /**
@@ -97,9 +97,6 @@ export interface AccessRequestEntryCreateParams {
   keywords?: string[];
 }
 
-/** @deprecated Use AccessRequestEntryCreateParams. */
-export type AccessRequestEntryParams = AccessRequestEntryCreateParams;
-
 /** The parameters for creating an access request. */
 export interface AccessRequestCreateParams {
   /**
@@ -117,7 +114,7 @@ export interface AccessRequestCreateParams {
 /**
  * A reference to a 1Password Credential Broker configuration.
  *
- * Passed to a `client.credential_broker.<kind>.get` call to fetch a
+ * Passed to a `client.credential_broker.<kind>.read` call to fetch a
  * credential. The `reference` string has the form:
  *
  * ```text
@@ -139,7 +136,7 @@ export interface ResolvedAccessRequestEntry {
   entryId?: string;
   /**
    * The credential-broker reference to fetch the credential with
-   * (e.g. via `credentialBroker.login.get`).
+   * (e.g. via `credentialBroker.logins.read`).
    */
   reference: CredentialReference;
 }
@@ -173,6 +170,22 @@ export interface DocumentCreateParams {
   content: Uint8Array;
 }
 
+/** A 1Password Environment. */
+export interface Environment {
+  /** The Environment's UUID. */
+  id: string;
+  /** The Environment's name. */
+  name: string;
+  /** The content version number */
+  contentVersion: number;
+  /** The secrets count. */
+  secrets: number;
+  /** The UTC date and time the environment was created */
+  createdAt: Date;
+  /** The UTC date and time the environment was last updated */
+  updatedAt: Date;
+}
+
 /**
  * One environment variable resolved by the credential broker.
  *
@@ -195,11 +208,21 @@ export interface EnvironmentVariable {
  * environment variables.
  *
  * Returned by
- * [`Environment::get`](crate::client::Environment::get).
+ * [`EnvironmentVariables::read`](crate::client::EnvironmentVariables::read).
  */
 export interface EnvironmentCredential {
   /** The environment variables in the bundle. */
   variables: EnvironmentVariable[];
+}
+
+/** A single secret from a 1Password Environment. */
+export interface EnvironmentSecret {
+  /** The secret's name. */
+  name: string;
+  /** The secret's value. */
+  value: string;
+  /** Whether the secret's value is concealed. */
+  concealed: boolean;
 }
 
 export interface FileAttributes {
@@ -680,7 +703,7 @@ export interface ItemsUpdateAllResponse {
  * Fields are none when the corresponding item field doesn't exist.
  *
  * Returned by
- * [`Login::get`](crate::client::Login::get).
+ * [`Logins::read`](crate::client::Logins::read).
  */
 export interface LoginCredential {
   /** The login's username. */
@@ -689,6 +712,17 @@ export interface LoginCredential {
   password?: string;
   /** Current one-time-password code, if the login has a TOTP field. */
   totp?: string;
+}
+
+/**
+ * Non-secret details for a brokered login.
+ *
+ * Returned by
+ * [`Login::get_details`](crate::client::Login::get_details).
+ */
+export interface LoginDetails {
+  /** Website URLs associated with the login. */
+  websites: string[];
 }
 
 /** Additional attributes for OTP fields. */

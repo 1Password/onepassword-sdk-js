@@ -12,29 +12,29 @@ import {
  * Create and poll credential-broker access requests: asking a target
  * identity to grant this workload access to one or more credentials.
  *
- * Accessed as `client.credential_broker.access_request` in the generated
+ * Accessed as `client.credential_broker.access_requests` in the generated
  * SDK bindings.
  */
-export interface CredentialBrokerAccessRequestApi {
+export interface CredentialBrokerAccessRequestsApi {
   /**
    * Register a new access request. The SDK mints the request id and
    * per-entry ids, and derives the target identity from the
    * authenticated workload.
    *
-   * Fails with [Error::InvalidConfiguration] if `params` doesn't hold
-   * between 1 and 5 entries.
+   * Only the non-sensitive half is registered server-side; the returned
+   * request is the full object with the presentation fields re-attached.
    */
   create(params: AccessRequestCreateParams): Promise<AccessRequest>;
 
   /**
    * Get the current status of an access request created by
-   * [`AccessRequest::create`].
+   * [`AccessRequests::create`].
    */
-  get(accessRequestId: string): Promise<AccessRequestStatus>;
+  getStatus(accessRequestId: string): Promise<AccessRequestStatus>;
 }
 
-export class CredentialBrokerAccessRequest
-  implements CredentialBrokerAccessRequestApi
+export class CredentialBrokerAccessRequests
+  implements CredentialBrokerAccessRequestsApi
 {
   #inner: InnerClient;
 
@@ -47,8 +47,8 @@ export class CredentialBrokerAccessRequest
    * per-entry ids, and derives the target identity from the
    * authenticated workload.
    *
-   * Fails with [Error::InvalidConfiguration] if `params` doesn't hold
-   * between 1 and 5 entries.
+   * Only the non-sensitive half is registered server-side; the returned
+   * request is the full object with the presentation fields re-attached.
    */
   public async create(
     params: AccessRequestCreateParams,
@@ -72,9 +72,11 @@ export class CredentialBrokerAccessRequest
 
   /**
    * Get the current status of an access request created by
-   * [`AccessRequest::create`].
+   * [`AccessRequests::create`].
    */
-  public async get(accessRequestId: string): Promise<AccessRequestStatus> {
+  public async getStatus(
+    accessRequestId: string,
+  ): Promise<AccessRequestStatus> {
     const invocationConfig: InvokeConfig = {
       invocation: {
         clientId: this.#inner.id,

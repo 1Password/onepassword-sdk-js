@@ -69,7 +69,7 @@ test("OAuth credentials select the OAuth client configuration", async () => {
   expect(initClientOidc).not.toHaveBeenCalled();
   expect(initClient).toHaveBeenCalledTimes(1);
   expect(JSON.parse(initClient.mock.calls[0][0])).toEqual(config);
-  expect("accessRequest" in client.credentialBroker).toBe(true);
+  expect("accessRequests" in client.credentialBroker).toBe(true);
 });
 
 test("OIDC credentials use the OIDC client configuration", async () => {
@@ -97,7 +97,7 @@ test("OIDC credentials use the OIDC client configuration", async () => {
     workloadDetails: config.workloadDetails,
   });
   expect(initClientOidc.mock.calls[0][1]).toBe(oidcFetcher);
-  expect("accessRequest" in client.credentialBroker).toBe(false);
+  expect("accessRequests" in client.credentialBroker).toBe(false);
 });
 
 test("credential broker uses the current core invocation names", async () => {
@@ -111,10 +111,11 @@ test("credential broker uses the current core invocation names", async () => {
     sharedCore,
   );
 
-  const accessRequest = await client.credentialBroker.accessRequest.create({
+  const accessRequest = await client.credentialBroker.accessRequests.create({
     entries: [{ type: "login", parameters: {} }],
   });
-  const status = await client.credentialBroker.accessRequest.get("request-id");
+  const status =
+    await client.credentialBroker.accessRequests.getStatus("request-id");
 
   expect(accessRequest).toContain(
     "method CredentialBrokerAccessRequestsCreate",

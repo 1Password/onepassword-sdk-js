@@ -38,7 +38,12 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.EXAMPLE_TESTS_OP_SERVICE_ACCOUNT_TOKEN }}
           OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
-        run: npm run esm-example
+        run: |
+          if [ -z "$OP_SERVICE_ACCOUNT_TOKEN" ] || [ -z "$OP_VAULT_ID" ]; then
+            echo "::notice::Skipping ESM example because example-test credentials are unavailable."
+            exit 0
+          fi
+          npm run esm-example
 
   lint:
     name: Lint

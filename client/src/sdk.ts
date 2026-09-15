@@ -6,7 +6,7 @@ import {
   OidcClientConfiguration,
   OAuthClientConfiguration,
 } from "./configuration.js";
-import { Client, OAuthClient, OidcClient } from "./client.js";
+import { Client, OidcClient, OAuthClient } from "./client.js";
 import {
   createClientWithCore,
   createOidcClientWithCore,
@@ -33,7 +33,7 @@ export const createClient = async (
 ): Promise<Client> => createClientWithCore(config, new SharedCore());
 
 /**
- * Creates a 1Password OIDC client.
+ * Creates a 1Password OIDC client, authenticated through the workload-identity init path.
  * @returns The authenticated 1Password OIDC client.
  */
 export const createOidcClient = async (
@@ -41,7 +41,7 @@ export const createOidcClient = async (
 ): Promise<OidcClient> => createOidcClientWithCore(config, new SharedCore());
 
 /**
- * Creates a 1Password OAuth client.
+ * Creates a 1Password OAuth client, authenticated with the credentials returned by the OAuth flow.
  * @returns The authenticated 1Password OAuth client.
  */
 export const createOAuthClient = async (

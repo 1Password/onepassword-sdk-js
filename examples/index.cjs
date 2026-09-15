@@ -86,7 +86,8 @@ async function pollAccessRequestStatus(client, requestId) {
 
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const status = await client.credentialBroker.accessRequest.get(requestId);
+    const status =
+      await client.credentialBroker.accessRequests.getStatus(requestId);
     console.log(`Polling access request ${requestId}, status: ${status.state}`);
 
     if (
@@ -115,7 +116,7 @@ async function demonstrateOAuthClient() {
     integrationKey: requiredEnvironmentVariable("OP_OAUTH_INTEGRATION_KEY"),
   });
 
-  const accessRequest = await client.credentialBroker.accessRequest.create({
+  const accessRequest = await client.credentialBroker.accessRequests.create({
     entries: [
       {
         type: sdk.AccessRequestEntryType.Login,
@@ -167,7 +168,7 @@ async function demonstrateOAuthClient() {
 
     const loginCredentials = await Promise.all(
       status.resolved.map(({ reference }) =>
-        client.credentialBroker.login.get(reference),
+        client.credentialBroker.logins.read(reference),
       ),
     );
 

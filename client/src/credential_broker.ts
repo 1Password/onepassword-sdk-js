@@ -3,54 +3,54 @@
 import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import { ReviverFunc } from "./types.js";
 import {
-  CredentialBrokerEnvironmentApi,
-  CredentialBrokerEnvironment,
-} from "./credential_broker_environment.js";
+  CredentialBrokerEnvironmentVariablesApi,
+  CredentialBrokerEnvironmentVariables,
+} from "./credential_broker_environment_variables.js";
 import {
-  CredentialBrokerLoginApi,
-  CredentialBrokerLogin,
-} from "./credential_broker_login.js";
+  CredentialBrokerLoginsApi,
+  CredentialBrokerLogins,
+} from "./credential_broker_logins.js";
 import {
-  CredentialBrokerAccessRequestApi,
-  CredentialBrokerAccessRequest,
-} from "./credential_broker_access_request.js";
+  CredentialBrokerAccessRequestsApi,
+  CredentialBrokerAccessRequests,
+} from "./credential_broker_access_requests.js";
 
 /**
  * Root namespace for the 1Password Credential Broker.
  *
  * Marker trait — no methods of its own. Each supported credential kind is a
  * nested API accessed as `client.credential_broker.<kind>`
- * ([`Environment`] and [`Login`] today; `ApiKey`, ... as they land).
+ * ([`EnvironmentVariables`] and [`Logins`] today; `ApiKey`, ... as they land).
  */
 export interface CredentialBrokerApi {
-  environment: CredentialBrokerEnvironmentApi;
-  login: CredentialBrokerLoginApi;
+  environmentVariables: CredentialBrokerEnvironmentVariablesApi;
+  logins: CredentialBrokerLoginsApi;
 }
 
 export class CredentialBroker implements CredentialBrokerApi {
   #inner: InnerClient;
-  public environment: CredentialBrokerEnvironmentApi;
-  public login: CredentialBrokerLoginApi;
+  public environmentVariables: CredentialBrokerEnvironmentVariablesApi;
+  public logins: CredentialBrokerLoginsApi;
 
   public constructor(inner: InnerClient) {
     this.#inner = inner;
-    this.environment = new CredentialBrokerEnvironment(inner);
-    this.login = new CredentialBrokerLogin(inner);
+    this.environmentVariables = new CredentialBrokerEnvironmentVariables(inner);
+    this.logins = new CredentialBrokerLogins(inner);
   }
 }
 
 export interface OAuthCredentialBrokerApi extends CredentialBrokerApi {
-  accessRequest: CredentialBrokerAccessRequestApi;
+  accessRequests: CredentialBrokerAccessRequestsApi;
 }
 
 export class OAuthCredentialBroker
   extends CredentialBroker
   implements OAuthCredentialBrokerApi
 {
-  public accessRequest: CredentialBrokerAccessRequestApi;
+  public accessRequests: CredentialBrokerAccessRequestsApi;
 
   public constructor(inner: InnerClient) {
     super(inner);
-    this.accessRequest = new CredentialBrokerAccessRequest(inner);
+    this.accessRequests = new CredentialBrokerAccessRequests(inner);
   }
 }
