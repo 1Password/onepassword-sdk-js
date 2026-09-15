@@ -13,11 +13,19 @@ function requiredEnvironmentVariable(name) {
   return value;
 }
 
-function workloadAccessAppLink(accountUuid, accessRequestId) {
-  const link = new URL("onepassword://grant-workload-access");
+// Mints the deep link the desktop app classifies as
+// `UrlClassification::GrantBrokeredAccess`. The host and the parameter
+// encoding are both load-bearing: core matches the host
+// `grant-brokered-access` exactly, and `AccessRequestDetails::decode` reads
+// `access_request_reference` as base64url (not standard base64). The blob is
+// the whole SDK access request — core keeps the sensitive presentation fields
+// (goal, reason, keywords, website) that never reach the server, and drops the
+// server-managed ones in favour of the template it fetches from the broker.
+function brokeredAccessAppLink(accessRequest) {
+  const link = new URL("onepassword://grant-brokered-access");
   link.searchParams.set(
-    "access_request",
-    `accounts/${accountUuid}/access-requests/${accessRequestId}`,
+    "access_request_reference",
+    Buffer.from(JSON.stringify(accessRequest)).toString("base64url"),
   );
   return link.toString();
 }
@@ -149,7 +157,7 @@ async function demonstrateOAuthClient() {
     `Created access request ${accessRequest.id}; opening local OPH and polling for approval...`,
   );
 
-  const appLink = workloadAccessAppLink(accountUuid, accessRequest.id);
+  const appLink = brokeredAccessAppLink(accessRequest);
   console.log(`Opening ${appLink}`);
   const ophProcess = await launchLocalOph(appLink);
   try {
