@@ -31,3 +31,11 @@ export class WorkloadClient {
     this.credentialBroker = new CredentialBroker(innerClient);
   }
 }
+
+export class OAuthClient {
+  public credentialBroker: CredentialBrokerApi;
+
+  public constructor(innerClient: InnerClient) {
+    this.credentialBroker = new CredentialBroker(innerClient);
+  }
+}

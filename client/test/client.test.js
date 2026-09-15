@@ -1,5 +1,6 @@
 const {
   createClientWithCore,
+  createOAuthClientWithCore,
   createWorkloadClientWithCore,
 } = require("../dist/client_builder.js");
 const {
@@ -63,17 +64,44 @@ test("OAuth credentials select the OAuth client configuration", async () => {
     integrationKey: "ops_test-integration-key",
   };
 
-  await createWorkloadClientWithCore(config, sharedCore);
+  await createOAuthClientWithCore(config, sharedCore);
 
   expect(initClientOidc).not.toHaveBeenCalled();
   expect(initClient).toHaveBeenCalledTimes(1);
   expect(JSON.parse(initClient.mock.calls[0][0])).toEqual(config);
 });
 
+test("workload credentials use the OIDC client configuration", async () => {
+  const core = new TestCore();
+  const initClientOidc = jest.spyOn(core, "initClientOidc");
+  const sharedCore = new SharedCore();
+  sharedCore.setInner(core);
+  const oidcFetcher = async () => "test-oidc-token";
+  const config = {
+    integrationName: "test integration",
+    integrationVersion: "1.0.0",
+    oidcFetcher,
+    workloadDetails: {
+      customerManagedSecret: "test-customer-managed-secret",
+      workloadUuid: "test-workload-uuid",
+    },
+  };
+
+  await createWorkloadClientWithCore(config, sharedCore);
+
+  expect(initClientOidc).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(initClientOidc.mock.calls[0][0])).toEqual({
+    integrationName: config.integrationName,
+    integrationVersion: config.integrationVersion,
+    workloadDetails: config.workloadDetails,
+  });
+  expect(initClientOidc.mock.calls[0][1]).toBe(oidcFetcher);
+});
+
 test("credential broker uses the current core invocation names", async () => {
   const sharedCore = new SharedCore();
   sharedCore.setInner(new TestCore());
-  const client = await createWorkloadClientWithCore(
+  const client = await createOAuthClientWithCore(
     {
       accessToken: "test-access-token",
       integrationKey: "ops_test-integration-key",

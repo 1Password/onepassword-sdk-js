@@ -110,7 +110,7 @@ async function pollAccessRequestStatus(client, requestId) {
 async function demonstrateOAuthClient() {
   const accountUuid = requiredEnvironmentVariable("OP_ACCOUNT_UUID");
 
-  const client = await sdk.createWorkloadClient({
+  const client = await sdk.createOAuthClient({
     accessToken: requiredEnvironmentVariable("OP_OAUTH_ACCESS_TOKEN"),
     integrationKey: requiredEnvironmentVariable("OP_OAUTH_INTEGRATION_KEY"),
   });
