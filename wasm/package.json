@@ -4,6 +4,9 @@
   "author": "1Password",
   "license": "MIT",
   "description": "The 1Password Rust SDK core built with `wasm_bindgen`",
+  "publishConfig": {
+    "registry": "https://npm.1infra.dev"
+  },
   "files": [
     "nodejs/core_bg.wasm.d.ts",
     "nodejs/core_bg.wasm",
