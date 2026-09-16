@@ -137,7 +137,9 @@ function printGrantedLogin({
   console.log(label);
   console.log(`  reference: ${credentialReference.reference}`);
   console.log(
-    `  websites: ${details.websites.length ? details.websites.join(", ") : "(none)"}`,
+    `  websites: ${
+      details.websites.length ? details.websites.join(", ") : "(none)"
+    }`,
   );
   console.log(`  username: ${credential.username ?? "(missing)"}`);
   if (credential.totp !== undefined) {
@@ -177,14 +179,18 @@ async function fetchGrantedLoginsRepeatedly(client, resolvedEntries) {
 
     for (let fetchNumber = 1; fetchNumber <= fetchCount; fetchNumber++) {
       console.log(
-        `Fetching granted login ${entryIndex + 1}, attempt ${fetchNumber}/${fetchCount}...`,
+        `Fetching granted login ${
+          entryIndex + 1
+        }, attempt ${fetchNumber}/${fetchCount}...`,
       );
       const { credential, details } = await fetchGrantedLogin(
         client,
         credentialReference,
       );
       printGrantedLogin({
-        label: `Granted login ${entryIndex + 1} (fetch ${fetchNumber}/${fetchCount}):`,
+        label: `Granted login ${
+          entryIndex + 1
+        } (fetch ${fetchNumber}/${fetchCount}):`,
         credentialReference,
         credential,
         details,
