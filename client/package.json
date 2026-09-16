@@ -17,6 +17,9 @@
   "files": [
     "./dist"
   ],
+  "publishConfig": {
+    "registry": "https://npm.1infra.dev"
+  },
   "exports": {
     ".": {
       "types": "./dist/sdk.d.ts",

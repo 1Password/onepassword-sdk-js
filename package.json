@@ -5,6 +5,9 @@
   "name": "@1password/sdk",
   "main": "./client/dist/sdk.js",
   "types": "./client/dist/sdk.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.1infra.dev"
+  },
   "exports": {
     ".": {
       "types": "./client/dist/sdk.d.ts",
