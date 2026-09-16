@@ -1,0 +1,149 @@
+name: Publish
+
+# This workflow publishes `@1password/sdk-core` (wasm) and `@1password/sdk` (client).
+#
+# Publishing both packages requires a particular ordering: we publish the sdk-core first
+# and the sdk depends on the newly published version.
+#
+# This flow is an alternative to `prep-release.sh` and `release.sh` for CI, allowing us to
+# use Cloudsmith and service accounts.
+#
+# ## How to publish a new version, e.g. 0.4.2-internal.1:
+#
+# 1. On a branch, bump the version in the three places this workflow checks:
+#
+#      npm version 0.4.2-internal.1 \
+#        --workspace client \
+#        --workspace wasm \
+#        --no-git-tag-version --no-workspaces-update
+#
+#    and edit `client/src/version.ts`:
+#
+#      export const SDK_VERSION = "0.4.2-internal.1";
+#      export const SDK_BUILD_NUMBER = "0040201";
+#      const SDK_CORE_VERSION = "0.4.2-internal.1";
+#
+#    NOTE: `client/package.json` depends on "../wasm". That is intentional and is pinned during publish.
+#
+# 2. Commit with a signed commit, open a PR, and merge to main.
+# 3. Dry run publish from the UI or CLI: *Actions > Publish > Run workflow on main*
+#
+#      gh workflow run publish.yaml --ref main
+#
+#    A dry run does everything except upload: it checks the versions, builds, and runs `npm publish --dry-run`.
+#
+# 4. Tag the merge commit and push the tag. The tag is `v` followed by the exact version.
+#
+#      # git fetch, git checkout origin/main, etc.
+#      git tag -a -s v0.4.2-internal.1 -m "0.4.2-internal.1"
+#      git push origin v0.4.2-internal.1
+#
+#    The tag push runs this workflow, which publishes both packages.
+#
+# Publishing a version that already exists fails. If a run fails, move to the next version and repeat.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: # A dry run
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions: {} # Default to no permissions
+
+env:
+  DRY_RUN: ${{ github.event_name != 'push' }} # Only a tag push publishes for real
+
+jobs:
+  publish:
+    name: ${{ github.event_name == 'push' && 'Publish to Cloudsmith' || 'Publish to Cloudsmith - dry run' }}
+    runs-on: shared-linux-amd64-large
+    container:
+      image: node:24-bookworm
+    environment: production
+    timeout-minutes: 30
+    permissions:
+      contents: read # Required for Git checkout
+      id-token: write # Required for OIDC auth to Cloudsmith
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check versions against the tag
+        run: |
+          fail() { echo "::error::$*"; exit 1; }
+
+          version="$(node -p 'require("./client/package.json").version')"
+          core_version="$(node -p 'require("./wasm/package.json").version')"
+          ts_version="$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' client/src/version.ts)"
+          ts_core_version="$(awk -F "['\"]" '/SDK_CORE_VERSION =/{print $2}' client/src/version.ts)"
+
+          [ "${core_version}" = "${version}" ] || fail "wasm/package.json version '${core_version}' does not match client/package.json version '${version}'"
+          [ "${ts_version}" = "${version}" ] || fail "SDK_VERSION '${ts_version}' in client/src/version.ts does not match client/package.json version '${version}'"
+          [ "${ts_core_version}" = "${version}" ] || fail "SDK_CORE_VERSION '${ts_core_version}' in client/src/version.ts does not match client/package.json version '${version}'"
+
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            [ "${GITHUB_REF_NAME}" = "v${version}" ] || fail "tag ${GITHUB_REF_NAME} does not match version ${version} (expected v${version})"
+          else
+            echo "::notice::Running from ${GITHUB_REF_TYPE} '${GITHUB_REF_NAME}'; validating as if tag v${version} had been pushed"
+          fi
+
+          # Strict x.y.z is `latest`; anything else (e.g. 0.4.2-internal.1) is `next`
+          if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then dist_tag="latest"; else dist_tag="next"; fi
+
+          {
+            echo "VERSION=${version}"
+            echo "DIST_TAG=${dist_tag}"
+          } >> "${GITHUB_ENV}"
+          echo "Publishing @1password/sdk-core and @1password/sdk at ${version} with dist-tag ${dist_tag}"
+
+      - name: Authenticate to Cloudsmith # Exports CLOUDSMITH_API_KEY
+        uses: step-security/cloudsmith-cli-action@dd1da513017145043c2d29a38b3b85c2b609b5ad # v2.0.3
+        with:
+          oidc-auth-only: "true"
+          oidc-namespace: "1password"
+          oidc-service-slug: "ga-agilebits-inc-onepassword-sdk-js"
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Build @1password/sdk
+        run: npm run build --workspace client
+
+      - name: Prepare @1password/sdk for publishing
+        # Copied from release.sh: depend on the published version and include the README
+        run: |
+          npm pkg set --workspace client "dependencies.@1password/sdk-core=${VERSION}"
+          cp README.md client/README.md
+
+      - name: Publish
+        # Publish sdk-core first, the client depends on its exact version
+        run: |
+          args=()
+          if [ "${DIST_TAG}" != "latest" ]; then args+=(--tag "${DIST_TAG}"); fi # Default tag lets npm refuse to move `latest` backwards
+          if [ "${DRY_RUN}" = "true" ]; then args+=(--dry-run); fi
+          npm publish --workspace wasm "${args[@]}"
+          npm publish --workspace client "${args[@]}"
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${DRY_RUN}" = "true" ]; then mode="Dry run, nothing was published"; else mode="Published"; fi
+          {
+            echo "### Publish: ${mode}"
+            echo
+            echo "| Key | Value |"
+            echo "| --- | --- |"
+            echo "| Ref | \`${GITHUB_REF_TYPE} ${GITHUB_REF_NAME}\` |"
+            echo "| Version | \`${VERSION:-?}\` |"
+            echo "| dist-tag | \`${DIST_TAG:-?}\` |"
+            echo "| Packages | \`@1password/sdk-core\`, \`@1password/sdk\` |"
+          } >> "${GITHUB_STEP_SUMMARY}"
