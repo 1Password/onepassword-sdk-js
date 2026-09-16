@@ -21,6 +21,10 @@
     ".": {
       "types": "./dist/sdk.d.ts",
       "default": "./dist/sdk.js"
+    },
+    "./web": {
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.js"
     }
   },
   "main": "./dist/sdk.js",
