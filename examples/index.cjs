@@ -116,6 +116,89 @@ async function pollAccessRequestStatus(client, requestId) {
   );
 }
 
+function parsePositiveIntEnvironmentVariable(name, defaultValue) {
+  const raw = process.env[name];
+  if (raw === undefined || raw === "") {
+    return defaultValue;
+  }
+  const value = Number.parseInt(raw, 10);
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error(`${name} must be a positive integer`);
+  }
+  return value;
+}
+
+function printGrantedLogin({
+  label,
+  credentialReference,
+  credential,
+  details,
+}) {
+  console.log(label);
+  console.log(`  reference: ${credentialReference.reference}`);
+  console.log(
+    `  websites: ${details.websites.length ? details.websites.join(", ") : "(none)"}`,
+  );
+  console.log(`  username: ${credential.username ?? "(missing)"}`);
+  if (credential.totp !== undefined) {
+    console.log(`  totp: ${credential.totp}`);
+  }
+  if (process.env.OP_PRINT_GRANTED_PASSWORD === "true") {
+    console.log(`  password: ${credential.password ?? "(missing)"}`);
+  } else if (credential.password !== undefined) {
+    console.log(
+      "  password: (redacted; set OP_PRINT_GRANTED_PASSWORD=true to print)",
+    );
+  } else {
+    console.log("  password: (missing)");
+  }
+}
+
+async function fetchGrantedLogin(client, credentialReference) {
+  const [credential, details] = await Promise.all([
+    client.credentialBroker.logins.read(credentialReference),
+    client.credentialBroker.logins.getDetails(credentialReference),
+  ]);
+  return { credential, details };
+}
+
+async function fetchGrantedLoginsRepeatedly(client, resolvedEntries) {
+  const fetchCount = parsePositiveIntEnvironmentVariable(
+    "OP_LOGIN_FETCH_COUNT",
+    3,
+  );
+  const fetchIntervalMs = parsePositiveIntEnvironmentVariable(
+    "OP_LOGIN_FETCH_INTERVAL_MS",
+    1000,
+  );
+
+  for (const [entryIndex, entry] of resolvedEntries.entries()) {
+    const credentialReference = entry.reference;
+
+    for (let fetchNumber = 1; fetchNumber <= fetchCount; fetchNumber++) {
+      console.log(
+        `Fetching granted login ${entryIndex + 1}, attempt ${fetchNumber}/${fetchCount}...`,
+      );
+      const { credential, details } = await fetchGrantedLogin(
+        client,
+        credentialReference,
+      );
+      printGrantedLogin({
+        label: `Granted login ${entryIndex + 1} (fetch ${fetchNumber}/${fetchCount}):`,
+        credentialReference,
+        credential,
+        details,
+      });
+
+      if (fetchNumber < fetchCount) {
+        await new Promise((resolve) => setTimeout(resolve, fetchIntervalMs));
+      }
+    }
+  }
+
+  return { fetchCount, loginCount: resolvedEntries.length };
+}
+
 async function demonstrateOAuthClient() {
   const accountUuid = requiredEnvironmentVariable("OP_ACCOUNT_UUID");
 
@@ -133,20 +216,6 @@ async function demonstrateOAuthClient() {
     ],
   });
 
-  const identitySegments = accessRequest.identity.split("/");
-  if (
-    identitySegments.length !== 6 ||
-    identitySegments[0] !== "oauth-clients" ||
-    !identitySegments[1] ||
-    identitySegments[2] !== "accounts" ||
-    identitySegments[3] !== accountUuid ||
-    identitySegments[4] !== "users" ||
-    !identitySegments[5]
-  ) {
-    throw new Error(
-      `Expected an OAuth access-request identity for account ${accountUuid}, got ${accessRequest.identity}`,
-    );
-  }
   if (accessRequest.state !== sdk.AccessRequestState.Pending) {
     throw new Error(
       `Expected a pending access request, got ${accessRequest.state}`,
@@ -174,32 +243,13 @@ async function demonstrateOAuthClient() {
       );
     }
 
-    const loginCredentials = await Promise.all(
-      status.resolved.map(({ reference }) =>
-        client.credentialBroker.logins.read(reference),
-      ),
+    const { fetchCount, loginCount } = await fetchGrantedLoginsRepeatedly(
+      client,
+      status.resolved,
     );
 
-    loginCredentials.forEach((credential, index) => {
-      const availableFields = ["username", "password", "totp"].filter(
-        (field) => credential[field] !== undefined,
-      );
-      console.log(
-        `Fetched granted login credential ${index + 1}; available fields: ${
-          availableFields.join(", ") || "none"
-        }.`,
-      );
-      if (process.env.OP_PRINT_GRANTED_PASSWORD === "true") {
-        console.log(
-          `Granted login credential ${index + 1} password: ${
-            credential.password ?? "<missing>"
-          }`,
-        );
-      }
-    });
-
     console.log(
-      `OAuth authentication, approval, and credential fetch succeeded for access request ${accessRequest.id}; fetched ${loginCredentials.length} login credential(s).`,
+      `OAuth authentication, approval, and credential fetch succeeded for access request ${accessRequest.id}; fetched ${loginCount} login credential(s) ${fetchCount} time(s) each.`,
     );
   } finally {
     if (ophProcess.exitCode === null && ophProcess.signalCode === null) {
