@@ -13,11 +13,12 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        # actively maintained versions at the time of writing (Oct 4th, 2024)
+        # Actively maintained versions at the time of writing (Sept 2026)
         # https://nodejs.org/en/about/previous-releases
-        node-version: ['18.x', '20.x', '22.x', 'latest']
-    runs-on: ${{ matrix.os }}
+        node-version: ['22', '24', '26']
+    runs-on: shared-linux-amd64-large
+    container:
+      image: node:${{ matrix.node-version }}-bookworm
     permissions:
       contents: read # Required for Git checkout
       id-token: write # Required for OIDC auth to Cloudsmith
@@ -45,7 +46,6 @@ jobs:
         run: npm test
 
       - name: Run esm-example
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '18.x'
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.EXAMPLE_TESTS_OP_SERVICE_ACCOUNT_TOKEN }}
           OP_VAULT_ID: ${{ secrets.EXAMPLE_TESTS_OP_VAULT_ID }}
@@ -58,7 +58,9 @@ jobs:
 
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: shared-linux-amd64-large
+    container:
+      image: node:24-bookworm
     permissions:
       contents: read # Required for Git checkout
       id-token: write # Required for OIDC auth to Cloudsmith
@@ -68,7 +70,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Authenticate to Cloudsmith # Exports CLOUDSMITH_API_KEY
         uses: step-security/cloudsmith-cli-action@dd1da513017145043c2d29a38b3b85c2b609b5ad # v2.0.3
