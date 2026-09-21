@@ -130,6 +130,40 @@ Make sure to use [secret reference URIs](https://developer.1password.com/docs/cl
 
 Inside `createClient()`, set `integrationName` to the name of your application and `integrationVersion` to the version of your application.
 
+## Use a branch build locally
+
+To test unreleased SDK changes, clone the branch you want to use and install its workspace dependencies. Set `BRANCH_NAME` to that branch; for example, use `credential-broker` for the credential broker branch:
+
+```bash
+BRANCH_NAME="credential-broker"
+
+git clone \
+  --branch "$BRANCH_NAME" \
+  --single-branch \
+  https://github.com/1Password/onepassword-sdk-js.git
+
+cd onepassword-sdk-js
+npm install
+```
+
+Running `npm install` at the repository root recognizes the npm workspaces and automatically links the local `wasm/` package as `@1password/sdk-core`. This ensures the client uses the WASM checked into the same branch. See the [npm workspaces documentation](https://docs.npmjs.com/cli/using-npm/workspaces).
+
+To consume the branch build from another local project:
+
+```bash
+cd /path/to/your-app
+
+npm install \
+  /path/to/onepassword-sdk-js/wasm \
+  /path/to/onepassword-sdk-js/client
+```
+
+Import only `@1password/sdk` in your application. Installing the core package explicitly ensures the SDK dependency resolves to the branch's local WASM:
+
+```js
+const sdk = require("@1password/sdk");
+```
+
 ## Supported functionality
 
 1Password SDKs are in active development. We're keen to hear what you'd like to see next. Let us know by [upvoting](https://github.com/1Password/onepassword-sdk-js/issues) or [filing](https://github.com/1Password/onepassword-sdk-js/issues/new/choose) an issue.
