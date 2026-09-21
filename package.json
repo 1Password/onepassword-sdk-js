@@ -2,6 +2,18 @@
   "author": "1Password",
   "license": "MIT",
   "private": true,
+  "name": "@1password/sdk",
+  "main": "./client/dist/sdk.js",
+  "types": "./client/dist/sdk.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.1infra.dev"
+  },
+  "exports": {
+    ".": {
+      "types": "./client/dist/sdk.d.ts",
+      "default": "./client/dist/sdk.js"
+    }
+  },
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
@@ -17,6 +29,10 @@
     "release-no-core-stable": "client/release/scripts/release.sh false stable",
     "release-stable": "client/release/scripts/release.sh true stable"
   },
+  "files": [
+    "client/dist",
+    "wasm"
+  ],
   "workspaces": [
     "client",
     "examples",
