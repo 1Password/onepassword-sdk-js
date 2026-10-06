@@ -37,7 +37,8 @@
     "wasm"
   ],
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "@1password/sdk-core": "file:wasm"
   },
   "devDependencies": {
     "@types/node": "^25.2.1"
