@@ -6,6 +6,12 @@ import { ItemsApi, Items } from "./items.js";
 import { VaultsApi, Vaults } from "./vaults.js";
 import { EnvironmentsApi, Environments } from "./environments.js";
 import { GroupsApi, Groups } from "./groups.js";
+import {
+  CredentialBrokerApi,
+  CredentialBroker,
+  OAuthCredentialBrokerApi,
+  OAuthCredentialBroker,
+} from "./credential_broker.js";
 
 export class Client {
   public secrets: SecretsApi;
@@ -20,5 +26,21 @@ export class Client {
     this.vaults = new Vaults(innerClient);
     this.environments = new Environments(innerClient);
     this.groups = new Groups(innerClient);
+  }
+}
+
+export class OidcClient {
+  public credentialBroker: CredentialBrokerApi;
+
+  public constructor(innerClient: InnerClient) {
+    this.credentialBroker = new CredentialBroker(innerClient);
+  }
+}
+
+export class OAuthClient {
+  public credentialBroker: OAuthCredentialBrokerApi;
+
+  public constructor(innerClient: InnerClient) {
+    this.credentialBroker = new OAuthCredentialBroker(innerClient);
   }
 }

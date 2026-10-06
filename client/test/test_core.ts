@@ -7,7 +7,7 @@ export class TestCore implements Core {
   constructor() {
     this.id = 0;
   }
-
+  
   invoke_sync(config: InvokeConfig): string {
     return JSON.stringify("method " +
       config.invocation.parameters.name +
@@ -23,7 +23,7 @@ export class TestCore implements Core {
 
   async initClientOidc(
     config: string,
-    _fetcher: (audience: string) => Promise<string>,
+    _fetcher: (string) => Promise<string>,
   ): Promise<string> {
     return this.initClient(config);
   }

@@ -2,11 +2,20 @@
   "author": "1Password",
   "license": "MIT",
   "private": true,
+  "name": "@1password/sdk",
+  "main": "./client/dist/sdk.js",
+  "types": "./client/dist/sdk.d.ts",
+  "exports": {
+    ".": {
+      "types": "./client/dist/sdk.d.ts",
+      "default": "./client/dist/sdk.js"
+    }
+  },
   "scripts": {
+    "prepare": "npm run build --workspace client",
     "test": "npm test --workspaces --if-present",
     "esm-example": "npm run build --workspace client && npm run esm-example --workspace examples",
     "commonjs-example": "npm run build --workspace client && npm run commonjs-example --workspace examples",
-    "prepare": "npm run build --workspace client",
     "prettier": "npm run prettier --workspaces --if-present",
     "prettier-fix": "npm run prettier-fix --workspaces --if-present",
     "eslint": "npm run eslint --workspaces --if-present",
@@ -15,8 +24,13 @@
     "release-no-core": "client/release/scripts/release.sh false beta",
     "release": "client/release/scripts/release.sh true beta",
     "release-no-core-stable": "client/release/scripts/release.sh false stable",
-    "release-stable": "client/release/scripts/release.sh true stable"
+    "release-stable": "client/release/scripts/release.sh true stable",
+    "release-dev-preview": "client/release/scripts/release.sh true credential-broker-dev-preview"
   },
+  "files": [
+    "client/dist",
+    "wasm"
+  ],
   "workspaces": [
     "client",
     "examples",
