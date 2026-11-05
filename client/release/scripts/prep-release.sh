@@ -117,6 +117,19 @@ else
     sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version_publish/" -e "s/{{ core_version }}/$current_core_version/" "$version_template_file" > "$output_version_file"
 fi
 
+# Bump the package.json versions to match version.ts. The "Publish to npm" workflow
+# (.github/workflows/publish-npm.yml) publishes exactly what's merged and checks these
+# against version.ts, so they have to be part of the release PR.
+if [ "${core_modified}" = "true" ]; then
+    core_version="${version}"
+    npm version "${core_version}" --no-git-tag-version --allow-same-version --no-workspaces-update --workspace wasm
+else
+    core_version="${current_core_version}"
+fi
+npm version "${version_publish}" --no-git-tag-version --allow-same-version --no-workspaces-update --workspace client
+npm pkg set dependencies.@1password/sdk-core="${core_version}" --workspace client
+npm pkg set dependencies.@1password/sdk="${version_publish}" --workspace examples
+
 printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
 read -r _ignore
 ${EDITOR:-nano} "client/release/RELEASE-NOTES"
@@ -139,7 +152,8 @@ git commit -S -m "Release v${version_publish}"
 git push --set-upstream origin "${branch}"
 
 echo "Release has been prepared..
-Make sure to double check version/build numbers in their appropriate files and
+Make sure to double check version/build numbers in their appropriate files
+(client/src/version.ts and the client, wasm, and examples package.json files) and
 changelog is correctly filled out.
 Once confirmed, run 'npm run release or npm run no-core-release' depending to release the SDK!"
 

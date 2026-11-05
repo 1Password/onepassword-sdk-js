@@ -12,5 +12,10 @@
   ],
   "scripts": {},
   "main": "nodejs/core.js",
-  "types": "nodejs/core.d.ts"
+  "types": "nodejs/core.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1Password/onepassword-sdk-js.git",
+    "directory": "wasm"
+  }
 }
