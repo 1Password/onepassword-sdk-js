@@ -56,7 +56,7 @@ Step 6. Congratulations, you have released the newest JS SDK!
 
 The [`publish-npm.yml`](../../.github/workflows/publish-npm.yml) workflow publishes the same packages from GitHub Actions. It authenticates to npm with the job's OIDC token, so no `NPM_TOKEN` is needed, and npm adds a provenance attestation to each published version.
 
-The workflow only publishes to npm. It doesn't bump versions, commit, tag, or create the GitHub release.
+After a real publish, the workflow also creates the `v<version>` tag and the GitHub release. It doesn't bump versions or commit; those come from the release PR in Steps 1-3.
 
 Step 4. Merge the release PR from Steps 1-3. Merge into `main` for a stable release, or into the beta release branch for a beta release. The workflow publishes the versions that are in the `package.json` files on the branch it runs from, and fails if they don't match `client/src/version.ts`.
 
@@ -72,17 +72,18 @@ Check the dry run's output, then run the workflow again with **Dry run** uncheck
 
 For stable releases, the workflow also points the `latest` dist-tag at the new versions, as the release script does.
 
-Step 6. Tag the release and create the GitHub release by hand. The workflow's job summary lists the commands, run from the commit you published:
-```
-git tag -a -s v<version> -m <version> && git push origin v<version>
-gh release create v<version> --title "Release <version>" --notes-file client/release/RELEASE-NOTES --repo github.com/1Password/onepassword-sdk-js
-```
+Step 6. Check the GitHub release. After the publish, the workflow's "GitHub release" job creates the tag `v<version>` on the commit it published, then creates the release "Release <version>" from `client/release/RELEASE-NOTES`. Beta versions are marked as pre-releases.
+
+The tag is a lightweight tag created by `github-actions[bot]`, so unlike Option A's tags it isn't signed itself. It points at the release PR's merge commit, which GitHub signs when the PR is merged in the web UI, so the release shows as Verified.
 
 ### Switching between the two options
 
 - The workflow skips any package version that's already on npm, so it's safe to re-run. It can also finish a release that Option A published only part of. For example, if the script published `@1password/sdk-core` but failed before `@1password/sdk`, run the workflow with the same versions.
 - npm doesn't allow publishing the same version twice, so the release script fails on a version that's already published. If the workflow published `@1password/sdk-core` but not `@1password/sdk`, finish with `npm run release-no-core` (or `npm run release-no-core-stable`).
-- Only one of the two should tag the release and create the GitHub release. Option A does it in `release.sh`, and Option B leaves it to Step 6.
+- Only one of the two should tag the release and create the GitHub release.
+  - If Option A already created them, the workflow's release job sees the existing release and skips.
+  - The workflow only creates the tag after both packages publish, so once it exists there's nothing left for the Option A release script to do for that version. npm would reject the already-published versions.
+  - If tag `v<version>` already exists on a different commit than the one the workflow published, the release job fails rather than reuse it.
 
 ### Maintaining the trusted publishing setup
 

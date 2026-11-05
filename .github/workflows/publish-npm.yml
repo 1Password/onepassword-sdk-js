@@ -10,8 +10,9 @@ name: Publish to npm (trusted publishing)
 # renaming either breaks publishing. Stable releases also need "Allow npm dist-tag"
 # enabled on both trusted publishers, to point `latest` at the new version.
 #
-# This workflow only publishes to npm. It doesn't commit, tag, or create the GitHub
-# release; do those by hand afterwards (see the job summary).
+# After a real (non-dry-run) publish, the `release` job creates the vX.Y.Z tag and the
+# GitHub release on the published commit. The workflow doesn't bump versions or commit;
+# those come from the merged release PR (npm run prep-release*).
 
 on:
   workflow_dispatch:
@@ -48,6 +49,8 @@ jobs:
     permissions:
       contents: read
       id-token: write # npm trusted publishing (OIDC)
+    outputs:
+      sdk: ${{ steps.versions.outputs.sdk }}
     env:
       CHANNEL: ${{ inputs.channel }}
       PUBLISH_CORE: ${{ inputs.publish_core }}
@@ -150,10 +153,63 @@ jobs:
             [ "$PUBLISH_CORE" = "true" ] && echo "- \`@1password/sdk-core@$CORE\`"
             echo "- \`@1password/sdk@$SDK\`"
             echo
-            echo "Still to do by hand (this workflow doesn't touch git or GitHub releases):"
-            echo
-            echo '```sh'
-            echo "git tag -a -s v$SDK -m $SDK && git push origin v$SDK"
-            echo "gh release create v$SDK --title \"Release $SDK\" --notes-file client/release/RELEASE-NOTES --repo github.com/1Password/onepassword-sdk-js"
-            echo '```'
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "Dry run: nothing was published, and the GitHub release job is skipped."
+            else
+              echo "The GitHub release job creates tag \`v$SDK\` and its release on \`$GITHUB_SHA\`."
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # Creates the vX.Y.Z tag and GitHub release on the commit that was just published.
+  # Kept in its own job so only this job can write to the repo, and the publish job
+  # (which holds the npm OIDC token) stays read-only.
+  #
+  # The tag is a lightweight tag created by github-actions[bot], so it isn't signed
+  # itself. It points at the release PR's merge commit, which GitHub signs when the PR
+  # is merged in the web UI. The local release script (release.sh) still creates signed
+  # annotated tags.
+  release:
+    name: GitHub release
+    needs: publish
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the tag and GitHub release
+    env:
+      SDK: ${{ needs.publish.outputs.sdk }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Safe to re-run: skips if the release already exists (for example, created by
+      # release.sh), and refuses to reuse a tag that points at a different commit.
+      - name: Create tag and GitHub release
+        run: |
+          tag="v$SDK"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::notice::GitHub release $tag already exists, skipping"
+            exit 0
+          fi
+
+          # Commit the tag points at, if it exists (peeled, for annotated tags).
+          tagged=$(git ls-remote origin "refs/tags/$tag" "refs/tags/$tag^{}" | sort -k2 | tail -n1 | cut -f1)
+          if [ -n "$tagged" ] && [ "$tagged" != "$GITHUB_SHA" ]; then
+            echo "::error::tag $tag already exists on $tagged, not on the published commit $GITHUB_SHA"
+            exit 1
+          fi
+
+          args=(--target "$GITHUB_SHA" --title "Release $SDK" --notes-file client/release/RELEASE-NOTES)
+          if [[ "$SDK" == *-* ]]; then
+            args+=(--prerelease)
+          fi
+          gh release create "$tag" "${args[@]}"
+          echo "Created GitHub release $tag on $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
