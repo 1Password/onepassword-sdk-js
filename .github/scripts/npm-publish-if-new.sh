@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# Publishes the package in the current directory with npm trusted publishing, mirroring
-# client/release/scripts/release.sh: `npm publish --tag <channel>`, then for stable also
-# point `latest` at the new version.
+# Publish step for .github/workflows/publish-npm.yml, run once in wasm/ for
+# @1password/sdk-core and once in client/ for @1password/sdk.
+#
+# It runs the same npm commands as client/release/scripts/release.sh
+# (`npm publish --tag <channel>`, then for stable `npm dist-tag add <pkg>@<version> latest`),
+# but none of that script's version bumps, prompts, or git/GitHub release steps, so it can
+# run unattended in CI with trusted publishing.
 #
 # Skips the publish if the version is already on npm (for example, released with the
 # local script, or a re-run after a partial failure), so the workflow is safe to re-run.
