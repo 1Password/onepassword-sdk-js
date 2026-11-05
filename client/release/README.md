@@ -58,7 +58,9 @@ The [`publish-npm.yml`](../../.github/workflows/publish-npm.yml) workflow publis
 
 After a real publish, the workflow also creates the `v<version>` tag and the GitHub release. It doesn't bump versions or commit; those come from the release PR in Steps 1-3.
 
-Step 4. Merge the release PR from Steps 1-3. Merge into `main` for a stable release, or into the beta release branch for a beta release. The workflow publishes the versions that are in the `package.json` files on the branch it runs from, and fails if they don't match `client/src/version.ts`.
+Step 4. Merge the release PR from Steps 1-3. Merge into `main` for a stable release, or into the beta release branch for a beta release. The beta release branch must be `beta` or named `release/...` (for example `release/0.5.0-beta`), because the environment only allows `main`, `beta`, and `release/*`.
+
+Run the workflow after merging, not from the release PR's own branch (`rc/...` or `sdk-core/...`). Option A runs `release.sh` on that branch before merging, but those branches aren't reviewed yet. `sdk-core/...` branches are also pushed automatically by the SDK core publish workflow. The environment doesn't allow either. The workflow publishes the versions that are in the `package.json` files on the branch it runs from, and fails if they don't match `client/src/version.ts`.
 
 Step 5. In GitHub, go to **Actions** → **Publish to npm (trusted publishing)** → **Run workflow**, select the branch from Step 4, and set the inputs:
 
@@ -88,6 +90,12 @@ The tag is a lightweight tag created by `github-actions[bot]`, so unlike Option 
 ### Maintaining the trusted publishing setup
 
 - Both npm packages (`@1password/sdk-core` and `@1password/sdk`) have a trusted publisher on npmjs.com for the `1Password/onepassword-sdk-js` repository, the `publish-npm.yml` workflow, and the `onepassword-sdk-js` GitHub environment. Renaming the workflow file or the environment breaks publishing until the trusted publishers are updated to match.
+- The `onepassword-sdk-js` environment's protection rules are what stop an unreviewed branch from publishing. npm's trusted publisher doesn't check the branch, and anyone with write access can run the workflow from any branch. That run uses the branch's own copy of the workflow file, so a branch check inside the workflow wouldn't help. The environment needs these rules (Settings → Environments, repo admin only):
+  - **Deployment branches and tags:** "Selected branches and tags", limited to `main`, `beta`, and `release/*`. These are the branches releases are merged into. Don't add `rc/*` or `sdk-core/*`: those are the unreviewed release PR branches, and `sdk-core/*` is pushed automatically.
+  - **Required reviewers:** the `1Password/open-source` team, with "Prevent self-review" on, so a second person approves each publish.
+
+  Set these up before adding the trusted publishers on npmjs.com, and keep them in place. Every run, including a dry run, then waits for a reviewer's approval.
+- The environment protects the npm publish, not the tag and release. A branch's edited copy of the workflow could skip the release job's checks and create them. That's no more than anyone with write access can already do by hand.
 - Stable releases need "Allow npm dist-tag" enabled on both trusted publishers, so the workflow can point `latest` at the new version. "npm publish" must be enabled too. "npm stage publish" is always on.
 - A new trusted publisher shows "Pending validation" until its first real publish, and it expires if nothing is published within 2 days. A dry run doesn't count. If it expires, delete it and create it again.
 - The `repository` field in `client/package.json` and `wasm/package.json` must keep pointing at this repository. npm checks it against the workflow's repository when it attaches provenance.

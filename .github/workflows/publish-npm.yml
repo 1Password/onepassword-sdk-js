@@ -10,6 +10,11 @@ name: Publish to npm (trusted publishing)
 # renaming either breaks publishing. Stable releases also need "Allow npm dist-tag"
 # enabled on both trusted publishers, to point `latest` at the new version.
 #
+# npm doesn't check the branch, and this workflow can run from any branch (using that
+# branch's copy of this file). The `onepassword-sdk-js` environment's protection rules
+# are what limit publishing: deployment branches `main`, `beta`, and `release/*`, and required
+# reviewers. See client/release/README.md.
+#
 # After a real (non-dry-run) publish, the `release` job creates the vX.Y.Z tag and the
 # GitHub release on the published commit. The workflow doesn't bump versions or commit;
 # those come from the merged release PR (npm run prep-release*).
