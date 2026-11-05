@@ -43,5 +43,10 @@
     "prettier-plugin-organize-imports": "^3.2.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1Password/onepassword-sdk-js.git",
+    "directory": "client"
   }
 }

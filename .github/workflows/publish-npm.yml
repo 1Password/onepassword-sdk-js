@@ -1,0 +1,159 @@
+name: Publish to npm (trusted publishing)
+
+# Opt-in alternative to the local release script (`npm run release*`, see
+# client/release/README.md). The script keeps working with NPM_TOKEN; this workflow
+# publishes the same packages with npm trusted publishing (OIDC) instead, so no npm
+# token is involved.
+#
+# The trusted publishers for @1password/sdk-core and @1password/sdk on npmjs.com are
+# bound to this file (publish-npm.yml) and the `onepassword-sdk-js` environment;
+# renaming either breaks publishing. Stable releases also need "Allow npm dist-tag"
+# enabled on both trusted publishers, to point `latest` at the new version.
+#
+# This workflow only publishes to npm. It doesn't commit, tag, or create the GitHub
+# release; do those by hand afterwards (see the job summary).
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Release channel (npm dist-tag)
+        type: choice
+        options:
+          - beta
+          - stable
+        required: true
+      publish_core:
+        description: Also publish @1password/sdk-core (like `npm run release` vs `release-no-core`)
+        type: boolean
+        default: false
+      dry_run:
+        description: Dry run (runs `npm publish --dry-run`; nothing is published)
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish (${{ inputs.channel }}${{ inputs.dry_run && ', dry run' || '' }})
+    runs-on: ubuntu-latest
+    # Must match the environment on the npm trusted publisher config.
+    environment: onepassword-sdk-js
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing (OIDC)
+    env:
+      CHANNEL: ${{ inputs.channel }}
+      PUBLISH_CORE: ${{ inputs.publish_core }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.x"
+          # No registry-url: trusted publishing doesn't use the .npmrc it writes.
+
+      # Node 24 ships npm 11.19.x. Publishing over OIDC needs npm >= 11.5.1, and
+      # `npm dist-tag` over OIDC (used for stable releases) needs npm >= 11.21.0.
+      - name: Install npm with OIDC dist-tag support
+        run: |
+          npm install -g npm@11.21.1
+          v=$(npm --version)
+          echo "npm $v"
+          node -e 'const [a,b]=process.argv[1].split(".").map(Number); process.exit(a>11||(a===11&&b>=21)?0:1)' "$v" \
+            || { echo "::error::npm $v is too old for trusted publishing with dist-tag (need >= 11.21.0)"; exit 1; }
+
+      # The repo's .npmrc points npm at ${NPM_TOKEN} for the local release script.
+      # Remove it here so npm authenticates with the job's OIDC token only.
+      - name: Drop token-based .npmrc
+        run: rm -f .npmrc
+
+      # client/src/version.ts is the source of truth, as in release.sh. This workflow
+      # doesn't bump versions itself, so the package.json versions must already match.
+      - name: Resolve and check versions
+        id: versions
+        run: |
+          read_ts() { awk -F "['\"]" "/$1 =/{print \$2}" client/src/version.ts | tr -d '\n'; }
+          sdk=$(read_ts SDK_VERSION)
+          core=$(read_ts SDK_CORE_VERSION)
+          client_pkg=$(node -p 'require("./client/package.json").version')
+          client_dep=$(node -p 'require("./client/package.json").dependencies["@1password/sdk-core"]')
+          wasm_pkg=$(node -p 'require("./wasm/package.json").version')
+          echo "version.ts: sdk=$sdk core=$core"
+          echo "package.json: client=$client_pkg client->sdk-core=$client_dep wasm=$wasm_pkg"
+
+          fail=0
+          [ "$client_pkg" = "$sdk" ] || { echo "::error::client/package.json version ($client_pkg) != SDK_VERSION ($sdk)"; fail=1; }
+          [ "$client_dep" = "$core" ] || { echo "::error::client/package.json depends on @1password/sdk-core $client_dep, expected $core"; fail=1; }
+          if [ "$PUBLISH_CORE" = "true" ]; then
+            [ "$wasm_pkg" = "$core" ] || { echo "::error::wasm/package.json version ($wasm_pkg) != SDK_CORE_VERSION ($core)"; fail=1; }
+          fi
+          case "$CHANNEL:$sdk" in
+            beta:*-beta.*|stable:*) ;;
+            *) echo "::error::channel '$CHANNEL' doesn't match SDK version $sdk"; fail=1 ;;
+          esac
+          if [ "$CHANNEL" = "stable" ] && [[ "$sdk" == *-* || "$core" == *-* ]]; then
+            echo "::error::stable releases can't use prerelease versions (sdk=$sdk core=$core)"; fail=1
+          fi
+          if [ "$fail" = 1 ]; then
+            echo "::error::Bump the package.json versions in the release PR first, e.g. npm version <v> --no-git-tag-version -w wasm -w client && npm pkg set dependencies.@1password/sdk-core=<core> -w client"
+            exit 1
+          fi
+
+          echo "sdk=$sdk" >> "$GITHUB_OUTPUT"
+          echo "core=$core" >> "$GITHUB_OUTPUT"
+
+      # Installs the workspaces, so client resolves @1password/sdk-core from ./wasm
+      # without waiting for the registry, and builds the client (root `prepare`).
+      - name: Install
+        run: npm install
+
+      - name: Publish @1password/sdk-core
+        if: ${{ inputs.publish_core }}
+        working-directory: wasm
+        env:
+          VERSION: ${{ steps.versions.outputs.core }}
+        run: ../.github/scripts/npm-publish-if-new.sh "@1password/sdk-core" "$VERSION"
+
+      - name: Publish @1password/sdk
+        working-directory: client
+        env:
+          VERSION: ${{ steps.versions.outputs.sdk }}
+        run: |
+          cp ../README.md .
+          ../.github/scripts/npm-publish-if-new.sh "@1password/sdk" "$VERSION"
+
+      - name: Summary
+        env:
+          SDK: ${{ steps.versions.outputs.sdk }}
+          CORE: ${{ steps.versions.outputs.core }}
+        run: |
+          {
+            echo "### npm publish ($CHANNEL$([ "$DRY_RUN" = true ] && echo ', dry run'))"
+            echo
+            [ "$PUBLISH_CORE" = "true" ] && echo "- \`@1password/sdk-core@$CORE\`"
+            echo "- \`@1password/sdk@$SDK\`"
+            echo
+            echo "Still to do by hand (this workflow doesn't touch git or GitHub releases):"
+            echo
+            echo '```sh'
+            echo "git tag -a -s v$SDK -m $SDK && git push origin v$SDK"
+            echo "gh release create v$SDK --title \"Release $SDK\" --notes-file client/release/RELEASE-NOTES --repo github.com/1Password/onepassword-sdk-js"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
