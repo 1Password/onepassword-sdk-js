@@ -66,8 +66,8 @@ if [ "$core_modified" = "true" ]; then
     npm pkg set dependencies.@1password/sdk-core="${version_sdk_core}" --workspace client
 
     cd wasm
-    # Update core version number to the latest
-    npm version "${version_sdk_core}"
+    # Update core version number to the latest (prep-release.sh normally already has)
+    npm version "${version_sdk_core}" --allow-same-version
     # Check if all files pertaining to sdk core are included
     npm publish --dry-run --tag "${RELEASE_CHANNEL}"
 
@@ -100,8 +100,8 @@ fi
     wait_for_npm_publish @1password/sdk-core "${version_sdk_core}"
   fi
 
-  # Update sdk version number to the latest
-  npm version "${version_sdk}"
+  # Update sdk version number to the latest (prep-release.sh normally already has)
+  npm version "${version_sdk}" --allow-same-version
 
   # Check if the latest core is pulled correctly
   npm install
@@ -138,8 +138,11 @@ fi
     esac
 
 branch="$(git rev-parse --abbrev-ref HEAD)"
-# Add and Commit the package.json's
-git commit -am "Update package.json's"
+# Add and Commit the package.json's, if anything is left to bump. prep-release.sh
+# normally bumps them already, and an empty commit would trip the ERR trap.
+if ! git diff --quiet; then
+    git commit -am "Update package.json's"
+fi
 
 # Create release tag
 git tag -a -s  "v${version_sdk}" -m "${version_sdk}"
