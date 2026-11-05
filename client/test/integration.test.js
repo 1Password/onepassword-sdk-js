@@ -2,6 +2,11 @@ const { Worker } = require('node:worker_threads');
 const path = require("path");
 const { retrieveSecret } = require('./task.js');
 
+// These tests load the WASM core, authenticate, and resolve a secret against the live
+// 1Password service, often several clients at once. That regularly takes 3-5 s per test
+// on CI runners, right at Jest's 5 s default, so allow more headroom.
+jest.setTimeout(30_000);
+
 test("test simple retrieving of secret", async () => {
     let p = retrieveSecret().then(secret => {
         expect(secret).toBe("test_password_42")
