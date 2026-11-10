@@ -47,7 +47,12 @@ export const clientAuthConfig = (
     accountName = userConfig.auth.accountName;
   }
   return {
-    serviceAccountToken: serviceAccountToken ?? "",
+    // The core's client config is untagged and tries service account auth first,
+    // so a workload identity (OIDC) config must not carry a service account token.
+    // Leaving it out (dropped from the JSON) selects the core's workload variant.
+    serviceAccountToken: userConfig.oidcFetcher
+      ? undefined
+      : serviceAccountToken ?? "",
     accountName,
     programmingLanguage: LANGUAGE,
     sdkVersion: VERSION,
