@@ -4,7 +4,8 @@ import { InvokeConfig, InnerClient, SharedCore } from "./core.js";
 import { GetVariablesResponse, ReviverFunc } from "./types.js";
 
 /**
- * The Environments API holds all the operations the SDK client can perform on 1Password Environments.
+ * The Environments API holds all the operations the SDK client can perform
+ * on 1Password Environments and the secrets inside them.
  */
 export interface EnvironmentsApi {
   /**

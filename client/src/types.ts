@@ -28,10 +28,7 @@ export interface DocumentCreateParams {
 /**
  * One environment variable resolved by the credential broker.
  *
- * Shared between the Environments API (`GetVariablesResponse`) and the
- * Credentials API (`CredentialResponse::Environment`, gated on
- * `brokered-access`), since both surfaces read from the same credential
- * broker enclave endpoint.
+ * Used by the Environments API (`GetVariablesResponse`).
  */
 export interface EnvironmentVariable {
   /** An environment variable's name */
