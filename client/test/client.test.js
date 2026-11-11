@@ -1,5 +1,6 @@
 const { createClientWithCore } = require("../dist/client_builder.js");
-const { clientAuthConfig, getOsName, VERSION, LANGUAGE } = require("../dist/configuration.js");
+const { clientAuthConfig, getOsName, VERSION, LANGUAGE, DesktopAuth } = require("../dist/configuration.js");
+const fs = require("fs");
 const { SharedCore } = require("../dist/core.js");
 const { TestCore } = require("./test_core");
 
@@ -75,4 +76,32 @@ test("authenticated client resolves secrets correctly", () => {
       );
     });
   });
+});
+
+test("createClient with desktop auth rejects without logging when the desktop app isn't found", async () => {
+  // Force "not installed", so the test doesn't depend on whether 1Password is on this machine.
+  const existsSync = jest.spyOn(fs, "existsSync").mockReturnValue(false);
+  const consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+
+  try {
+    const sharedCore = new SharedCore();
+    sharedCore.setInner(new TestCore());
+
+    await expect(
+      createClientWithCore(
+        {
+          auth: new DesktopAuth("my-account"),
+          integrationName: "test integration",
+          integrationVersion: "test integration",
+        },
+        sharedCore,
+      ),
+    ).rejects.toThrow("1Password desktop application not found");
+
+    // The caller handles the error; the SDK doesn't print its own copy (#196).
+    expect(consoleError).not.toHaveBeenCalled();
+  } finally {
+    existsSync.mockRestore();
+    consoleError.mockRestore();
+  }
 });
