@@ -229,10 +229,6 @@ await archiveItem(client, updatedItem.vaultId, updatedItem.id);
 await client.items.delete(item.vaultId, item.id);
 // [developer-docs.sdk.js.delete-item]-end
 
-if (process.env.OP_ENVIRONMENT_ID) {
-  await getEnvironmentVariables(client);
-}
-
 async function shareItem(client, vaultId, itemId) {
   // [developer-docs.sdk.js.item-share-get-item]-start
   // Get an item to share
@@ -488,13 +484,13 @@ function generateSpecialItemFields() {
   ];
 }
 
-async function resolveAllSecrets(client, vaultId, itemId, fieldId, fieldId2) {
+async function resolveAllSecrets(client) {
   // [developer-docs.sdk.js.resolve-bulk-secret]-start
   try {
     // Fetch multiple secrets using secret references
     const secrets = await client.secrets.resolveAll([
-      `op://${vaultId}/${itemId}/${fieldId}`,
-      `op://${vaultId}/${itemId}/${fieldId2}`,
+      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/username",
+      "op://7turaasywpymt3jecxoxk5roli/hdvxoumwprditdustkxv7d3dqy/password",
     ]);
 
     for (const [_, response] of Object.entries(secrets.individualResponses)) {
@@ -698,18 +694,4 @@ async function showcaseBatchItemOperations(client, vaultId) {
     }
   }
   // [developer-docs.sdk.js.batch-delete-items]-end
-}
-
-async function getEnvironmentVariables(client) {
-  // [developer-docs.sdk.js.get-environment-variables]-start
-  // Read variables from a 1Password Environment
-  const environment = await client.environments.getVariables(
-    process.env.OP_ENVIRONMENT_ID,
-  );
-  for (const variable of environment.variables) {
-    console.log(
-      `${variable.name}: ${variable.value} (masked: ${variable.masked})`,
-    );
-  }
-  // [developer-docs.sdk.js.get-environment-variables]-end
 }
