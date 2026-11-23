@@ -5,14 +5,28 @@ import { ClientAuthConfig, WorkloadDetails } from "./core.js";
 export const LANGUAGE = "JS";
 export const VERSION = SDK_BUILD_NUMBER;
 
-// Contains information necessary to configure an SDK client.
-export interface ClientConfiguration {
-  // Auth currently only accepts a service account token. Read more about how to get started with service accounts: https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account
-  auth?: Auth;
+// Fields common to every client configuration.
+interface BaseClientConfiguration {
   integrationName: string;
   integrationVersion: string;
-  oidcFetcher?: (audience: string) => Promise<string>;
-  workloadDetails?: WorkloadDetails;
+}
+
+// Contains information necessary to configure an SDK client.
+export interface ClientConfiguration extends BaseClientConfiguration {
+  // Auth currently only accepts a service account token. Read more about how to get started with service accounts: https://developer.1password.com/docs/service-accounts/get-started/#create-a-service-account
+  auth: Auth;
+}
+
+// Contains information necessary to configure an OIDC-authenticated client.
+export interface OidcClientConfiguration extends BaseClientConfiguration {
+  oidcFetcher: (audience: string) => Promise<string>;
+  workloadDetails: WorkloadDetails;
+}
+
+// Contains the credentials returned by the OAuth authorization flow.
+export interface OAuthClientConfiguration {
+  accessToken: string;
+  integrationKey: string;
 }
 
 // Sets the authentication method. Use a token as a `string` to authenticate with a service account token.
@@ -58,7 +72,6 @@ export const clientAuthConfig = (
     os: getOsName(),
     osVersion: defaultOsVersion,
     architecture: os.arch(),
-    workloadDetails: userConfig.workloadDetails,
   };
 };
 

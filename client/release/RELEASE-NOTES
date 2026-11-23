@@ -1,6 +1,7 @@
-# 1Password JavaScript SDK v0.5.0
+# 1Password JavaScript SDK v0.0.0-credential-broker-dev-preview.4
 
-## NEW
+> **Dev preview.** No backwards-compatibility guarantees.
 
+## FIXED
 
-- **Workload Identity authentication (public preview):** The SDK can now authenticate using workload identity via 1Password Credential Broker. Provide an `oidcFetcher` and `workloadDetails` to `createClient()` instead of a service account token. Currently available for GitHub Actions only.
+- **Typed errors from login and Environment reads:** `credentialBroker.logins.read`, `credentialBroker.logins.getDetails` and `credentialBroker.environmentVariables` reads now throw the typed errors introduced in dev-preview.3. Before, these calls threw a plain `Error` (for example "resource not found") and dropped the reason 1Password sent. Reading a login that was deleted or archived, or whose vault was deleted or archived, now throws `CredentialNotFoundError`, and `NoActiveGrantError`, `PermissionDeniedError` and the other typed errors are thrown from these calls as well.

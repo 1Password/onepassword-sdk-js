@@ -85,33 +85,34 @@ export class SharedLibCore implements Core {
   private lib: DesktopIPCClient | null = null;
   private acccountName: string;
 
-  /**
-   * Loads the 1Password desktop app's shared library.
-   *
-   * Throws if the desktop app can't be found or its library can't be loaded, so
-   * `createClient` rejects and the caller can handle it (for example, fall back
-   * to another auth method). It doesn't log the error itself.
-   */
   public constructor(accountName: string) {
-    const libPath = find1PasswordLibPath();
-    const moduleStub = { exports: {} };
-    process.dlopen(moduleStub, libPath);
+    try {
+      const libPath = find1PasswordLibPath();
+      const moduleStub = { exports: {} };
+      process.dlopen(moduleStub, libPath);
 
-    // Safely check the structure of the loaded module before casting.
-    if (
-      typeof moduleStub === "object" &&
-      moduleStub !== null &&
-      typeof moduleStub.exports === "object" &&
-      moduleStub.exports !== null &&
-      "sendMessage" in moduleStub.exports &&
-      typeof (moduleStub.exports as { sendMessage: unknown }).sendMessage ===
-        "function"
-    ) {
-      this.lib = moduleStub.exports as DesktopIPCClient;
-    } else {
-      throw new Error(
-        "Failed to initialize native library: sendMessage function not found on module.",
+      // Safely check the structure of the loaded module before casting.
+      if (
+        typeof moduleStub === "object" &&
+        moduleStub !== null &&
+        typeof moduleStub.exports === "object" &&
+        moduleStub.exports !== null &&
+        "sendMessage" in moduleStub.exports &&
+        typeof (moduleStub.exports as { sendMessage: unknown }).sendMessage ===
+          "function"
+      ) {
+        this.lib = moduleStub.exports as DesktopIPCClient;
+      } else {
+        throw new Error(
+          "Failed to initialize native library: sendMessage function not found on module.",
+        );
+      }
+    } catch (e) {
+      console.error(
+        "A critical error occurred while loading the native addon:",
+        e,
       );
+      this.lib = null;
     }
 
     this.acccountName = accountName;
